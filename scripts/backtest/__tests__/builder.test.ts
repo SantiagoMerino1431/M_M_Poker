@@ -37,7 +37,7 @@ describe("buildMatchData", () => {
 
   it("odds are populated for Qatar vs Ecuador (1X2 available)", () => {
     const md = buildMatchData("Qatar", "Ecuador", "2022-11-20", -1, loaders)
-    const homeOdds = md.odds.find(o => o.market === "1X2" && o.selection === "1")
+    const homeOdds = md.odds.find(o => o.market === "h2h" && o.selection === "Qatar")
     expect(homeOdds?.odds).toBeCloseTo(100.0, 0)
   })
 

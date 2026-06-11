@@ -73,9 +73,9 @@ export function buildMatchData(
   const now = new Date().toISOString()
   const odds: MarketOdds[] = oddsEntry
     ? [
-        { market: "1X2", selection: "1", odds: oddsEntry.h, bookmaker: "Best", updatedAt: now },
-        { market: "1X2", selection: "X", odds: oddsEntry.d, bookmaker: "Best", updatedAt: now },
-        { market: "1X2", selection: "2", odds: oddsEntry.a, bookmaker: "Best", updatedAt: now },
+        { market: "h2h", selection: home, odds: oddsEntry.h, bookmaker: "Best", updatedAt: now },
+        { market: "h2h", selection: "Draw", odds: oddsEntry.d, bookmaker: "Best", updatedAt: now },
+        { market: "h2h", selection: away, odds: oddsEntry.a, bookmaker: "Best", updatedAt: now },
       ]
     : []
 

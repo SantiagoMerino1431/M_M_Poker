@@ -2,52 +2,55 @@ import { describe, it, expect } from "vitest"
 import { resolveMarket } from "../resolver"
 
 describe("resolveMarket — 1X2", () => {
-  it("selection 1 wins when home scores more", () => {
-    expect(resolveMarket("1X2", "1", 2, 1)).toBe("win")
+  it("home wins when home scores more", () => {
+    expect(resolveMarket("1X2", "home", 2, 1)).toBe("win")
   })
-  it("selection 1 loses when home scores less", () => {
-    expect(resolveMarket("1X2", "1", 0, 1)).toBe("loss")
+  it("home loses when home scores less", () => {
+    expect(resolveMarket("1X2", "home", 0, 1)).toBe("loss")
   })
-  it("selection X wins on draw", () => {
-    expect(resolveMarket("1X2", "X", 1, 1)).toBe("win")
+  it("draw wins on equal score", () => {
+    expect(resolveMarket("1X2", "draw", 1, 1)).toBe("win")
   })
-  it("selection X loses on non-draw", () => {
-    expect(resolveMarket("1X2", "X", 2, 0)).toBe("loss")
+  it("draw loses on non-draw", () => {
+    expect(resolveMarket("1X2", "draw", 2, 0)).toBe("loss")
   })
-  it("selection 2 wins when away scores more", () => {
-    expect(resolveMarket("1X2", "2", 0, 3)).toBe("win")
+  it("away wins when away scores more", () => {
+    expect(resolveMarket("1X2", "away", 0, 3)).toBe("win")
   })
-  it("selection 2 loses when home scores more", () => {
-    expect(resolveMarket("1X2", "2", 2, 1)).toBe("loss")
+  it("away loses when home scores more", () => {
+    expect(resolveMarket("1X2", "away", 2, 1)).toBe("loss")
   })
 })
 
-describe("resolveMarket — Over/Under 2.5", () => {
-  it("Over 2.5 wins when total > 2.5", () => {
-    expect(resolveMarket("Over 2.5 Goals", "Over", 2, 1)).toBe("win")
+describe("resolveMarket — Over/Under", () => {
+  it("over_2.5 wins when total > 2.5", () => {
+    expect(resolveMarket("Over/Under", "over_2.5", 2, 1)).toBe("win")
   })
-  it("Over 2.5 loses when total <= 2.5", () => {
-    expect(resolveMarket("Over 2.5 Goals", "Over", 1, 1)).toBe("loss")
+  it("over_2.5 loses when total <= 2.5", () => {
+    expect(resolveMarket("Over/Under", "over_2.5", 1, 1)).toBe("loss")
   })
-  it("Under 2.5 wins when total <= 2.5", () => {
-    expect(resolveMarket("Over 2.5 Goals", "Under", 1, 0)).toBe("win")
+  it("under_2.5 wins when total <= 2.5", () => {
+    expect(resolveMarket("Over/Under", "under_2.5", 1, 0)).toBe("win")
+  })
+  it("over_1.5 wins when total > 1.5", () => {
+    expect(resolveMarket("Over/Under", "over_1.5", 1, 1)).toBe("win")
   })
 })
 
 describe("resolveMarket — BTTS", () => {
-  it("BTTS Yes wins when both scored", () => {
-    expect(resolveMarket("BTTS", "Yes", 1, 1)).toBe("win")
+  it("yes wins when both scored", () => {
+    expect(resolveMarket("BTTS", "yes", 1, 1)).toBe("win")
   })
-  it("BTTS Yes loses when one team scored 0", () => {
-    expect(resolveMarket("BTTS", "Yes", 0, 2)).toBe("loss")
+  it("yes loses when one team scored 0", () => {
+    expect(resolveMarket("BTTS", "yes", 0, 2)).toBe("loss")
   })
-  it("BTTS No wins when one team scored 0", () => {
-    expect(resolveMarket("BTTS", "No", 3, 0)).toBe("win")
+  it("no wins when one team scored 0", () => {
+    expect(resolveMarket("BTTS", "no", 3, 0)).toBe("win")
   })
 })
 
 describe("resolveMarket — unknown market", () => {
   it("returns void for markets not handled", () => {
-    expect(resolveMarket("Corner Kicks", "Over 9.5", 1, 0)).toBe("void")
+    expect(resolveMarket("Marcador Exacto", "1-0", 1, 0)).toBe("void")
   })
 })

@@ -5,23 +5,26 @@ export function resolveMarket(
   awayScore: number,
 ): "win" | "loss" | "void" {
   const total = homeScore + awayScore
+  const sel = selection.toLowerCase()
 
   if (market === "1X2") {
-    if (selection === "1") return homeScore > awayScore ? "win" : "loss"
-    if (selection === "X") return homeScore === awayScore ? "win" : "loss"
-    if (selection === "2") return awayScore > homeScore ? "win" : "loss"
+    if (sel === "home") return homeScore > awayScore ? "win" : "loss"
+    if (sel === "draw") return homeScore === awayScore ? "win" : "loss"
+    if (sel === "away") return awayScore > homeScore ? "win" : "loss"
   }
 
-  if (market.startsWith("Over") && market.includes("Goals")) {
-    const line = parseFloat(market.match(/([\d.]+)/)?.[1] ?? "2.5")
-    if (selection === "Over")  return total > line ? "win" : "loss"
-    if (selection === "Under") return total <= line ? "win" : "loss"
+  if (market === "Over/Under") {
+    const m = sel.match(/^(over|under)_([\d.]+)$/)
+    if (!m) return "void"
+    const line = parseFloat(m[2])
+    if (m[1] === "over")  return total > line ? "win" : "loss"
+    if (m[1] === "under") return total <= line ? "win" : "loss"
   }
 
   if (market === "BTTS") {
     const btts = homeScore > 0 && awayScore > 0
-    if (selection === "Yes") return btts ? "win" : "loss"
-    if (selection === "No")  return btts ? "loss" : "win"
+    if (sel === "yes") return btts ? "win" : "loss"
+    if (sel === "no")  return btts ? "loss" : "win"
   }
 
   return "void"
