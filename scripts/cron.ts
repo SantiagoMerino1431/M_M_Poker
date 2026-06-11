@@ -1,4 +1,3 @@
-import "dotenv/config"
 import { db } from "../src/lib/db/client"
 import { migrate } from "../src/lib/db/schema"
 import { seed } from "../src/lib/db/seed"

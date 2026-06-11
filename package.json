@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "cron:run": "tsx scripts/cron.ts",
+    "cron:run": "tsx --env-file=.env.local scripts/cron.ts",
     "test": "vitest"
   },
   "dependencies": {
