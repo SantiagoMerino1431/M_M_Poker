@@ -1,5 +1,5 @@
-data/
-scripts/
+/data/
+/scripts/
 node_modules/
 .env.local
 *.db
