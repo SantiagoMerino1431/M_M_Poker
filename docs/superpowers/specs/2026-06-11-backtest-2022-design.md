@@ -163,7 +163,7 @@ Base:   40
 ```
 Para cada partido en Qatar2022Matches (orden cronológico):
   1. buildMatchData(home, away, date, fixtureId, loaders)
-  2. analyzeMatch(matchData, bankroll=1000, trialMode=false)
+  2. analyzeMatch(matchData, bankroll=100000, trialMode=false)
   3. Filtrar markets recomendados: EV >= 3%, confidence >= 40, odds != null
   4. Determinar resultado real: home_score vs away_score del ground truth
   5. Para cada apuesta recomendada:
@@ -183,7 +183,7 @@ Apuestas recomendadas: N
 Apuestas ganadoras:   N (strike rate %)
 ROI total:            X%
 Yield:                X%
-Bankroll final:       $X (inicio $1,000)
+Bankroll final:       $X COP (inicio $100,000 COP)
 Drawdown máximo:      X%
 
 Por mercado:
@@ -196,7 +196,7 @@ Calibración (prob. modelo vs frecuencia real):
 
 ### Estado del bankroll virtual
 
-El bankroll del backtest es independiente del bankroll real. Arranca en `$1,000` fijo. No toca `bankroll_snapshots` en DB. Solo los `bets` se guardan.
+El bankroll del backtest es independiente del bankroll real. Arranca en `$100,000 COP` fijo. No toca `bankroll_snapshots` en DB. Solo los `bets` se guardan.
 
 ---
 
