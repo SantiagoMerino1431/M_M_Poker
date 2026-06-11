@@ -100,7 +100,9 @@ export default async function HoyPage() {
               }}>
                 <div>
                   <div className="stat-number" style={{ fontSize: 18, textTransform: "uppercase", marginBottom: 4 }}>
-                    Fixture #{analysis.fixtureId}
+                    {analysis.homeTeam && analysis.awayTeam
+                      ? `${analysis.homeTeam} vs ${analysis.awayTeam}`
+                      : `Fixture #${analysis.fixtureId}`}
                   </div>
                   {analysis.alerts.length > 0 && (
                     <div style={{ fontSize: 11, color: "var(--draw)" }}>

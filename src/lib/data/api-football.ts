@@ -20,6 +20,7 @@ async function apiFetch<T>(path: string): Promise<T> {
 export async function fetchTodayFixtures(): Promise<{
   id: number; date: string; stadium: string; city: string;
   homeTeamId: number; awayTeamId: number; stage: string;
+  homeTeamName: string; awayTeamName: string;
 }[]> {
   const today = new Date().toISOString().split("T")[0]
   const data = await apiFetch<any>(
@@ -32,6 +33,8 @@ export async function fetchTodayFixtures(): Promise<{
     city: f.fixture.venue?.city ?? "Unknown",
     homeTeamId: f.teams.home.id,
     awayTeamId: f.teams.away.id,
+    homeTeamName: f.teams.home.name ?? `Team ${f.teams.home.id}`,
+    awayTeamName: f.teams.away.name ?? `Team ${f.teams.away.id}`,
     stage: f.league.round ?? "Group Stage",
   }))
 }

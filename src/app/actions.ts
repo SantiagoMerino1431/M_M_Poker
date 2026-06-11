@@ -4,6 +4,12 @@ import { getBankrollState } from "@/lib/kelly/bankroll"
 import { calcMetrics, getBets, saveBet } from "@/lib/kelly/tracker"
 import type { MatchAnalysis, Bet } from "@/lib/types"
 
+function normalizeName(name: string): string {
+  return name.toLowerCase()
+    .normalize("NFD").replace(/\p{Mn}/gu, "")
+    .replace(/[\s'\-.]/g, "")
+}
+
 export async function getTodayAnalyses(): Promise<MatchAnalysis[]> {
   const today = new Date().toISOString().split("T")[0]
   const rows = await db.execute({
@@ -17,6 +23,8 @@ export async function getTodayAnalyses(): Promise<MatchAnalysis[]> {
     model: { lambdaHome: r.lambda_home, lambdaAway: r.lambda_away, adjustmentsApplied: JSON.parse(r.adjustments_applied || "[]"), scoreMatrix: [] },
     markets: JSON.parse(r.markets || "[]"),
     alerts: JSON.parse(r.alerts || "[]"),
+    homeTeam: r.home_team || undefined,
+    awayTeam: r.away_team || undefined,
     lastUpdated: r.created_at,
   }))
 }
@@ -68,12 +76,15 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
 
     const teamsRows = await db.execute("SELECT * FROM teams")
     const teams = new Map<number, any>()
+    const teamsByName = new Map<string, any>()
     for (const row of teamsRows.rows as any[]) {
-      teams.set(row.id, {
+      const t = {
         id: row.id, name: row.name, country: row.country, groupName: row.group_name,
         fifaRanking: row.fifa_ranking, attackStrength: row.attack_strength,
         defenseStrength: row.defense_strength,
-      })
+      }
+      teams.set(row.id, t)
+      teamsByName.set(normalizeName(row.name), t)
     }
 
     const fixtures = await fetchTodayFixtures()
@@ -81,16 +92,21 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
 
     for (const fixture of fixtures) {
       const home = teams.get(fixture.homeTeamId)
+        ?? teamsByName.get(normalizeName(fixture.homeTeamName))
+        ?? { id: fixture.homeTeamId, name: fixture.homeTeamName, country: "", groupName: "",
+             fifaRanking: 50, attackStrength: 1.0, defenseStrength: 1.0 }
       const away = teams.get(fixture.awayTeamId)
-      if (!home || !away) continue
+        ?? teamsByName.get(normalizeName(fixture.awayTeamName))
+        ?? { id: fixture.awayTeamId, name: fixture.awayTeamName, country: "", groupName: "",
+             fifaRanking: 50, attackStrength: 1.0, defenseStrength: 1.0 }
       try {
         const matchData = await buildMatchData({ ...fixture, altitudeM: 0 }, home, away)
         await db.execute({
           sql: `INSERT OR REPLACE INTO match_analyses
                 (fixture_id, is_preliminary, confidence, lambda_home, lambda_away,
-                 adjustments_applied, markets, alerts, data_quality, created_at)
-                VALUES (?, 1, ?, 0, 0, '[]', '[]', '[]', ?, ?)`,
-          args: [fixture.id, 0, matchData.dataQuality, new Date().toISOString()],
+                 adjustments_applied, markets, alerts, data_quality, home_team, away_team, created_at)
+                VALUES (?, 1, ?, 0, 0, '[]', '[]', '[]', ?, ?, ?, ?)`,
+          args: [fixture.id, 0, matchData.dataQuality, fixture.homeTeamName, fixture.awayTeamName, new Date().toISOString()],
         })
         processed++
       } catch {
@@ -195,8 +211,8 @@ export async function adjustBankrollAction(
 ): Promise<{ ok: boolean; message: string }> {
   try {
     await db.execute({
-      sql: `INSERT INTO bankroll_snapshots (type, balance, note, created_at) VALUES (?, ?, ?, ?)`,
-      args: ["manual", amount, reason ?? "Ajuste manual", new Date().toISOString()],
+      sql: `INSERT INTO bankroll_snapshots (snapshot_type, balance, created_at) VALUES (?, ?, ?)`,
+      args: ["manual", amount, new Date().toISOString()],
     })
     return { ok: true, message: `Bankroll ajustado a $${amount.toLocaleString("es-CO")} COP` }
   } catch (err: any) {
@@ -208,8 +224,8 @@ export async function takeWeeklySnapshotAction(): Promise<{ ok: boolean; message
   try {
     const state = await getBankrollState()
     await db.execute({
-      sql: `INSERT INTO bankroll_snapshots (type, balance, note, created_at) VALUES (?, ?, ?, ?)`,
-      args: ["weekly", state.current, "Snapshot semanal manual", new Date().toISOString()],
+      sql: `INSERT INTO bankroll_snapshots (snapshot_type, balance, created_at) VALUES (?, ?, ?)`,
+      args: ["weekly", state.current, new Date().toISOString()],
     })
     return { ok: true, message: `Snapshot: $${state.current.toLocaleString("es-CO")} COP` }
   } catch (err: any) {

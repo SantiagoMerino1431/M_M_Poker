@@ -98,6 +98,8 @@ export async function migrate() {
       markets TEXT NOT NULL,
       alerts TEXT NOT NULL,
       data_quality INTEGER NOT NULL,
+      home_team TEXT DEFAULT '',
+      away_team TEXT DEFAULT '',
       created_at TEXT NOT NULL
     );
 
@@ -138,4 +140,12 @@ export async function migrate() {
       created_at TEXT NOT NULL
     );
   `)
+
+  // Add columns to existing tables (safe to run multiple times)
+  for (const sql of [
+    "ALTER TABLE match_analyses ADD COLUMN home_team TEXT DEFAULT ''",
+    "ALTER TABLE match_analyses ADD COLUMN away_team TEXT DEFAULT ''",
+  ]) {
+    try { await db.execute(sql) } catch { /* column already exists */ }
+  }
 }

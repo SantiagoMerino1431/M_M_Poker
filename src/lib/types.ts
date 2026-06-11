@@ -117,6 +117,8 @@ export interface MatchAnalysis {
   model: ModelOutput
   markets: MarketResult[]
   alerts: string[]
+  homeTeam?: string
+  awayTeam?: string
   lastUpdated: string
 }
 
