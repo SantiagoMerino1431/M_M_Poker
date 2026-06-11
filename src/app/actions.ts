@@ -87,8 +87,17 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
       teamsByName.set(normalizeName(row.name), t)
     }
 
+    const { analyzeMatch } = await import("@/lib/engine/analyzer")
+    const bankrollState = await getBankrollState()
+
     const fixtures = await fetchTodayFixtures()
+
+    if (fixtures.length === 0) {
+      return { ok: true, message: "API devolvió 0 fixtures para hoy (league=1, season=2026)" }
+    }
+
     let processed = 0
+    const errors: string[] = []
 
     for (const fixture of fixtures) {
       const home = teams.get(fixture.homeTeamId)
@@ -101,20 +110,38 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
              fifaRanking: 50, attackStrength: 1.0, defenseStrength: 1.0 }
       try {
         const matchData = await buildMatchData({ ...fixture, altitudeM: 0 }, home, away)
+        const analysis = analyzeMatch(matchData, bankrollState.current)
         await db.execute({
           sql: `INSERT OR REPLACE INTO match_analyses
                 (fixture_id, is_preliminary, confidence, lambda_home, lambda_away,
                  adjustments_applied, markets, alerts, data_quality, home_team, away_team, created_at)
-                VALUES (?, 1, ?, 0, 0, '[]', '[]', '[]', ?, ?, ?, ?)`,
-          args: [fixture.id, 0, matchData.dataQuality, fixture.homeTeamName, fixture.awayTeamName, new Date().toISOString()],
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          args: [
+            fixture.id,
+            analysis.isPreliminary ? 1 : 0,
+            analysis.confidence,
+            analysis.model.lambdaHome,
+            analysis.model.lambdaAway,
+            JSON.stringify(analysis.model.adjustmentsApplied),
+            JSON.stringify(analysis.markets),
+            JSON.stringify(analysis.alerts),
+            matchData.dataQuality,
+            fixture.homeTeamName,
+            fixture.awayTeamName,
+            new Date().toISOString(),
+          ],
         })
         processed++
-      } catch {
-        // continue with next fixture
+      } catch (err: any) {
+        errors.push(`${fixture.homeTeamName} vs ${fixture.awayTeamName}: ${err?.message ?? err}`)
       }
     }
 
-    return { ok: true, message: `${processed} partido${processed !== 1 ? "s" : ""} procesado${processed !== 1 ? "s" : ""}` }
+    if (processed === 0 && errors.length > 0) {
+      return { ok: false, message: `${fixtures.length} fixtures de API, 0 guardados. Error: ${errors[0]}` }
+    }
+
+    return { ok: true, message: `${processed}/${fixtures.length} partidos procesados` }
   } catch (err: any) {
     return { ok: false, message: err?.message ?? "Error en pipeline diario" }
   }

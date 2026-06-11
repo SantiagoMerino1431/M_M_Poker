@@ -52,7 +52,7 @@ function makeMarket(
     kellyFraction: null,
     kellyAmount: null,
     correlationGroup,
-    isRecommended: EV !== null && EV >= 0.03 && (edge ?? 0) >= 0.02 && (odds?.odds ?? 0) >= 1.5,
+    isRecommended: EV !== null && EV >= 0.08 && (edge ?? 0) >= 0.02 && (odds?.odds ?? 0) >= 1.5,
     oddsStale: stale,
   }
 }

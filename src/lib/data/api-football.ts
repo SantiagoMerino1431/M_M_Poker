@@ -4,16 +4,19 @@ const BASE = "https://v3.football.api-sports.io"
 const WC_2026_LEAGUE_ID = 1
 const WC_2026_SEASON = 2026
 
-async function apiFetch<T>(path: string): Promise<T> {
+async function apiFetch<T>(path: string, noCache = false): Promise<T> {
   const res = await fetch(`${BASE}${path}`, {
     headers: {
       "x-rapidapi-key": process.env.RAPIDAPI_KEY!,
       "x-rapidapi-host": "v3.football.api-sports.io",
     },
-    next: { revalidate: 3600 },
+    ...(noCache ? { cache: "no-store" } : { next: { revalidate: 3600 } }),
   })
   if (!res.ok) throw new Error(`API-Football ${res.status}: ${path}`)
   const data = await res.json()
+  if (data.errors && Object.keys(data.errors).length > 0) {
+    throw new Error(`API-Football error: ${JSON.stringify(data.errors)}`)
+  }
   return data
 }
 
@@ -24,7 +27,8 @@ export async function fetchTodayFixtures(): Promise<{
 }[]> {
   const today = new Date().toISOString().split("T")[0]
   const data = await apiFetch<any>(
-    `/fixtures?league=${WC_2026_LEAGUE_ID}&season=${WC_2026_SEASON}&date=${today}`
+    `/fixtures?league=${WC_2026_LEAGUE_ID}&season=${WC_2026_SEASON}&date=${today}`,
+    true  // no-store: always fresh for today's schedule
   )
   return (data.response ?? []).map((f: any) => ({
     id: f.fixture.id,
