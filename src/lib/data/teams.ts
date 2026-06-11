@@ -103,13 +103,13 @@ export function getStadium(homeId: number, awayId: number): string {
 }
 
 export function getMatchDate(homeId: number, awayId: number): string {
-  // Distribución orientativa: fase de grupos junio-julio 2026
   const base = new Date("2026-06-11")
   base.setDate(base.getDate() + Math.floor((homeId + awayId) % 18))
-  return base.toLocaleDateString("es-CO", { weekday: "long", year: "numeric", month: "long", day: "numeric" })
+  return base.toLocaleDateString("es-CO", { timeZone: "America/Bogota", weekday: "long", year: "numeric", month: "long", day: "numeric" })
 }
 
 export function getMatchTime(homeId: number): string {
-  const times = ["14:00", "17:00", "20:00", "23:00"]
+  // Horarios en COT (UTC-5). WC 2026 usa ET (EDT=UTC-4) → COT = ET -1h
+  const times = ["13:00", "16:00", "19:00", "22:00"]
   return times[homeId % 4]
 }

@@ -1,6 +1,7 @@
 import { getAnalysisForFixture } from "../../actions"
 import { notFound } from "next/navigation"
 import Link from "next/link"
+import { formatTime } from "@/lib/utils/time"
 
 function pct(n: number | null) {
   if (n === null) return "--"
@@ -37,7 +38,7 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
             {analysis.isPreliminary ? "PRELIMINAR" : "FINAL"}
           </span>
           <span style={{ fontSize: 10, color: "var(--text-muted)" }}>
-            Actualizado: {new Date(analysis.lastUpdated).toLocaleTimeString("es")}
+            Actualizado: {formatTime(analysis.lastUpdated)} COT
           </span>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>

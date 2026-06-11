@@ -122,7 +122,7 @@ export default async function PartidoDetallePage({ params }: { params: Promise<{
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 1, background: "var(--border)" }}>
           {[
             { label: "Fecha", val: date },
-            { label: "Hora (ET)", val: time },
+            { label: "Hora (COT)", val: time },
             { label: "Sede", val: stadium },
             { label: "Estado", val: "Programado" },
           ].map(({ label, val }) => (
