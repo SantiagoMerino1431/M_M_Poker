@@ -3,6 +3,9 @@
 /** Average goals per team per WC match — used to normalize attack/defense strengths */
 export const WC_AVG_GOALS = 1.35
 
+/** Sentinel value for a team not found in TEAM_IDS — should never appear in practice */
+export const UNKNOWN_TEAM_ID = -99
+
 /** Cutoff date — no match data after this is used for form/H2H calculation */
 export const QATAR_START = "2022-11-20"
 

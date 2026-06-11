@@ -185,15 +185,15 @@ export function loadH2H(dataDir: string): Map<string, H2HRecord[]> {
     const homeId = TEAM_IDS[home]
     const awayId = TEAM_IDS[away]
 
-    if (!homeId && !awayId) continue
+    if (!homeId || !awayId) continue
 
     const key = [home, away].sort().join("||")
     if (!map.has(key)) map.set(key, [])
 
     map.get(key)!.push({
       date: row.date,
-      homeTeamId: homeId ?? -99,
-      awayTeamId: awayId ?? -99,
+      homeTeamId: homeId,
+      awayTeamId: awayId,
       homeGoals: hs,
       awayGoals: as_,
       competition: classifyTournament(row.tournament ?? ""),
@@ -229,17 +229,25 @@ export function loadQatar2022Matches(dataDir: string): Qatar2022Match[] {
     .filter(r => r.Year === "2022")
     .sort((a, b) => a.Date.localeCompare(b.Date))
 
-  return wc2022.map((row, i) => ({
-    fixtureId: -(i + 1),
-    date: row.Date,
-    home: normalizeTeamName(row.home_team),
-    away: normalizeTeamName(row.away_team),
-    homeScore: parseInt(row.home_score, 10),
-    awayScore: parseInt(row.away_score, 10),
-    venue: row.Venue ?? "Qatar Stadium",
-    referee: row.Referee ?? "",
-    stage: row.Round ?? "Group Stage",
-  }))
+  const results: Qatar2022Match[] = []
+  let index = 0
+  for (const row of wc2022) {
+    const homeScore = parseInt(row.home_score, 10)
+    const awayScore = parseInt(row.away_score, 10)
+    if (isNaN(homeScore) || isNaN(awayScore)) continue
+    results.push({
+      fixtureId: -(++index),
+      date: row.Date,
+      home: normalizeTeamName(row.home_team),
+      away: normalizeTeamName(row.away_team),
+      homeScore,
+      awayScore,
+      venue: row.Venue ?? "Qatar Stadium",
+      referee: row.Referee ?? "",
+      stage: row.Round ?? "Group Stage",
+    })
+  }
+  return results
 }
 
 // Odds parser
