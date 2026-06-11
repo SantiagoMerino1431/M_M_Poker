@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Barlow_Condensed, Inter } from "next/font/google"
+import Link from "next/link"
 import "./globals.css"
 
 const barlowCondensed = Barlow_Condensed({
@@ -14,64 +15,56 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "Predictor IA | Mundial 2026",
-  description: "Proyecciones estadísticas de todos los mercados del Mundial 2026. Análisis de entretenimiento.",
+  title: "Betting Assistant · Mundial 2026",
+  description: "Análisis y gestión de apuestas partido a partido",
 }
+
+const NAV_LINKS = [
+  { href: "/hoy",      label: "HOY" },
+  { href: "/partidos", label: "PARTIDOS" },
+  { href: "/grupos",   label: "GRUPOS" },
+  { href: "/historial", label: "HISTORIAL" },
+]
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es" className={`${barlowCondensed.variable} ${inter.variable}`}>
       <body>
-        <header style={{
-          borderBottom: "1px solid var(--border)",
-          background: "var(--surface)",
-          padding: "0 24px",
-          height: 56,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
+        <nav style={{
+          position: "sticky", top: 0, zIndex: 100,
+          background: "var(--surface)", borderBottom: "1px solid var(--border)",
+          display: "flex", alignItems: "center", gap: 0,
+          padding: "0 24px", height: 48,
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span style={{
-              fontFamily: "var(--font-display)",
-              fontSize: 22,
-              fontWeight: 800,
-              letterSpacing: "0.04em",
-              color: "var(--accent)",
-              textTransform: "uppercase",
+          <Link href="/hoy" style={{
+            textDecoration: "none", marginRight: 8,
+            fontFamily: "var(--font-display)", fontWeight: 800,
+            fontSize: 16, textTransform: "uppercase", letterSpacing: "0.06em",
+            color: "var(--accent)",
+          }}>
+            MM
+          </Link>
+          {NAV_LINKS.map(({ href, label }) => (
+            <Link key={href} href={href} style={{
+              textDecoration: "none",
+              fontFamily: "var(--font-display)", fontWeight: 700,
+              fontSize: 13, textTransform: "uppercase", letterSpacing: "0.08em",
+              color: "var(--text-muted)", padding: "0 14px", height: "100%",
+              display: "flex", alignItems: "center",
             }}>
-              MM&nbsp;<span style={{ color: "var(--text)" }}>Predictor</span>
-            </span>
-            <span style={{
-              fontSize: 11,
-              color: "var(--text-muted)",
-              border: "1px solid var(--border)",
-              borderRadius: 4,
-              padding: "2px 6px",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-            }}>
-              Mundial 2026
-            </span>
-          </div>
-          <nav style={{ display: "flex", gap: 24, fontSize: 13, color: "var(--text-muted)" }}>
-            <a href="/" style={{ color: "inherit", textDecoration: "none" }}>Inicio</a>
-            <a href="/grupos" style={{ color: "inherit", textDecoration: "none" }}>Grupos</a>
-            <a href="/partidos" style={{ color: "inherit", textDecoration: "none" }}>Partidos</a>
-          </nav>
-        </header>
+              {label}
+            </Link>
+          ))}
+        </nav>
         <main>{children}</main>
         <footer style={{
           borderTop: "1px solid var(--border)",
-          padding: "16px 24px",
+          padding: "12px 24px",
           fontSize: 11,
           color: "var(--text-muted)",
           textAlign: "center",
         }}>
-          Análisis estadístico de entretenimiento. No constituye asesoría de apuestas ni inversión.
+          Herramienta de análisis personal. No constituye asesoría de apuestas.
         </footer>
       </body>
     </html>

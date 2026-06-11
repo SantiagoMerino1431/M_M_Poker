@@ -42,7 +42,7 @@ function lambdaFromStrengths(
   return isHome ? base * homeAdvantage : base
 }
 
-function buildScoreMatrix(lambdaHome: number, lambdaAway: number, maxGoals = 8) {
+export function buildScoreMatrix(lambdaHome: number, lambdaAway: number, maxGoals = 8) {
   const matrix: number[][] = []
   for (let h = 0; h <= maxGoals; h++) {
     matrix[h] = []
