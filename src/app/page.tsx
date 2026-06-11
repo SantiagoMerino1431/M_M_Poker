@@ -1,32 +1,43 @@
 import { predictMatch } from "@/lib/model/poisson"
 import { runMonteCarlo } from "@/lib/model/montecarlo"
 
+// Un favorito por grupo — grupos oficiales FIFA World Cup 2026
 const CONTENDERS = [
-  { id: 5, name: "España", group: "B", attackStrength: 1.45, defenseStrength: 0.7, fifaRanking: 1 },
-  { id: 9, name: "Argentina", group: "C", attackStrength: 1.5, defenseStrength: 0.75, fifaRanking: 2 },
-  { id: 13, name: "Francia", group: "D", attackStrength: 1.5, defenseStrength: 0.72, fifaRanking: 3 },
-  { id: 17, name: "Alemania", group: "E", attackStrength: 1.4, defenseStrength: 0.78, fifaRanking: 4 },
-  { id: 21, name: "Brasil", group: "F", attackStrength: 1.42, defenseStrength: 0.76, fifaRanking: 5 },
-  { id: 25, name: "Inglaterra", group: "G", attackStrength: 1.38, defenseStrength: 0.8, fifaRanking: 5 },
-  { id: 18, name: "Portugal", group: "E", attackStrength: 1.38, defenseStrength: 0.8, fifaRanking: 6 },
-  { id: 26, name: "Países Bajos", group: "G", attackStrength: 1.32, defenseStrength: 0.82, fifaRanking: 7 },
+  { id: 3,  name: "Rep. de Corea", group: "MC", attackStrength: 1.08, defenseStrength: 0.92, fifaRanking: 23 }, // A
+  { id: 8,  name: "Suiza",         group: "MC", attackStrength: 1.05, defenseStrength: 0.90, fifaRanking: 22 }, // B
+  { id: 9,  name: "Brasil",        group: "MC", attackStrength: 1.42, defenseStrength: 0.76, fifaRanking: 5  }, // C
+  { id: 13, name: "EE. UU.",       group: "MC", attackStrength: 1.15, defenseStrength: 0.95, fifaRanking: 13 }, // D
+  { id: 17, name: "Alemania",      group: "MC", attackStrength: 1.40, defenseStrength: 0.78, fifaRanking: 4  }, // E
+  { id: 21, name: "Países Bajos",  group: "MC", attackStrength: 1.32, defenseStrength: 0.82, fifaRanking: 7  }, // F
+  { id: 25, name: "Bélgica",       group: "MC", attackStrength: 1.30, defenseStrength: 0.82, fifaRanking: 5  }, // G
+  { id: 29, name: "España",        group: "MC", attackStrength: 1.45, defenseStrength: 0.70, fifaRanking: 1  }, // H
+  { id: 33, name: "Francia",       group: "MC", attackStrength: 1.50, defenseStrength: 0.72, fifaRanking: 3  }, // I
+  { id: 37, name: "Argentina",     group: "MC", attackStrength: 1.50, defenseStrength: 0.75, fifaRanking: 2  }, // J
+  { id: 41, name: "Portugal",      group: "MC", attackStrength: 1.38, defenseStrength: 0.80, fifaRanking: 6  }, // K
+  { id: 45, name: "Inglaterra",    group: "MC", attackStrength: 1.38, defenseStrength: 0.80, fifaRanking: 5  }, // L
 ]
 
+// Partidos destacados con equipos de los grupos oficiales
+const ESP  = { id: 29, name: "España",       attackStrength: 1.45, defenseStrength: 0.70, fifaRanking: 1  }
+const ARG  = { id: 37, name: "Argentina",    attackStrength: 1.50, defenseStrength: 0.75, fifaRanking: 2  }
+const FRA  = { id: 33, name: "Francia",      attackStrength: 1.50, defenseStrength: 0.72, fifaRanking: 3  }
+const ALE  = { id: 17, name: "Alemania",     attackStrength: 1.40, defenseStrength: 0.78, fifaRanking: 4  }
+const BRA  = { id: 9,  name: "Brasil",       attackStrength: 1.42, defenseStrength: 0.76, fifaRanking: 5  }
+const POR  = { id: 41, name: "Portugal",     attackStrength: 1.38, defenseStrength: 0.80, fifaRanking: 6  }
+
 const SAMPLE_FIXTURES = [
-  { id: 1, home: CONTENDERS[0], away: CONTENDERS[1], stage: "group_B", label: "ESP vs ARG" },
-  { id: 2, home: CONTENDERS[2], away: CONTENDERS[3], stage: "group_D", label: "FRA vs ALE" },
-  { id: 3, home: CONTENDERS[4], away: CONTENDERS[6], stage: "group_F", label: "BRA vs POR" },
+  { label: "ESP vs ARG", home: ESP, away: ARG },
+  { label: "FRA vs ALE", home: FRA, away: ALE },
+  { label: "BRA vs POR", home: BRA, away: POR },
 ]
 
 function pct(n: number) { return `${(n * 100).toFixed(0)}%` }
 
 export default function HomePage() {
-  // Normalize all contenders to the same group so Monte Carlo simulateGroup works correctly
-  const mcTeams = CONTENDERS.map(t => ({ ...t, group: "MC" }))
   const mcFixtures = CONTENDERS.flatMap((t1, i) =>
     CONTENDERS.slice(i + 1).map(t2 => ({ homeId: t1.id, awayId: t2.id, stage: "group_MC" }))
   )
-  const mcResult = runMonteCarlo(mcTeams, mcFixtures, 2000)
+  const mcResult = runMonteCarlo(CONTENDERS, mcFixtures, 2000)
 
   const champRanked = Object.entries(mcResult.champion)
     .map(([id, prob]) => ({ team: CONTENDERS.find(t => t.id === Number(id))!, prob }))
