@@ -22,7 +22,7 @@ async function apiFetch<T>(path: string, noCache = false): Promise<T> {
 
 type FixtureRow = {
   id: number; date: string; stadium: string; city: string;
-  homeTeamId: number; awayTeamId: number; stage: string;
+  altitudeM: number; homeTeamId: number; awayTeamId: number; stage: string;
   homeTeamName: string; awayTeamName: string;
 }
 
@@ -32,7 +32,7 @@ export async function fetchTodayFixtures(): Promise<FixtureRow[]> {
   const today = new Date().toISOString().split("T")[0]
   const rows = await db.execute({
     sql: `SELECT f.id, f.match_date, f.stadium, f.city, f.stage,
-                 f.home_team_id, f.away_team_id,
+                 f.altitude_m, f.home_team_id, f.away_team_id,
                  h.name AS home_name, a.name AS away_name
           FROM fixtures f
           JOIN teams h ON h.id = f.home_team_id
@@ -46,6 +46,7 @@ export async function fetchTodayFixtures(): Promise<FixtureRow[]> {
     date: r.match_date,
     stadium: r.stadium ?? "Unknown",
     city: r.city ?? "Unknown",
+    altitudeM: r.altitude_m ?? 0,
     homeTeamId: r.home_team_id,
     awayTeamId: r.away_team_id,
     homeTeamName: r.home_name,
