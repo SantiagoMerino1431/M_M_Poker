@@ -9,6 +9,7 @@
     "lint": "eslint",
     "cron:run": "tsx --env-file=.env.local scripts/cron.ts",
     "pre-match:run": "tsx --env-file=.env.local scripts/pre-match-cron.ts",
+    "db:migrate": "tsx --env-file=.env.local scripts/migrate.ts",
     "test": "vitest"
   },
   "dependencies": {
