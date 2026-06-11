@@ -1,0 +1,338 @@
+Year,Date,Home Team,Away Team,Home Score,Away Score,Shootout,Tournament,City,Country,Neutral Venue,Winning Team,first_shooter,Losing Team
+1960,1960-07-06,Czechoslovakia,Russia,0.0,3.0,False,UEFA Euro,Marseille,France,True,Russia,,Czechoslovakia
+1960,1960-07-06,France,Yugoslavia,4.0,5.0,False,UEFA Euro,Paris,France,False,Yugoslavia,,France
+1960,1960-07-09,France,Czechoslovakia,0.0,2.0,False,UEFA Euro,Marseille,France,False,Czechoslovakia,,France
+1960,1960-07-10,Russia,Yugoslavia,2.0,1.0,False,UEFA Euro,Paris,France,True,Russia,,Yugoslavia
+1964,1964-06-17,Denmark,Russia,0.0,3.0,False,UEFA Euro,Barcelona,Spain,True,Russia,,Denmark
+1964,1964-06-17,Spain,Hungary,2.0,1.0,False,UEFA Euro,Madrid,Spain,False,Spain,,Hungary
+1964,1964-06-20,Hungary,Denmark,3.0,1.0,False,UEFA Euro,Barcelona,Spain,True,Hungary,,Denmark
+1964,1964-06-21,Spain,Russia,2.0,1.0,False,UEFA Euro,Madrid,Spain,False,Spain,,Russia
+1968,1968-06-05,England,Yugoslavia,0.0,1.0,False,UEFA Euro,Florence,Italy,True,Yugoslavia,,England
+1968,1968-06-05,Italy,Russia,0.0,0.0,False,UEFA Euro,Naples,Italy,False,Draw,,Draw
+1968,1968-06-08,England,Russia,2.0,0.0,False,UEFA Euro,Rome,Italy,True,England,,Russia
+1968,1968-06-08,Italy,Yugoslavia,1.0,1.0,False,UEFA Euro,Rome,Italy,False,Draw,,Draw
+1968,1968-06-10,Italy,Yugoslavia,2.0,0.0,False,UEFA Euro,Rome,Italy,False,Italy,,Yugoslavia
+1972,1972-06-14,Belgium,Germany,1.0,2.0,False,UEFA Euro,Antwerp,Belgium,False,Germany,,Belgium
+1972,1972-06-14,Hungary,Russia,0.0,1.0,False,UEFA Euro,Brussels,Belgium,True,Russia,,Hungary
+1972,1972-06-17,Belgium,Hungary,2.0,1.0,False,UEFA Euro,Liège,Belgium,False,Belgium,,Hungary
+1972,1972-06-18,Germany,Russia,3.0,0.0,False,UEFA Euro,Brussels,Belgium,True,Germany,,Russia
+1976,1976-06-16,Czechoslovakia,Netherlands,3.0,1.0,False,UEFA Euro,Zagreb,Yugoslavia,True,Czechoslovakia,,Netherlands
+1976,1976-06-17,Yugoslavia,Germany,2.0,4.0,False,UEFA Euro,Belgrade,Yugoslavia,False,Germany,,Yugoslavia
+1976,1976-06-19,Yugoslavia,Netherlands,2.0,3.0,False,UEFA Euro,Zagreb,Yugoslavia,False,Netherlands,,Yugoslavia
+1976,1976-06-20,Czechoslovakia,Germany,2.0,2.0,True,UEFA Euro,Belgrade,Yugoslavia,True,Czechoslovakia,Czechoslovakia,Germany
+1980,1980-06-11,Czechoslovakia,Germany,0.0,1.0,False,UEFA Euro,Rome,Italy,True,Germany,,Czechoslovakia
+1980,1980-06-11,Netherlands,Greece,1.0,0.0,False,UEFA Euro,Naples,Italy,True,Netherlands,,Greece
+1980,1980-06-12,Belgium,England,1.0,1.0,False,UEFA Euro,Turin,Italy,True,Draw,,Draw
+1980,1980-06-12,Italy,Spain,0.0,0.0,False,UEFA Euro,Milan,Italy,False,Draw,,Draw
+1980,1980-06-14,Germany,Netherlands,3.0,2.0,False,UEFA Euro,Naples,Italy,True,Germany,,Netherlands
+1980,1980-06-14,Greece,Czechoslovakia,1.0,3.0,False,UEFA Euro,Rome,Italy,True,Czechoslovakia,,Greece
+1980,1980-06-15,Belgium,Spain,2.0,1.0,False,UEFA Euro,Milan,Italy,True,Belgium,,Spain
+1980,1980-06-15,Italy,England,1.0,0.0,False,UEFA Euro,Turin,Italy,False,Italy,,England
+1980,1980-06-17,Greece,Germany,0.0,0.0,False,UEFA Euro,Turin,Italy,True,Draw,,Draw
+1980,1980-06-17,Netherlands,Czechoslovakia,1.0,1.0,False,UEFA Euro,Milan,Italy,True,Draw,,Draw
+1980,1980-06-18,Italy,Belgium,0.0,0.0,False,UEFA Euro,Rome,Italy,False,Draw,,Draw
+1980,1980-06-18,Spain,England,1.0,2.0,False,UEFA Euro,Naples,Italy,True,England,,Spain
+1980,1980-06-21,Italy,Czechoslovakia,1.0,1.0,True,UEFA Euro,Naples,Italy,False,Czechoslovakia,Italy,Italy
+1980,1980-06-22,Belgium,Germany,1.0,2.0,False,UEFA Euro,Rome,Italy,True,Germany,,Belgium
+1984,1984-06-12,France,Denmark,1.0,0.0,False,UEFA Euro,Paris,France,False,France,,Denmark
+1984,1984-06-13,Belgium,Yugoslavia,2.0,0.0,False,UEFA Euro,Lens,France,True,Belgium,,Yugoslavia
+1984,1984-06-14,Germany,Portugal,0.0,0.0,False,UEFA Euro,Strasbourg,France,True,Draw,,Draw
+1984,1984-06-14,Romania,Spain,1.0,1.0,False,UEFA Euro,Saint-Étienne,France,True,Draw,,Draw
+1984,1984-06-16,Denmark,Yugoslavia,5.0,0.0,False,UEFA Euro,Lyon,France,True,Denmark,,Yugoslavia
+1984,1984-06-16,France,Belgium,5.0,0.0,False,UEFA Euro,Nantes,France,False,France,,Belgium
+1984,1984-06-17,Germany,Romania,2.0,1.0,False,UEFA Euro,Lens,France,True,Germany,,Romania
+1984,1984-06-17,Portugal,Spain,1.0,1.0,False,UEFA Euro,Marseille,France,True,Draw,,Draw
+1984,1984-06-19,Denmark,Belgium,3.0,2.0,False,UEFA Euro,Strasbourg,France,True,Denmark,,Belgium
+1984,1984-06-19,France,Yugoslavia,3.0,2.0,False,UEFA Euro,Saint-Étienne,France,False,France,,Yugoslavia
+1984,1984-06-20,Germany,Spain,0.0,1.0,False,UEFA Euro,Paris,France,True,Spain,,Germany
+1984,1984-06-20,Portugal,Romania,1.0,0.0,False,UEFA Euro,Nantes,France,True,Portugal,,Romania
+1984,1984-06-23,France,Portugal,3.0,2.0,False,UEFA Euro,Marseille,France,False,France,,Portugal
+1984,1984-06-24,Denmark,Spain,1.0,1.0,True,UEFA Euro,Lyon,France,True,Spain,Denmark,Denmark
+1984,1984-06-27,France,Spain,2.0,0.0,False,UEFA Euro,Paris,France,False,France,,Spain
+1988,1988-06-10,Germany,Italy,1.0,1.0,False,UEFA Euro,Düsseldorf,Germany,False,Draw,,Draw
+1988,1988-06-11,Denmark,Spain,2.0,3.0,False,UEFA Euro,Hanover,Germany,True,Spain,,Denmark
+1988,1988-06-12,England,Republic of Ireland,0.0,1.0,False,UEFA Euro,Stuttgart,Germany,True,Republic of Ireland,,England
+1988,1988-06-12,Netherlands,Russia,0.0,1.0,False,UEFA Euro,Cologne,Germany,True,Russia,,Netherlands
+1988,1988-06-14,Germany,Denmark,2.0,0.0,False,UEFA Euro,Gelsenkirchen,Germany,False,Germany,,Denmark
+1988,1988-06-14,Italy,Spain,1.0,0.0,False,UEFA Euro,Frankfurt am Main,Germany,True,Italy,,Spain
+1988,1988-06-15,England,Netherlands,1.0,3.0,False,UEFA Euro,Düsseldorf,Germany,True,Netherlands,,England
+1988,1988-06-15,Republic of Ireland,Russia,1.0,1.0,False,UEFA Euro,Hanover,Germany,True,Draw,,Draw
+1988,1988-06-17,Germany,Spain,2.0,0.0,False,UEFA Euro,Munich,Germany,False,Germany,,Spain
+1988,1988-06-17,Italy,Denmark,2.0,0.0,False,UEFA Euro,Cologne,Germany,True,Italy,,Denmark
+1988,1988-06-18,England,Russia,1.0,3.0,False,UEFA Euro,Frankfurt am Main,Germany,True,Russia,,England
+1988,1988-06-18,Republic of Ireland,Netherlands,0.0,1.0,False,UEFA Euro,Gelsenkirchen,Germany,True,Netherlands,,Republic of Ireland
+1988,1988-06-21,Germany,Netherlands,1.0,2.0,False,UEFA Euro,Hamburg,Germany,False,Netherlands,,Germany
+1988,1988-06-22,Russia,Italy,2.0,0.0,False,UEFA Euro,Stuttgart,Germany,True,Russia,,Italy
+1988,1988-06-25,Russia,Netherlands,0.0,2.0,False,UEFA Euro,Munich,Germany,True,Netherlands,,Russia
+1992,1992-06-10,Sweden,France,1.0,1.0,False,UEFA Euro,Solna,Sweden,False,Draw,,Draw
+1992,1992-06-11,Denmark,England,0.0,0.0,False,UEFA Euro,Malmö,Sweden,True,Draw,,Draw
+1992,1992-06-12,Netherlands,Scotland,1.0,0.0,False,UEFA Euro,Gothenburg,Sweden,True,Netherlands,,Scotland
+1992,1992-06-12,Russia,Germany,1.0,1.0,False,UEFA Euro,Norrköping,Sweden,True,Draw,,Draw
+1992,1992-06-14,France,England,0.0,0.0,False,UEFA Euro,Malmö,Sweden,True,Draw,,Draw
+1992,1992-06-14,Sweden,Denmark,1.0,0.0,False,UEFA Euro,Solna,Sweden,False,Sweden,,Denmark
+1992,1992-06-15,Netherlands,Russia,0.0,0.0,False,UEFA Euro,Gothenburg,Sweden,True,Draw,,Draw
+1992,1992-06-15,Scotland,Germany,0.0,2.0,False,UEFA Euro,Norrköping,Sweden,True,Germany,,Scotland
+1992,1992-06-17,France,Denmark,1.0,2.0,False,UEFA Euro,Malmö,Sweden,True,Denmark,,France
+1992,1992-06-17,Sweden,England,2.0,1.0,False,UEFA Euro,Solna,Sweden,False,Sweden,,England
+1992,1992-06-18,Netherlands,Germany,3.0,1.0,False,UEFA Euro,Gothenburg,Sweden,True,Netherlands,,Germany
+1992,1992-06-18,Scotland,Russia,3.0,0.0,False,UEFA Euro,Norrköping,Sweden,True,Scotland,,Russia
+1992,1992-06-21,Sweden,Germany,2.0,3.0,False,UEFA Euro,Solna,Sweden,False,Germany,,Sweden
+1992,1992-06-22,Netherlands,Denmark,2.0,2.0,True,UEFA Euro,Gothenburg,Sweden,True,Denmark,Netherlands,Netherlands
+1992,1992-06-26,Denmark,Germany,2.0,0.0,False,UEFA Euro,Gothenburg,Sweden,True,Denmark,,Germany
+1996,1996-06-08,England,Switzerland,1.0,1.0,False,UEFA Euro,London,England,False,Draw,,Draw
+1996,1996-06-09,Denmark,Portugal,1.0,1.0,False,UEFA Euro,Sheffield,England,True,Draw,,Draw
+1996,1996-06-09,Germany,Czech Republic,2.0,0.0,False,UEFA Euro,Manchester,England,True,Germany,,Czech Republic
+1996,1996-06-09,Spain,Bulgaria,1.0,1.0,False,UEFA Euro,Leeds,England,True,Draw,,Draw
+1996,1996-06-10,Netherlands,Scotland,0.0,0.0,False,UEFA Euro,Birmingham,England,True,Draw,,Draw
+1996,1996-06-10,Romania,France,0.0,1.0,False,UEFA Euro,Newcastle,England,True,France,,Romania
+1996,1996-06-11,Italy,Russia,2.0,1.0,False,UEFA Euro,Liverpool,England,True,Italy,,Russia
+1996,1996-06-11,Turkey,Croatia,0.0,1.0,False,UEFA Euro,Nottingham,England,True,Croatia,,Turkey
+1996,1996-06-13,Bulgaria,Romania,1.0,0.0,False,UEFA Euro,Newcastle,England,True,Bulgaria,,Romania
+1996,1996-06-13,Switzerland,Netherlands,0.0,2.0,False,UEFA Euro,Birmingham,England,True,Netherlands,,Switzerland
+1996,1996-06-14,Czech Republic,Italy,2.0,1.0,False,UEFA Euro,Liverpool,England,True,Czech Republic,,Italy
+1996,1996-06-14,Portugal,Turkey,1.0,0.0,False,UEFA Euro,Nottingham,England,True,Portugal,,Turkey
+1996,1996-06-15,England,Scotland,2.0,0.0,False,UEFA Euro,London,England,False,England,,Scotland
+1996,1996-06-15,France,Spain,1.0,1.0,False,UEFA Euro,Leeds,England,True,Draw,,Draw
+1996,1996-06-16,Croatia,Denmark,3.0,0.0,False,UEFA Euro,Sheffield,England,True,Croatia,,Denmark
+1996,1996-06-16,Russia,Germany,0.0,3.0,False,UEFA Euro,Manchester,England,True,Germany,,Russia
+1996,1996-06-18,England,Netherlands,4.0,1.0,False,UEFA Euro,London,England,False,England,,Netherlands
+1996,1996-06-18,France,Bulgaria,3.0,1.0,False,UEFA Euro,Newcastle,England,True,France,,Bulgaria
+1996,1996-06-18,Romania,Spain,1.0,2.0,False,UEFA Euro,Leeds,England,True,Spain,,Romania
+1996,1996-06-18,Scotland,Switzerland,1.0,0.0,False,UEFA Euro,Birmingham,England,True,Scotland,,Switzerland
+1996,1996-06-19,Croatia,Portugal,0.0,3.0,False,UEFA Euro,Nottingham,England,True,Portugal,,Croatia
+1996,1996-06-19,Italy,Germany,0.0,0.0,False,UEFA Euro,Manchester,England,True,Draw,,Draw
+1996,1996-06-19,Russia,Czech Republic,3.0,3.0,False,UEFA Euro,Liverpool,England,True,Draw,,Draw
+1996,1996-06-19,Turkey,Denmark,0.0,3.0,False,UEFA Euro,Sheffield,England,True,Denmark,,Turkey
+1996,1996-06-22,England,Spain,0.0,0.0,True,UEFA Euro,London,England,False,England,England,Spain
+1996,1996-06-22,France,Netherlands,0.0,0.0,True,UEFA Euro,Liverpool,England,True,France,Netherlands,Netherlands
+1996,1996-06-23,Czech Republic,Portugal,1.0,0.0,False,UEFA Euro,Birmingham,England,True,Czech Republic,,Portugal
+1996,1996-06-23,Germany,Croatia,2.0,1.0,False,UEFA Euro,Manchester,England,True,Germany,,Croatia
+1996,1996-06-26,England,Germany,1.0,1.0,True,UEFA Euro,London,England,False,Germany,England,England
+1996,1996-06-26,France,Czech Republic,0.0,0.0,True,UEFA Euro,Manchester,England,True,Czech Republic,France,France
+1996,1996-06-30,Czech Republic,Germany,1.0,2.0,False,UEFA Euro,London,England,True,Germany,,Czech Republic
+2000,2000-06-10,Belgium,Sweden,2.0,1.0,False,UEFA Euro,Brussels,Belgium,False,Belgium,,Sweden
+2000,2000-06-11,France,Denmark,3.0,0.0,False,UEFA Euro,Bruges,Belgium,True,France,,Denmark
+2000,2000-06-11,Netherlands,Czech Republic,1.0,0.0,False,UEFA Euro,Amsterdam,Netherlands,False,Netherlands,,Czech Republic
+2000,2000-06-11,Turkey,Italy,1.0,2.0,False,UEFA Euro,Arnhem,Netherlands,True,Italy,,Turkey
+2000,2000-06-12,Germany,Romania,1.0,1.0,False,UEFA Euro,Liège,Belgium,True,Draw,,Draw
+2000,2000-06-12,Portugal,England,3.0,2.0,False,UEFA Euro,Eindhoven,Netherlands,True,Portugal,,England
+2000,2000-06-13,Serbia,Slovenia,3.0,3.0,False,UEFA Euro,Charleroi,Belgium,True,Draw,,Draw
+2000,2000-06-13,Spain,Norway,0.0,1.0,False,UEFA Euro,Rotterdam,Netherlands,True,Norway,,Spain
+2000,2000-06-14,Belgium,Italy,0.0,2.0,False,UEFA Euro,Brussels,Belgium,False,Italy,,Belgium
+2000,2000-06-15,Sweden,Turkey,0.0,0.0,False,UEFA Euro,Eindhoven,Netherlands,True,Draw,,Draw
+2000,2000-06-16,Czech Republic,France,1.0,2.0,False,UEFA Euro,Bruges,Belgium,True,France,,Czech Republic
+2000,2000-06-16,Netherlands,Denmark,3.0,0.0,False,UEFA Euro,Rotterdam,Netherlands,False,Netherlands,,Denmark
+2000,2000-06-17,England,Germany,1.0,0.0,False,UEFA Euro,Charleroi,Belgium,True,England,,Germany
+2000,2000-06-17,Romania,Portugal,0.0,1.0,False,UEFA Euro,Arnhem,Netherlands,True,Portugal,,Romania
+2000,2000-06-18,Norway,Serbia,0.0,1.0,False,UEFA Euro,Liège,Belgium,True,Serbia,,Norway
+2000,2000-06-18,Slovenia,Spain,1.0,2.0,False,UEFA Euro,Amsterdam,Netherlands,True,Spain,,Slovenia
+2000,2000-06-19,Belgium,Turkey,0.0,2.0,False,UEFA Euro,Brussels,Belgium,False,Turkey,,Belgium
+2000,2000-06-19,Italy,Sweden,2.0,1.0,False,UEFA Euro,Eindhoven,Netherlands,True,Italy,,Sweden
+2000,2000-06-20,England,Romania,2.0,3.0,False,UEFA Euro,Charleroi,Belgium,True,Romania,,England
+2000,2000-06-20,Portugal,Germany,3.0,0.0,False,UEFA Euro,Rotterdam,Netherlands,True,Portugal,,Germany
+2000,2000-06-21,Denmark,Czech Republic,0.0,2.0,False,UEFA Euro,Liège,Belgium,True,Czech Republic,,Denmark
+2000,2000-06-21,Netherlands,France,3.0,2.0,False,UEFA Euro,Amsterdam,Netherlands,False,Netherlands,,France
+2000,2000-06-21,Serbia,Spain,3.0,4.0,False,UEFA Euro,Bruges,Belgium,True,Spain,,Serbia
+2000,2000-06-21,Slovenia,Norway,0.0,0.0,False,UEFA Euro,Arnhem,Netherlands,True,Draw,,Draw
+2000,2000-06-24,Italy,Romania,2.0,0.0,False,UEFA Euro,Brussels,Belgium,True,Italy,,Romania
+2000,2000-06-24,Turkey,Portugal,0.0,2.0,False,UEFA Euro,Amsterdam,Netherlands,True,Portugal,,Turkey
+2000,2000-06-25,Netherlands,Serbia,6.0,1.0,False,UEFA Euro,Rotterdam,Netherlands,False,Netherlands,,Serbia
+2000,2000-06-25,Spain,France,1.0,2.0,False,UEFA Euro,Bruges,Belgium,True,France,,Spain
+2000,2000-06-28,France,Portugal,2.0,1.0,False,UEFA Euro,Brussels,Belgium,True,France,,Portugal
+2000,2000-06-29,Netherlands,Italy,0.0,0.0,True,UEFA Euro,Amsterdam,Netherlands,False,Italy,Italy,Netherlands
+2000,2000-07-02,France,Italy,2.0,1.0,False,UEFA Euro,Rotterdam,Netherlands,True,France,,Italy
+2004,2004-06-12,Portugal,Greece,1.0,2.0,False,UEFA Euro,Porto,Portugal,False,Greece,,Portugal
+2004,2004-06-12,Spain,Russia,1.0,0.0,False,UEFA Euro,Faro,Portugal,True,Spain,,Russia
+2004,2004-06-13,France,England,2.0,1.0,False,UEFA Euro,Lisbon,Portugal,True,France,,England
+2004,2004-06-13,Switzerland,Croatia,0.0,0.0,False,UEFA Euro,Leiria,Portugal,True,Draw,,Draw
+2004,2004-06-14,Denmark,Italy,0.0,0.0,False,UEFA Euro,Guimarães,Portugal,True,Draw,,Draw
+2004,2004-06-14,Sweden,Bulgaria,5.0,0.0,False,UEFA Euro,Lisbon,Portugal,True,Sweden,,Bulgaria
+2004,2004-06-15,Czech Republic,Latvia,2.0,1.0,False,UEFA Euro,Aveiro,Portugal,True,Czech Republic,,Latvia
+2004,2004-06-15,Germany,Netherlands,1.0,1.0,False,UEFA Euro,Porto,Portugal,True,Draw,,Draw
+2004,2004-06-16,Greece,Spain,1.0,1.0,False,UEFA Euro,Porto,Portugal,True,Draw,,Draw
+2004,2004-06-16,Portugal,Russia,2.0,0.0,False,UEFA Euro,Lisbon,Portugal,False,Portugal,,Russia
+2004,2004-06-17,Croatia,France,2.0,2.0,False,UEFA Euro,Leiria,Portugal,True,Draw,,Draw
+2004,2004-06-17,England,Switzerland,3.0,0.0,False,UEFA Euro,Coimbra,Portugal,True,England,,Switzerland
+2004,2004-06-18,Bulgaria,Denmark,0.0,2.0,False,UEFA Euro,Braga,Portugal,True,Denmark,,Bulgaria
+2004,2004-06-18,Italy,Sweden,1.0,1.0,False,UEFA Euro,Porto,Portugal,True,Draw,,Draw
+2004,2004-06-19,Latvia,Germany,0.0,0.0,False,UEFA Euro,Porto,Portugal,True,Draw,,Draw
+2004,2004-06-19,Netherlands,Czech Republic,2.0,3.0,False,UEFA Euro,Aveiro,Portugal,True,Czech Republic,,Netherlands
+2004,2004-06-20,Portugal,Spain,1.0,0.0,False,UEFA Euro,Lisbon,Portugal,False,Portugal,,Spain
+2004,2004-06-20,Russia,Greece,2.0,1.0,False,UEFA Euro,Faro,Portugal,True,Russia,,Greece
+2004,2004-06-21,Croatia,England,2.0,4.0,False,UEFA Euro,Lisbon,Portugal,True,England,,Croatia
+2004,2004-06-21,Switzerland,France,1.0,3.0,False,UEFA Euro,Coimbra,Portugal,True,France,,Switzerland
+2004,2004-06-22,Denmark,Sweden,2.0,2.0,False,UEFA Euro,Porto,Portugal,True,Draw,,Draw
+2004,2004-06-22,Italy,Bulgaria,2.0,1.0,False,UEFA Euro,Guimarães,Portugal,True,Italy,,Bulgaria
+2004,2004-06-23,Germany,Czech Republic,1.0,2.0,False,UEFA Euro,Lisbon,Portugal,True,Czech Republic,,Germany
+2004,2004-06-23,Netherlands,Latvia,3.0,0.0,False,UEFA Euro,Braga,Portugal,True,Netherlands,,Latvia
+2004,2004-06-24,Portugal,England,2.0,2.0,True,UEFA Euro,Lisbon,Portugal,False,Portugal,England,England
+2004,2004-06-25,France,Greece,0.0,1.0,False,UEFA Euro,Lisbon,Portugal,True,Greece,,France
+2004,2004-06-26,Sweden,Netherlands,0.0,0.0,True,UEFA Euro,Faro,Portugal,True,Netherlands,Sweden,Sweden
+2004,2004-06-27,Czech Republic,Denmark,3.0,0.0,False,UEFA Euro,Porto,Portugal,True,Czech Republic,,Denmark
+2004,2004-06-30,Portugal,Netherlands,2.0,1.0,False,UEFA Euro,Lisbon,Portugal,False,Portugal,,Netherlands
+2004,2004-07-01,Greece,Czech Republic,1.0,0.0,False,UEFA Euro,Porto,Portugal,True,Greece,,Czech Republic
+2004,2004-07-04,Portugal,Greece,0.0,1.0,False,UEFA Euro,Lisbon,Portugal,False,Greece,,Portugal
+2008,2008-06-07,Portugal,Turkey,2.0,0.0,False,UEFA Euro,Geneva,Switzerland,True,Portugal,,Turkey
+2008,2008-06-07,Switzerland,Czech Republic,0.0,1.0,False,UEFA Euro,Basel,Switzerland,False,Czech Republic,,Switzerland
+2008,2008-06-08,Austria,Croatia,0.0,1.0,False,UEFA Euro,Vienna,Austria,False,Croatia,,Austria
+2008,2008-06-08,Germany,Poland,2.0,0.0,False,UEFA Euro,Klagenfurt,Austria,True,Germany,,Poland
+2008,2008-06-09,Netherlands,Italy,3.0,0.0,False,UEFA Euro,Berne,Switzerland,True,Netherlands,,Italy
+2008,2008-06-09,Romania,France,0.0,0.0,False,UEFA Euro,Zürich,Switzerland,True,Draw,,Draw
+2008,2008-06-10,Greece,Sweden,0.0,2.0,False,UEFA Euro,Salzburg,Austria,True,Sweden,,Greece
+2008,2008-06-10,Spain,Russia,4.0,1.0,False,UEFA Euro,Innsbruck,Austria,True,Spain,,Russia
+2008,2008-06-11,Czech Republic,Portugal,1.0,3.0,False,UEFA Euro,Geneva,Switzerland,True,Portugal,,Czech Republic
+2008,2008-06-11,Switzerland,Turkey,1.0,2.0,False,UEFA Euro,Basel,Switzerland,False,Turkey,,Switzerland
+2008,2008-06-12,Austria,Poland,1.0,1.0,False,UEFA Euro,Vienna,Austria,False,Draw,,Draw
+2008,2008-06-12,Croatia,Germany,2.0,1.0,False,UEFA Euro,Klagenfurt,Austria,True,Croatia,,Germany
+2008,2008-06-13,Italy,Romania,1.0,1.0,False,UEFA Euro,Zürich,Switzerland,True,Draw,,Draw
+2008,2008-06-13,Netherlands,France,4.0,1.0,False,UEFA Euro,Berne,Switzerland,True,Netherlands,,France
+2008,2008-06-14,Greece,Russia,0.0,1.0,False,UEFA Euro,Salzburg,Austria,True,Russia,,Greece
+2008,2008-06-14,Sweden,Spain,1.0,2.0,False,UEFA Euro,Innsbruck,Austria,True,Spain,,Sweden
+2008,2008-06-15,Switzerland,Portugal,2.0,0.0,False,UEFA Euro,Basel,Switzerland,False,Switzerland,,Portugal
+2008,2008-06-15,Turkey,Czech Republic,3.0,2.0,False,UEFA Euro,Geneva,Switzerland,True,Turkey,,Czech Republic
+2008,2008-06-16,Austria,Germany,0.0,1.0,False,UEFA Euro,Vienna,Austria,False,Germany,,Austria
+2008,2008-06-16,Poland,Croatia,0.0,1.0,False,UEFA Euro,Klagenfurt,Austria,True,Croatia,,Poland
+2008,2008-06-17,France,Italy,0.0,2.0,False,UEFA Euro,Zürich,Switzerland,True,Italy,,France
+2008,2008-06-17,Netherlands,Romania,2.0,0.0,False,UEFA Euro,Berne,Switzerland,True,Netherlands,,Romania
+2008,2008-06-18,Greece,Spain,1.0,2.0,False,UEFA Euro,Salzburg,Austria,True,Spain,,Greece
+2008,2008-06-18,Russia,Sweden,2.0,0.0,False,UEFA Euro,Innsbruck,Austria,True,Russia,,Sweden
+2008,2008-06-19,Portugal,Germany,2.0,3.0,False,UEFA Euro,Basel,Switzerland,True,Germany,,Portugal
+2008,2008-06-20,Croatia,Turkey,1.0,1.0,True,UEFA Euro,Vienna,Austria,True,Turkey,Croatia,Croatia
+2008,2008-06-21,Netherlands,Russia,1.0,3.0,False,UEFA Euro,Basel,Switzerland,True,Russia,,Netherlands
+2008,2008-06-22,Spain,Italy,0.0,0.0,True,UEFA Euro,Vienna,Austria,True,Spain,Spain,Italy
+2008,2008-06-25,Germany,Turkey,3.0,2.0,False,UEFA Euro,Basel,Switzerland,True,Germany,,Turkey
+2008,2008-06-26,Russia,Spain,0.0,3.0,False,UEFA Euro,Vienna,Austria,True,Spain,,Russia
+2008,2008-06-29,Germany,Spain,0.0,1.0,False,UEFA Euro,Vienna,Austria,True,Spain,,Germany
+2012,2012-06-08,Poland,Greece,1.0,1.0,False,UEFA Euro,Warsaw,Poland,False,Draw,,Draw
+2012,2012-06-08,Russia,Czech Republic,4.0,1.0,False,UEFA Euro,Wrocław,Poland,True,Russia,,Czech Republic
+2012,2012-06-09,Germany,Portugal,1.0,0.0,False,UEFA Euro,Lviv,Ukraine,True,Germany,,Portugal
+2012,2012-06-09,Netherlands,Denmark,0.0,1.0,False,UEFA Euro,Kharkiv,Ukraine,True,Denmark,,Netherlands
+2012,2012-06-10,Republic of Ireland,Croatia,1.0,3.0,False,UEFA Euro,Poznań,Poland,True,Croatia,,Republic of Ireland
+2012,2012-06-10,Spain,Italy,1.0,1.0,False,UEFA Euro,Gdańsk,Poland,True,Draw,,Draw
+2012,2012-06-11,France,England,1.0,1.0,False,UEFA Euro,Donets'k,Ukraine,True,Draw,,Draw
+2012,2012-06-11,Ukraine,Sweden,2.0,1.0,False,UEFA Euro,Kyiv,Ukraine,False,Ukraine,,Sweden
+2012,2012-06-12,Greece,Czech Republic,1.0,2.0,False,UEFA Euro,Wrocław,Poland,True,Czech Republic,,Greece
+2012,2012-06-12,Poland,Russia,1.0,1.0,False,UEFA Euro,Warsaw,Poland,False,Draw,,Draw
+2012,2012-06-13,Denmark,Portugal,2.0,3.0,False,UEFA Euro,Lviv,Ukraine,True,Portugal,,Denmark
+2012,2012-06-13,Netherlands,Germany,1.0,2.0,False,UEFA Euro,Kharkiv,Ukraine,True,Germany,,Netherlands
+2012,2012-06-14,Italy,Croatia,1.0,1.0,False,UEFA Euro,Poznań,Poland,True,Draw,,Draw
+2012,2012-06-14,Spain,Republic of Ireland,4.0,0.0,False,UEFA Euro,Gdańsk,Poland,True,Spain,,Republic of Ireland
+2012,2012-06-15,Sweden,England,2.0,3.0,False,UEFA Euro,Kyiv,Ukraine,True,England,,Sweden
+2012,2012-06-15,Ukraine,France,0.0,2.0,False,UEFA Euro,Donets'k,Ukraine,False,France,,Ukraine
+2012,2012-06-16,Greece,Russia,1.0,0.0,False,UEFA Euro,Warsaw,Poland,True,Greece,,Russia
+2012,2012-06-16,Poland,Czech Republic,0.0,1.0,False,UEFA Euro,Wrocław,Poland,False,Czech Republic,,Poland
+2012,2012-06-17,Denmark,Germany,1.0,2.0,False,UEFA Euro,Lviv,Ukraine,True,Germany,,Denmark
+2012,2012-06-17,Portugal,Netherlands,2.0,1.0,False,UEFA Euro,Kharkiv,Ukraine,True,Portugal,,Netherlands
+2012,2012-06-18,Croatia,Spain,0.0,1.0,False,UEFA Euro,Gdańsk,Poland,True,Spain,,Croatia
+2012,2012-06-18,Italy,Republic of Ireland,2.0,0.0,False,UEFA Euro,Poznań,Poland,True,Italy,,Republic of Ireland
+2012,2012-06-19,Sweden,France,2.0,0.0,False,UEFA Euro,Kyiv,Ukraine,True,Sweden,,France
+2012,2012-06-19,Ukraine,England,0.0,1.0,False,UEFA Euro,Donets'k,Ukraine,False,England,,Ukraine
+2012,2012-06-21,Czech Republic,Portugal,0.0,1.0,False,UEFA Euro,Warsaw,Poland,True,Portugal,,Czech Republic
+2012,2012-06-22,Germany,Greece,4.0,2.0,False,UEFA Euro,Gdańsk,Poland,True,Germany,,Greece
+2012,2012-06-23,Spain,France,2.0,0.0,False,UEFA Euro,Donets'k,Ukraine,True,Spain,,France
+2012,2012-06-24,England,Italy,0.0,0.0,True,UEFA Euro,Kyiv,Ukraine,True,Italy,Italy,England
+2012,2012-06-27,Portugal,Spain,0.0,0.0,True,UEFA Euro,Donets'k,Ukraine,True,Spain,Spain,Portugal
+2012,2012-06-28,Germany,Italy,1.0,2.0,False,UEFA Euro,Warsaw,Poland,True,Italy,,Germany
+2012,2012-07-01,Spain,Italy,4.0,0.0,False,UEFA Euro,Kyiv,Ukraine,True,Spain,,Italy
+2016,2016-06-10,France,Romania,2.0,1.0,False,UEFA Euro,Saint-Denis,France,False,France,,Romania
+2016,2016-06-11,Albania,Switzerland,0.0,1.0,False,UEFA Euro,Lens,France,True,Switzerland,,Albania
+2016,2016-06-11,England,Russia,1.0,1.0,False,UEFA Euro,Marseille,France,True,Draw,,Draw
+2016,2016-06-11,Wales,Slovakia,2.0,1.0,False,UEFA Euro,Bordeaux,France,True,Wales,,Slovakia
+2016,2016-06-12,Germany,Ukraine,2.0,0.0,False,UEFA Euro,Villeneuve-d'Ascq,France,True,Germany,,Ukraine
+2016,2016-06-12,Poland,Northern Ireland,1.0,0.0,False,UEFA Euro,Nice,France,True,Poland,,Northern Ireland
+2016,2016-06-12,Turkey,Croatia,0.0,1.0,False,UEFA Euro,Paris,France,True,Croatia,,Turkey
+2016,2016-06-13,Belgium,Italy,0.0,2.0,False,UEFA Euro,Lyon,France,True,Italy,,Belgium
+2016,2016-06-13,Republic of Ireland,Sweden,1.0,1.0,False,UEFA Euro,Saint-Denis,France,True,Draw,,Draw
+2016,2016-06-13,Spain,Czech Republic,1.0,0.0,False,UEFA Euro,Toulouse,France,True,Spain,,Czech Republic
+2016,2016-06-14,Austria,Hungary,0.0,2.0,False,UEFA Euro,Bordeaux,France,True,Hungary,,Austria
+2016,2016-06-14,Portugal,Iceland,1.0,1.0,False,UEFA Euro,Saint-Étienne,France,True,Draw,,Draw
+2016,2016-06-15,France,Albania,2.0,0.0,False,UEFA Euro,Marseille,France,False,France,,Albania
+2016,2016-06-15,Romania,Switzerland,1.0,1.0,False,UEFA Euro,Paris,France,True,Draw,,Draw
+2016,2016-06-15,Russia,Slovakia,1.0,2.0,False,UEFA Euro,Villeneuve-d'Ascq,France,True,Slovakia,,Russia
+2016,2016-06-16,England,Wales,2.0,1.0,False,UEFA Euro,Lens,France,True,England,,Wales
+2016,2016-06-16,Germany,Poland,0.0,0.0,False,UEFA Euro,Saint-Denis,France,True,Draw,,Draw
+2016,2016-06-16,Ukraine,Northern Ireland,0.0,2.0,False,UEFA Euro,Lyon,France,True,Northern Ireland,,Ukraine
+2016,2016-06-17,Czech Republic,Croatia,2.0,2.0,False,UEFA Euro,Saint-Étienne,France,True,Draw,,Draw
+2016,2016-06-17,Italy,Sweden,1.0,0.0,False,UEFA Euro,Toulouse,France,True,Italy,,Sweden
+2016,2016-06-17,Spain,Turkey,3.0,0.0,False,UEFA Euro,Nice,France,True,Spain,,Turkey
+2016,2016-06-18,Belgium,Republic of Ireland,3.0,0.0,False,UEFA Euro,Bordeaux,France,True,Belgium,,Republic of Ireland
+2016,2016-06-18,Iceland,Hungary,1.0,1.0,False,UEFA Euro,Marseille,France,True,Draw,,Draw
+2016,2016-06-18,Portugal,Austria,0.0,0.0,False,UEFA Euro,Lyon,France,True,Draw,,Draw
+2016,2016-06-19,France,Switzerland,0.0,0.0,False,UEFA Euro,Villeneuve-d'Ascq,France,False,Draw,,Draw
+2016,2016-06-19,Romania,Albania,0.0,1.0,False,UEFA Euro,Lyon,France,True,Albania,,Romania
+2016,2016-06-20,Russia,Wales,0.0,3.0,False,UEFA Euro,Toulouse,France,True,Wales,,Russia
+2016,2016-06-20,Slovakia,England,0.0,0.0,False,UEFA Euro,Saint-Étienne,France,True,Draw,,Draw
+2016,2016-06-21,Croatia,Spain,2.0,1.0,False,UEFA Euro,Bordeaux,France,True,Croatia,,Spain
+2016,2016-06-21,Czech Republic,Turkey,0.0,2.0,False,UEFA Euro,Lens,France,True,Turkey,,Czech Republic
+2016,2016-06-21,Northern Ireland,Germany,0.0,1.0,False,UEFA Euro,Paris,France,True,Germany,,Northern Ireland
+2016,2016-06-21,Ukraine,Poland,0.0,1.0,False,UEFA Euro,Marseille,France,True,Poland,,Ukraine
+2016,2016-06-22,Hungary,Portugal,3.0,3.0,False,UEFA Euro,Lyon,France,True,Draw,,Draw
+2016,2016-06-22,Iceland,Austria,2.0,1.0,False,UEFA Euro,Saint-Denis,France,True,Iceland,,Austria
+2016,2016-06-22,Italy,Republic of Ireland,0.0,1.0,False,UEFA Euro,Villeneuve-d'Ascq,France,True,Republic of Ireland,,Italy
+2016,2016-06-22,Sweden,Belgium,0.0,1.0,False,UEFA Euro,Nice,France,True,Belgium,,Sweden
+2016,2016-06-25,Croatia,Portugal,0.0,1.0,False,UEFA Euro,Lens,France,True,Portugal,,Croatia
+2016,2016-06-25,Switzerland,Poland,1.0,1.0,True,UEFA Euro,Saint-Étienne,France,True,Poland,Switzerland,Switzerland
+2016,2016-06-25,Wales,Northern Ireland,1.0,0.0,False,UEFA Euro,Paris,France,True,Wales,,Northern Ireland
+2016,2016-06-26,France,Republic of Ireland,2.0,1.0,False,UEFA Euro,Lyon,France,False,France,,Republic of Ireland
+2016,2016-06-26,Germany,Slovakia,3.0,0.0,False,UEFA Euro,Villeneuve-d'Ascq,France,True,Germany,,Slovakia
+2016,2016-06-26,Hungary,Belgium,0.0,4.0,False,UEFA Euro,Toulouse,France,True,Belgium,,Hungary
+2016,2016-06-27,England,Iceland,1.0,2.0,False,UEFA Euro,Nice,France,True,Iceland,,England
+2016,2016-06-27,Italy,Spain,2.0,0.0,False,UEFA Euro,Saint-Denis,France,True,Italy,,Spain
+2016,2016-06-30,Poland,Portugal,1.0,1.0,True,UEFA Euro,Marseille,France,True,Portugal,Portugal,Poland
+2016,2016-07-01,Wales,Belgium,3.0,1.0,False,UEFA Euro,Villeneuve-d'Ascq,France,True,Wales,,Belgium
+2016,2016-07-02,Germany,Italy,1.0,1.0,True,UEFA Euro,Bordeaux,France,True,Germany,Italy,Italy
+2016,2016-07-03,France,Iceland,5.0,2.0,False,UEFA Euro,Saint-Denis,France,False,France,,Iceland
+2016,2016-07-06,Portugal,Wales,2.0,0.0,False,UEFA Euro,Lyon,France,True,Portugal,,Wales
+2016,2016-07-07,France,Germany,2.0,0.0,False,UEFA Euro,Marseille,France,False,France,,Germany
+2016,2016-07-10,France,Portugal,0.0,1.0,False,UEFA Euro,Saint-Denis,France,False,Portugal,,France
+2021,2021-06-11,Italy,Turkey,3.0,0.0,False,UEFA Euro,Rome,Italy,False,Italy,,Turkey
+2021,2021-06-12,Wales,Switzerland,1.0,1.0,False,UEFA Euro,Cardiff,Wales,False,Draw,,Draw
+2021,2021-06-12,Denmark,Finland,0.0,1.0,False,UEFA Euro,Copenhagen,Denmark,False,Finland,,Denmark
+2021,2021-06-12,Russia,Belgium,0.0,3.0,False,UEFA Euro,Saint Petersburg,Russia,False,Belgium,,Russia
+2021,2021-06-13,Austria,North Macedonia,3.0,1.0,False,UEFA Euro,Bucharest,Romania,True,Austria,,North Macedonia
+2021,2021-06-13,Netherlands,Ukraine,3.0,2.0,False,UEFA Euro,Amsterdam,Netherlands,False,Netherlands,,Ukraine
+2021,2021-06-13,England,Croatia,1.0,0.0,False,UEFA Euro,London,England,False,England,,Croatia
+2021,2021-06-14,Scotland,Czech Republic,0.0,2.0,False,UEFA Euro,Glasgow,Scotland,False,Czech Republic,,Scotland
+2021,2021-06-14,Poland,Slovakia,1.0,2.0,False,UEFA Euro,Saint Petersburg,Russia,True,Slovakia,,Poland
+2021,2021-06-14,Spain,Sweden,0.0,0.0,False,UEFA Euro,Seville,Spain,False,Draw,,Draw
+2021,2021-06-15,Hungary,Portugal,0.0,3.0,False,UEFA Euro,Budapest,Hungary,False,Portugal,,Hungary
+2021,2021-06-15,Germany,France,0.0,1.0,False,UEFA Euro,Munich,Germany,False,France,,Germany
+2021,2021-06-16,Turkey,Wales,0.0,2.0,False,UEFA Euro,Baku,Azerbaijan,True,Wales,,Turkey
+2021,2021-06-16,Italy,Switzerland,3.0,0.0,False,UEFA Euro,Rome,Italy,False,Italy,,Switzerland
+2021,2021-06-16,Russia,Finland,1.0,0.0,False,UEFA Euro,Saint Petersburg,Russia,False,Russia,,Finland
+2021,2021-06-17,Denmark,Belgium,1.0,2.0,False,UEFA Euro,Copenhagen,Denmark,False,Belgium,,Denmark
+2021,2021-06-17,Ukraine,North Macedonia,2.0,1.0,False,UEFA Euro,Bucharest,Romania,True,Ukraine,,North Macedonia
+2021,2021-06-17,Netherlands,Austria,2.0,0.0,False,UEFA Euro,Amsterdam,Netherlands,False,Netherlands,,Austria
+2021,2021-06-18,Croatia,Czech Republic,1.0,1.0,False,UEFA Euro,Glasgow,Scotland,True,Draw,,Draw
+2021,2021-06-18,England,Scotland,0.0,0.0,False,UEFA Euro,London,England,False,Draw,,Draw
+2021,2021-06-18,Sweden,Slovakia,1.0,0.0,False,UEFA Euro,Saint Petersburg,Russia,True,Sweden,,Slovakia
+2021,2021-06-19,Spain,Poland,1.0,1.0,False,UEFA Euro,Seville,Spain,False,Draw,,Draw
+2021,2021-06-19,Hungary,France,1.0,1.0,False,UEFA Euro,Budapest,Hungary,False,Draw,,Draw
+2021,2021-06-19,Germany,Portugal,4.0,2.0,False,UEFA Euro,Munich,Germany,False,Germany,,Portugal
+2021,2021-06-20,Italy,Wales,1.0,0.0,False,UEFA Euro,Rome,Italy,False,Italy,,Wales
+2021,2021-06-20,Switzerland,Turkey,3.0,1.0,False,UEFA Euro,Baku,Azerbaijan,True,Switzerland,,Turkey
+2021,2021-06-21,Denmark,Russia,4.0,1.0,False,UEFA Euro,Copenhagen,Denmark,False,Denmark,,Russia
+2021,2021-06-21,Finland,Belgium,0.0,2.0,False,UEFA Euro,Saint Petersburg,Russia,True,Belgium,,Finland
+2021,2021-06-21,Netherlands,North Macedonia,3.0,0.0,False,UEFA Euro,Amsterdam,Netherlands,False,Netherlands,,North Macedonia
+2021,2021-06-21,Ukraine,Austria,0.0,1.0,False,UEFA Euro,Bucharest,Romania,True,Austria,,Ukraine
+2021,2021-06-22,Scotland,Croatia,1.0,3.0,False,UEFA Euro,Glasgow,Scotland,False,Croatia,,Scotland
+2021,2021-06-22,England,Czech Republic,1.0,0.0,False,UEFA Euro,London,England,False,England,,Czech Republic
+2021,2021-06-23,Spain,Slovakia,5.0,0.0,False,UEFA Euro,Seville,Spain,False,Spain,,Slovakia
+2021,2021-06-23,Sweden,Poland,3.0,2.0,False,UEFA Euro,Saint Petersburg,Russia,True,Sweden,,Poland
+2021,2021-06-23,Germany,Hungary,2.0,2.0,False,UEFA Euro,Munich,Germany,False,Draw,,Draw
+2021,2021-06-23,Portugal,France,2.0,2.0,False,UEFA Euro,Budapest,Hungary,True,Draw,,Draw
+2021,2021-06-26,Italy,Austria,2.0,1.0,False,UEFA Euro,London,England,True,Italy,,Austria
+2021,2021-06-26,Wales,Denmark,0.0,4.0,False,UEFA Euro,Amsterdam,Netherlands,True,Denmark,,Wales
+2021,2021-06-27,Netherlands,Czech Republic,0.0,2.0,False,UEFA Euro,Budapest,Hungary,True,Czech Republic,,Netherlands
+2021,2021-06-27,Belgium,Portugal,1.0,0.0,False,UEFA Euro,Seville,Spain,True,Belgium,,Portugal
+2021,2021-06-28,Croatia,Spain,3.0,5.0,False,UEFA Euro,Copenhagen,Denmark,True,Spain,,Croatia
+2021,2021-06-28,France,Switzerland,3.0,3.0,True,UEFA Euro,Bucharest,Romania,True,Switzerland,Switzerland,France
+2021,2021-06-29,England,Germany,2.0,0.0,False,UEFA Euro,London,England,False,England,,Germany
+2021,2021-06-29,Sweden,Ukraine,1.0,2.0,False,UEFA Euro,Glasgow,Scotland,True,Ukraine,,Sweden
+2021,2021-07-02,Switzerland,Spain,1.0,1.0,True,UEFA Euro,Saint Petersburg,Russia,True,Spain,Spain,Switzerland
+2021,2021-07-02,Belgium,Italy,1.0,2.0,False,UEFA Euro,Munich,Germany,True,Italy,,Belgium
+2021,2021-07-03,Czech Republic,Denmark,1.0,2.0,False,UEFA Euro,Baku,Azerbaijan,True,Denmark,,Czech Republic
+2021,2021-07-03,Ukraine,England,0.0,4.0,False,UEFA Euro,Rome,Italy,True,England,,Ukraine
+2021,2021-07-06,Italy,Spain,1.0,1.0,True,UEFA Euro,London,England,True,Italy,Italy,Spain
+2021,2021-07-07,England,Denmark,2.0,1.0,False,UEFA Euro,London,England,False,England,,Denmark
+2021,2021-07-11,England,Italy,1.0,1.0,True,UEFA Euro,London,England,False,Italy,Italy,England

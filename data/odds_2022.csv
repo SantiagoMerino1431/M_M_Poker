@@ -1,0 +1,65 @@
+date,time,stage,home_team,away_team,odds_1,odds_x,odds_2
+2022-11-20,12:00,Group A,Qatar,Ecuador,100.00,13.50,2.41
+2022-11-21,12:00,Group A,Senegal,Netherlands,6.28,3.75,2.09
+2022-11-25,09:00,Group A,Qatar,Senegal,18.00,6.20,1.77
+2022-11-25,12:00,Group A,Netherlands,Ecuador,1.90,4.70,15.00
+2022-11-29,11:00,Group A,Netherlands,Qatar,1.22,10.00,60.00
+2022-11-29,11:00,Group A,Ecuador,Senegal,6.80,4.00,3.35
+2022-11-21,09:00,Group B,England,Iran,1.40,10.50,110.00
+2022-11-21,15:00,Group B,USA,Wales,2.53,4.60,12.50
+2022-11-25,06:00,Group B,Wales,Iran,2.61,3.26,4.31
+2022-11-25,15:00,Group B,England,USA,1.91,4.45,9.08
+2022-11-29,15:00,Group B,Iran,USA,18.00,5.40,2.05
+2022-11-29,15:00,Group B,Wales,England,9.91,4.70,1.56
+2022-11-22,06:00,Group C,Argentina,Saudi Arabia,1.14,17.00,90.00
+2022-11-22,12:00,Group C,Mexico,Poland,2.59,3.25,4.50
+2022-11-26,09:00,Group C,Poland,Saudi Arabia,1.75,3.70,5.80
+2022-11-26,15:00,Group C,Argentina,Mexico,2.12,4.10,7.97
+2022-11-30,15:00,Group C,Saudi Arabia,Mexico,5.10,4.20,1.74
+2022-11-30,15:00,Group C,Poland,Argentina,9.20,4.50,1.49
+2022-11-22,09:00,Group D,Denmark,Tunisia,2.00,4.10,7.50
+2022-11-22,15:00,Group D,France,Australia,1.23,10.00,75.00
+2022-11-26,06:00,Group D,Tunisia,Australia,6.20,3.50,3.90
+2022-11-26,12:00,Group D,France,Denmark,2.19,3.64,5.10
+2022-11-30,11:00,Group D,Australia,Denmark,7.40,4.50,1.56
+2022-11-30,11:00,Group D,Tunisia,France,9.10,5.00,1.43
+2022-11-23,09:00,Group E,Germany,Japan,1.48,8.75,22.00
+2022-11-23,12:00,Group E,Spain,Costa Rica,1.17,18.50,40.00
+2022-11-27,06:00,Group E,Japan,Costa Rica,1.46,4.60,9.50
+2022-11-27,15:00,Group E,Spain,Germany,2.44,3.75,3.08
+2022-12-01,15:00,Group E,Costa Rica,Germany,100.00,14.00,1.12
+2022-12-01,15:00,Group E,Japan,Spain,23.00,6.80,1.53
+2022-11-23,06:00,Group F,Morocco,Croatia,3.88,3.35,2.88
+2022-11-23,15:00,Group F,Belgium,Canada,1.62,4.70,7.60
+2022-11-27,09:00,Group F,Belgium,Morocco,2.02,3.42,4.33
+2022-11-27,12:00,Group F,Croatia,Canada,2.23,3.48,3.50
+2022-12-01,11:00,Group F,Canada,Morocco,14.50,5.60,1.86
+2022-12-01,11:00,Group F,Croatia,Belgium,3.22,3.55,2.77
+2022-11-24,06:00,Group G,Switzerland,Cameroon,2.19,3.56,5.20
+2022-11-24,15:00,Group G,Brazil,Serbia,1.49,5.20,9.50
+2022-11-28,06:00,Group G,Cameroon,Serbia,5.35,3.85,1.75
+2022-11-28,12:00,Group G,Brazil,Switzerland,1.53,4.70,7.50
+2022-12-02,15:00,Group G,Cameroon,Brazil,8.60,5.15,1.58
+2022-12-02,15:00,Group G,Serbia,Switzerland,2.70,3.60,2.96
+2022-11-24,09:00,Group H,Uruguay,South Korea,2.05,3.64,5.40
+2022-11-24,12:00,Group H,Portugal,Ghana,1.55,5.70,11.50
+2022-11-28,09:00,Group H,South Korea,Ghana,2.60,3.15,3.13
+2022-11-28,15:00,Group H,Portugal,Uruguay,2.01,3.45,4.25
+2022-12-02,11:00,Group H,South Korea,Portugal,4.00,3.92,2.00
+2022-12-02,11:00,Group H,Ghana,Uruguay,4.44,3.74,1.95
+2022-12-03,10:00,Round of 16,Netherlands,USA,1.96,3.55,4.90
+2022-12-03,14:00,Round of 16,Argentina,Australia,1.30,6.50,11.25
+2022-12-04,10:00,Round of 16,France,Poland,1.41,5.30,10.00
+2022-12-04,14:00,Round of 16,England,Senegal,1.64,3.82,6.95
+2022-12-05,10:00,Round of 16,Japan,Croatia,3.95,3.34,2.14
+2022-12-05,14:00,Round of 16,Brazil,South Korea,1.24,7.20,17.00
+2022-12-06,10:00,Round of 16,Morocco,Spain,6.25,3.90,1.65
+2022-12-06,14:00,Round of 16,Portugal,Switzerland,2.06,3.72,4.76
+2022-12-09,10:00,Quarter-final,Croatia,Brazil,9.00,4.85,1.43
+2022-12-09,14:00,Quarter-final,Netherlands,Argentina,4.14,3.17,2.29
+2022-12-10,10:00,Quarter-final,Morocco,Portugal,6.75,4.00,1.65
+2022-12-10,14:00,Quarter-final,England,France,3.17,3.25,2.81
+2022-12-13,14:00,Semi-final,Argentina,Croatia,2.09,3.20,4.95
+2022-12-14,14:00,Semi-final,France,Morocco,1.66,4.07,6.75
+2022-12-17,10:00,Third place,Croatia,Morocco,2.29,3.70,3.20
+2022-12-18,10:00,Final,Argentina,France,2.77,3.28,2.96

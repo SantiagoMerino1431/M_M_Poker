@@ -1,0 +1,422 @@
+Year,Date,Home Team,Away Team,Home Score,Away Score,Shootout,Tournament,City,Country,Neutral Venue,Winning Team,first_shooter,Losing Team
+1956,1956-09-01,Hong Kong,Israel,2.0,3.0,False,AFC Asian Cup,So Kon Po,Hong Kong,False,Israel,,Hong Kong
+1956,1956-09-06,Hong Kong,South Korea,2.0,2.0,False,AFC Asian Cup,So Kon Po,Hong Kong,False,Draw,,Draw
+1956,1956-09-08,Israel,South Korea,1.0,2.0,False,AFC Asian Cup,So Kon Po,Hong Kong,True,South Korea,,Israel
+1956,1956-09-09,Hong Kong,Vietnam Republic,2.0,2.0,False,AFC Asian Cup,So Kon Po,Hong Kong,False,Draw,,Draw
+1956,1956-09-12,Israel,Vietnam Republic,2.0,1.0,False,AFC Asian Cup,So Kon Po,Hong Kong,True,Israel,,Vietnam Republic
+1956,1956-09-15,South Korea,Vietnam Republic,5.0,3.0,False,AFC Asian Cup,So Kon Po,Hong Kong,True,South Korea,,Vietnam Republic
+1960,1960-10-14,South Korea,Vietnam Republic,5.0,1.0,False,AFC Asian Cup,Seoul,South Korea,False,South Korea,,Vietnam Republic
+1960,1960-10-16,Taiwan,Vietnam Republic,2.0,0.0,False,AFC Asian Cup,Seoul,South Korea,True,Taiwan,,Vietnam Republic
+1960,1960-10-17,South Korea,Israel,3.0,0.0,False,AFC Asian Cup,Seoul,South Korea,False,South Korea,,Israel
+1960,1960-10-19,Israel,Vietnam Republic,5.0,1.0,False,AFC Asian Cup,Seoul,South Korea,True,Israel,,Vietnam Republic
+1960,1960-10-21,South Korea,Taiwan,1.0,0.0,False,AFC Asian Cup,Seoul,South Korea,False,South Korea,,Taiwan
+1960,1960-10-23,Israel,Taiwan,1.0,0.0,False,AFC Asian Cup,Seoul,South Korea,True,Israel,,Taiwan
+1964,1964-05-26,Israel,Hong Kong,1.0,0.0,False,AFC Asian Cup,Ramat-Gan,Israel,False,Israel,,Hong Kong
+1964,1964-05-27,India,South Korea,2.0,0.0,False,AFC Asian Cup,Haifa,Israel,True,India,,South Korea
+1964,1964-05-29,Israel,India,2.0,0.0,False,AFC Asian Cup,Jaffa,Israel,False,Israel,,India
+1964,1964-05-30,Hong Kong,South Korea,0.0,1.0,False,AFC Asian Cup,Jerusalem,Israel,True,South Korea,,Hong Kong
+1964,1964-06-02,Hong Kong,India,1.0,3.0,False,AFC Asian Cup,Jaffa,Israel,True,India,,Hong Kong
+1964,1964-06-03,Israel,South Korea,2.0,1.0,False,AFC Asian Cup,Ramat-Gan,Israel,False,Israel,,South Korea
+1968,1968-05-10,Iran,Hong Kong,2.0,0.0,False,AFC Asian Cup,Tehran,Iran,False,Iran,,Hong Kong
+1968,1968-05-11,Myanmar,Taiwan,1.0,1.0,False,AFC Asian Cup,Tehran,Iran,True,Draw,,Draw
+1968,1968-05-12,Hong Kong,Israel,1.0,6.0,False,AFC Asian Cup,Tehran,Iran,True,Israel,,Hong Kong
+1968,1968-05-13,Iran,Taiwan,4.0,0.0,False,AFC Asian Cup,Tehran,Iran,False,Iran,,Taiwan
+1968,1968-05-14,Myanmar,Israel,1.0,0.0,False,AFC Asian Cup,Tehran,Iran,True,Myanmar,,Israel
+1968,1968-05-15,Hong Kong,Taiwan,1.0,1.0,False,AFC Asian Cup,Tehran,Iran,True,Draw,,Draw
+1968,1968-05-16,Iran,Myanmar,3.0,1.0,False,AFC Asian Cup,Tehran,Iran,False,Iran,,Myanmar
+1968,1968-05-17,Israel,Taiwan,4.0,1.0,False,AFC Asian Cup,Tehran,Iran,True,Israel,,Taiwan
+1968,1968-05-18,Myanmar,Hong Kong,2.0,0.0,False,AFC Asian Cup,Tehran,Iran,True,Myanmar,,Hong Kong
+1968,1968-05-19,Iran,Israel,2.0,1.0,False,AFC Asian Cup,Tehran,Iran,False,Iran,,Israel
+1972,1972-05-07,Iran,Cambodia,2.0,0.0,False,AFC Asian Cup,Bangkok,Thailand,True,Iran,,Cambodia
+1972,1972-05-07,South Korea,Iraq,0.0,0.0,True,AFC Asian Cup,Bangkok,Thailand,True,Iraq,,South Korea
+1972,1972-05-08,Thailand,Kuwait,0.0,2.0,False,AFC Asian Cup,Bangkok,Thailand,False,Kuwait,,Thailand
+1972,1972-05-09,Iran,Iraq,3.0,0.0,False,AFC Asian Cup,Bangkok,Thailand,True,Iran,,Iraq
+1972,1972-05-10,Cambodia,South Korea,1.0,4.0,False,AFC Asian Cup,Bangkok,Thailand,True,South Korea,,Cambodia
+1972,1972-05-11,Thailand,Iraq,1.0,1.0,False,AFC Asian Cup,Bangkok,Thailand,False,Draw,,Draw
+1972,1972-05-12,South Korea,Kuwait,1.0,2.0,False,AFC Asian Cup,Bangkok,Thailand,True,Kuwait,,South Korea
+1972,1972-05-13,Thailand,Iran,2.0,3.0,False,AFC Asian Cup,Bangkok,Thailand,False,Iran,,Thailand
+1972,1972-05-14,Cambodia,Kuwait,4.0,0.0,False,AFC Asian Cup,Bangkok,Thailand,True,Cambodia,,Kuwait
+1972,1972-05-16,Iran,Cambodia,2.0,1.0,False,AFC Asian Cup,Bangkok,Thailand,True,Iran,,Cambodia
+1972,1972-05-17,Thailand,South Korea,1.0,1.0,True,AFC Asian Cup,Bangkok,Thailand,False,South Korea,,Thailand
+1972,1972-05-19,Iran,South Korea,2.0,1.0,False,AFC Asian Cup,Bangkok,Thailand,True,Iran,,South Korea
+1972,1972-05-19,Thailand,Cambodia,2.0,2.0,True,AFC Asian Cup,Bangkok,Thailand,False,Thailand,,Cambodia
+1976,1976-06-03,Kuwait,Malaysia,2.0,0.0,False,AFC Asian Cup,Tehran,Iran,True,Kuwait,,Malaysia
+1976,1976-06-04,Iran,Iraq,2.0,0.0,False,AFC Asian Cup,Tehran,Iran,False,Iran,,Iraq
+1976,1976-06-05,China PR,Malaysia,1.0,1.0,False,AFC Asian Cup,Tehran,Iran,True,Draw,,Draw
+1976,1976-06-06,Iraq,Yemen DPR,1.0,0.0,False,AFC Asian Cup,Tehran,Iran,True,Iraq,,Yemen DPR
+1976,1976-06-07,China PR,Kuwait,0.0,1.0,False,AFC Asian Cup,Tehran,Iran,True,Kuwait,,China PR
+1976,1976-06-08,Iran,Yemen DPR,8.0,0.0,False,AFC Asian Cup,Tehran,Iran,False,Iran,,Yemen DPR
+1976,1976-06-11,Iran,China PR,2.0,0.0,False,AFC Asian Cup,Tehran,Iran,False,Iran,,China PR
+1976,1976-06-11,Iraq,Kuwait,2.0,3.0,False,AFC Asian Cup,Tehran,Iran,True,Kuwait,,Iraq
+1976,1976-06-13,China PR,Iraq,1.0,0.0,False,AFC Asian Cup,Tehran,Iran,True,China PR,,Iraq
+1976,1976-06-13,Iran,Kuwait,1.0,0.0,False,AFC Asian Cup,Tehran,Iran,False,Iran,,Kuwait
+1980,1980-09-15,Kuwait,United Arab Emirates,1.0,1.0,False,AFC Asian Cup,Kuwait City,Kuwait,False,Draw,,Draw
+1980,1980-09-16,North Korea,Bangladesh,3.0,2.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,North Korea,,Bangladesh
+1980,1980-09-16,Malaysia,South Korea,1.0,1.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,Draw,,Draw
+1980,1980-09-17,Iran,Syria,0.0,0.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,Draw,,Draw
+1980,1980-09-17,Qatar,United Arab Emirates,2.0,1.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,Qatar,,United Arab Emirates
+1980,1980-09-18,North Korea,China PR,2.0,1.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,North Korea,,China PR
+1980,1980-09-18,Kuwait,Malaysia,3.0,1.0,False,AFC Asian Cup,Kuwait City,Kuwait,False,Kuwait,,Malaysia
+1980,1980-09-19,Bangladesh,Syria,0.0,1.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,Syria,,Bangladesh
+1980,1980-09-19,Qatar,South Korea,0.0,2.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,South Korea,,Qatar
+1980,1980-09-20,China PR,Iran,2.0,2.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,Draw,,Draw
+1980,1980-09-20,United Arab Emirates,Malaysia,0.0,2.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,Malaysia,,United Arab Emirates
+1980,1980-09-21,Kuwait,South Korea,0.0,3.0,False,AFC Asian Cup,Kuwait City,Kuwait,False,South Korea,,Kuwait
+1980,1980-09-22,Bangladesh,Iran,0.0,7.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,Iran,,Bangladesh
+1980,1980-09-23,Malaysia,Qatar,1.0,1.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,Draw,,Draw
+1980,1980-09-23,Syria,China PR,1.0,0.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,Syria,,China PR
+1980,1980-09-24,Iran,North Korea,3.0,2.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,Iran,,North Korea
+1980,1980-09-24,South Korea,United Arab Emirates,4.0,1.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,South Korea,,United Arab Emirates
+1980,1980-09-25,China PR,Bangladesh,6.0,0.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,China PR,,Bangladesh
+1980,1980-09-25,Kuwait,Qatar,4.0,0.0,False,AFC Asian Cup,Kuwait City,Kuwait,False,Kuwait,,Qatar
+1980,1980-09-26,Syria,North Korea,1.0,2.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,North Korea,,Syria
+1980,1980-09-28,South Korea,North Korea,2.0,1.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,South Korea,,North Korea
+1980,1980-09-28,Kuwait,Iran,2.0,1.0,False,AFC Asian Cup,Kuwait City,Kuwait,False,Kuwait,,Iran
+1980,1980-09-29,Iran,North Korea,3.0,0.0,False,AFC Asian Cup,Kuwait City,Kuwait,True,Iran,,North Korea
+1980,1980-09-30,Kuwait,South Korea,3.0,0.0,False,AFC Asian Cup,Kuwait City,Kuwait,False,Kuwait,,South Korea
+1984,1984-12-01,Iran,United Arab Emirates,3.0,0.0,False,AFC Asian Cup,Kallang,Singapore,True,Iran,,United Arab Emirates
+1984,1984-12-01,Qatar,Syria,1.0,1.0,False,AFC Asian Cup,Kallang,Singapore,True,Draw,,Draw
+1984,1984-12-02,Saudi Arabia,South Korea,1.0,1.0,False,AFC Asian Cup,Kallang,Singapore,True,Draw,,Draw
+1984,1984-12-02,Singapore,India,2.0,0.0,False,AFC Asian Cup,Kallang,Singapore,False,Singapore,,India
+1984,1984-12-03,China PR,Iran,0.0,2.0,False,AFC Asian Cup,Kallang,Singapore,True,Iran,,China PR
+1984,1984-12-03,Kuwait,Qatar,1.0,0.0,False,AFC Asian Cup,Kallang,Singapore,True,Kuwait,,Qatar
+1984,1984-12-04,Syria,Saudi Arabia,0.0,1.0,False,AFC Asian Cup,Kallang,Singapore,True,Saudi Arabia,,Syria
+1984,1984-12-04,United Arab Emirates,India,2.0,0.0,False,AFC Asian Cup,Kallang,Singapore,True,United Arab Emirates,,India
+1984,1984-12-05,South Korea,Kuwait,0.0,0.0,False,AFC Asian Cup,Kallang,Singapore,True,Draw,,Draw
+1984,1984-12-05,Singapore,China PR,0.0,2.0,False,AFC Asian Cup,Kallang,Singapore,False,China PR,,Singapore
+1984,1984-12-07,Iran,India,0.0,0.0,False,AFC Asian Cup,Kallang,Singapore,True,Draw,,Draw
+1984,1984-12-07,Syria,South Korea,1.0,0.0,False,AFC Asian Cup,Kallang,Singapore,True,Syria,,South Korea
+1984,1984-12-08,Qatar,Saudi Arabia,1.0,1.0,False,AFC Asian Cup,Kallang,Singapore,True,Draw,,Draw
+1984,1984-12-08,Singapore,United Arab Emirates,0.0,1.0,False,AFC Asian Cup,Kallang,Singapore,False,United Arab Emirates,,Singapore
+1984,1984-12-09,India,China PR,0.0,3.0,False,AFC Asian Cup,Kallang,Singapore,True,China PR,,India
+1984,1984-12-09,Kuwait,Syria,3.0,1.0,False,AFC Asian Cup,Kallang,Singapore,True,Kuwait,,Syria
+1984,1984-12-10,South Korea,Qatar,0.0,1.0,False,AFC Asian Cup,Kallang,Singapore,True,Qatar,,South Korea
+1984,1984-12-10,Singapore,Iran,1.0,1.0,False,AFC Asian Cup,Kallang,Singapore,False,Draw,,Draw
+1984,1984-12-11,China PR,United Arab Emirates,5.0,0.0,False,AFC Asian Cup,Kallang,Singapore,True,China PR,,United Arab Emirates
+1984,1984-12-11,Saudi Arabia,Kuwait,1.0,0.0,False,AFC Asian Cup,Kallang,Singapore,True,Saudi Arabia,,Kuwait
+1984,1984-12-13,Saudi Arabia,Iran,1.0,1.0,True,AFC Asian Cup,Kallang,Singapore,True,Saudi Arabia,,Iran
+1984,1984-12-14,Kuwait,China PR,0.0,1.0,False,AFC Asian Cup,Kallang,Singapore,True,China PR,,Kuwait
+1984,1984-12-16,Iran,Kuwait,1.0,1.0,True,AFC Asian Cup,Kallang,Singapore,True,Kuwait,,Iran
+1984,1984-12-16,Saudi Arabia,China PR,2.0,0.0,False,AFC Asian Cup,Kallang,Singapore,True,Saudi Arabia,,China PR
+1988,1988-12-02,Qatar,Iran,0.0,2.0,False,AFC Asian Cup,Doha,Qatar,False,Iran,,Qatar
+1988,1988-12-02,Syria,Saudi Arabia,0.0,2.0,False,AFC Asian Cup,Doha,Qatar,True,Saudi Arabia,,Syria
+1988,1988-12-03,Kuwait,Bahrain,0.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+1988,1988-12-03,United Arab Emirates,South Korea,0.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,South Korea,,United Arab Emirates
+1988,1988-12-04,China PR,Syria,3.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,China PR,,Syria
+1988,1988-12-04,Japan,Iran,0.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+1988,1988-12-05,Qatar,United Arab Emirates,2.0,1.0,False,AFC Asian Cup,Doha,Qatar,False,Qatar,,United Arab Emirates
+1988,1988-12-05,Saudi Arabia,Kuwait,0.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+1988,1988-12-06,Bahrain,China PR,0.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,China PR,,Bahrain
+1988,1988-12-06,South Korea,Japan,2.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,South Korea,,Japan
+1988,1988-12-08,Iran,United Arab Emirates,1.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Iran,,United Arab Emirates
+1988,1988-12-08,Syria,Kuwait,1.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Syria,,Kuwait
+1988,1988-12-09,Qatar,South Korea,2.0,3.0,False,AFC Asian Cup,Doha,Qatar,False,South Korea,,Qatar
+1988,1988-12-09,Saudi Arabia,Bahrain,1.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+1988,1988-12-10,Kuwait,China PR,2.0,2.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+1988,1988-12-10,United Arab Emirates,Japan,1.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,United Arab Emirates,,Japan
+1988,1988-12-11,Bahrain,Syria,0.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Syria,,Bahrain
+1988,1988-12-11,South Korea,Iran,3.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,South Korea,,Iran
+1988,1988-12-12,China PR,Saudi Arabia,0.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Saudi Arabia,,China PR
+1988,1988-12-12,Qatar,Japan,3.0,0.0,False,AFC Asian Cup,Doha,Qatar,False,Qatar,,Japan
+1988,1988-12-14,South Korea,China PR,2.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,South Korea,,China PR
+1988,1988-12-15,Saudi Arabia,Iran,1.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Saudi Arabia,,Iran
+1988,1988-12-17,China PR,Iran,0.0,0.0,True,AFC Asian Cup,Doha,Qatar,True,Iran,,China PR
+1988,1988-12-18,South Korea,Saudi Arabia,0.0,0.0,True,AFC Asian Cup,Doha,Qatar,True,Saudi Arabia,,South Korea
+1992,1992-10-29,Qatar,Thailand,1.0,1.0,False,AFC Asian Cup,Hiroshima,Japan,True,Draw,,Draw
+1992,1992-10-29,Saudi Arabia,China PR,1.0,1.0,False,AFC Asian Cup,Hiroshima,Japan,True,Draw,,Draw
+1992,1992-10-30,Japan,United Arab Emirates,0.0,0.0,False,AFC Asian Cup,Onomichi,Japan,False,Draw,,Draw
+1992,1992-10-30,North Korea,Iran,0.0,2.0,False,AFC Asian Cup,Onomichi,Japan,True,Iran,,North Korea
+1992,1992-10-31,China PR,Thailand,0.0,0.0,False,AFC Asian Cup,Hiroshima,Japan,True,Draw,,Draw
+1992,1992-10-31,Saudi Arabia,Qatar,1.0,1.0,False,AFC Asian Cup,Hiroshima,Japan,True,Draw,,Draw
+1992,1992-11-01,Japan,North Korea,1.0,1.0,False,AFC Asian Cup,Hiroshima,Japan,False,Draw,,Draw
+1992,1992-11-01,United Arab Emirates,Iran,0.0,0.0,False,AFC Asian Cup,Hiroshima,Japan,True,Draw,,Draw
+1992,1992-11-02,China PR,Qatar,2.0,1.0,False,AFC Asian Cup,Onomichi,Japan,True,China PR,,Qatar
+1992,1992-11-02,Saudi Arabia,Thailand,4.0,0.0,False,AFC Asian Cup,Onomichi,Japan,True,Saudi Arabia,,Thailand
+1992,1992-11-03,Japan,Iran,1.0,0.0,False,AFC Asian Cup,Hiroshima,Japan,False,Japan,,Iran
+1992,1992-11-03,United Arab Emirates,North Korea,2.0,1.0,False,AFC Asian Cup,Hiroshima,Japan,True,United Arab Emirates,,North Korea
+1992,1992-11-06,Japan,China PR,3.0,2.0,False,AFC Asian Cup,Hiroshima,Japan,False,Japan,,China PR
+1992,1992-11-06,Saudi Arabia,United Arab Emirates,2.0,0.0,False,AFC Asian Cup,Hiroshima,Japan,True,Saudi Arabia,,United Arab Emirates
+1992,1992-11-08,China PR,United Arab Emirates,1.0,1.0,True,AFC Asian Cup,Hiroshima,Japan,True,China PR,,United Arab Emirates
+1992,1992-11-08,Japan,Saudi Arabia,1.0,0.0,False,AFC Asian Cup,Hiroshima,Japan,False,Japan,,Saudi Arabia
+1996,1996-12-04,Indonesia,Kuwait,2.0,2.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Draw,,Draw
+1996,1996-12-04,United Arab Emirates,South Korea,1.0,1.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,False,Draw,,Draw
+1996,1996-12-05,Iran,Iraq,1.0,2.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Iraq,,Iran
+1996,1996-12-05,Saudi Arabia,Thailand,6.0,0.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Saudi Arabia,,Thailand
+1996,1996-12-06,China PR,Uzbekistan,0.0,2.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Uzbekistan,,China PR
+1996,1996-12-06,Japan,Syria,2.0,1.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Japan,,Syria
+1996,1996-12-07,South Korea,Indonesia,4.0,2.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,South Korea,,Indonesia
+1996,1996-12-07,United Arab Emirates,Kuwait,3.0,2.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,False,United Arab Emirates,,Kuwait
+1996,1996-12-08,Saudi Arabia,Iraq,1.0,0.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Saudi Arabia,,Iraq
+1996,1996-12-08,Thailand,Iran,1.0,3.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Iran,,Thailand
+1996,1996-12-09,Japan,Uzbekistan,4.0,0.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Japan,,Uzbekistan
+1996,1996-12-09,Syria,China PR,0.0,3.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,China PR,,Syria
+1996,1996-12-10,Kuwait,South Korea,2.0,0.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Kuwait,,South Korea
+1996,1996-12-10,United Arab Emirates,Indonesia,2.0,0.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,False,United Arab Emirates,,Indonesia
+1996,1996-12-11,Iraq,Thailand,4.0,1.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Iraq,,Thailand
+1996,1996-12-11,Saudi Arabia,Iran,0.0,3.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Iran,,Saudi Arabia
+1996,1996-12-12,Japan,China PR,1.0,0.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Japan,,China PR
+1996,1996-12-12,Uzbekistan,Syria,1.0,2.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Syria,,Uzbekistan
+1996,1996-12-15,Kuwait,Japan,2.0,0.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Kuwait,,Japan
+1996,1996-12-15,United Arab Emirates,Iraq,1.0,0.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,False,United Arab Emirates,,Iraq
+1996,1996-12-16,South Korea,Iran,2.0,6.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Iran,,South Korea
+1996,1996-12-16,Saudi Arabia,China PR,4.0,3.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Saudi Arabia,,China PR
+1996,1996-12-19,Iran,Saudi Arabia,0.0,0.0,True,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Saudi Arabia,,Iran
+1996,1996-12-19,United Arab Emirates,Kuwait,1.0,0.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,False,United Arab Emirates,,Kuwait
+1996,1996-12-21,Iran,Kuwait,1.0,1.0,True,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Iran,,Kuwait
+1996,1996-12-21,United Arab Emirates,Saudi Arabia,0.0,0.0,True,AFC Asian Cup,Abu Dhabi,United Arab Emirates,False,Saudi Arabia,,United Arab Emirates
+2000,2000-10-12,Iraq,Thailand,2.0,0.0,False,AFC Asian Cup,Tripoli,Lebanon,True,Iraq,,Thailand
+2000,2000-10-12,Lebanon,Iran,0.0,4.0,False,AFC Asian Cup,Beirut,Lebanon,False,Iran,,Lebanon
+2000,2000-10-13,South Korea,China PR,2.0,2.0,False,AFC Asian Cup,Tripoli,Lebanon,True,Draw,,Draw
+2000,2000-10-13,Kuwait,Indonesia,0.0,0.0,False,AFC Asian Cup,Tripoli,Lebanon,True,Draw,,Draw
+2000,2000-10-14,Qatar,Uzbekistan,1.0,1.0,False,AFC Asian Cup,Sidon,Lebanon,True,Draw,,Draw
+2000,2000-10-14,Saudi Arabia,Japan,1.0,4.0,False,AFC Asian Cup,Sidon,Lebanon,True,Japan,,Saudi Arabia
+2000,2000-10-15,Iran,Thailand,1.0,1.0,False,AFC Asian Cup,Beirut,Lebanon,True,Draw,,Draw
+2000,2000-10-15,Lebanon,Iraq,2.0,2.0,False,AFC Asian Cup,Beirut,Lebanon,False,Draw,,Draw
+2000,2000-10-16,China PR,Indonesia,4.0,0.0,False,AFC Asian Cup,Tripoli,Lebanon,True,China PR,,Indonesia
+2000,2000-10-16,South Korea,Kuwait,0.0,1.0,False,AFC Asian Cup,Tripoli,Lebanon,True,Kuwait,,South Korea
+2000,2000-10-17,Japan,Uzbekistan,8.0,1.0,False,AFC Asian Cup,Sidon,Lebanon,True,Japan,,Uzbekistan
+2000,2000-10-17,Saudi Arabia,Qatar,0.0,0.0,False,AFC Asian Cup,Sidon,Lebanon,True,Draw,,Draw
+2000,2000-10-18,Iran,Iraq,1.0,0.0,False,AFC Asian Cup,Sidon,Lebanon,True,Iran,,Iraq
+2000,2000-10-18,Lebanon,Thailand,1.0,1.0,False,AFC Asian Cup,Beirut,Lebanon,False,Draw,,Draw
+2000,2000-10-19,China PR,Kuwait,0.0,0.0,False,AFC Asian Cup,Tripoli,Lebanon,True,Draw,,Draw
+2000,2000-10-19,South Korea,Indonesia,3.0,0.0,False,AFC Asian Cup,Beirut,Lebanon,True,South Korea,,Indonesia
+2000,2000-10-20,Japan,Qatar,1.0,1.0,False,AFC Asian Cup,Beirut,Lebanon,True,Draw,,Draw
+2000,2000-10-20,Saudi Arabia,Uzbekistan,5.0,0.0,False,AFC Asian Cup,Sidon,Lebanon,True,Saudi Arabia,,Uzbekistan
+2000,2000-10-23,China PR,Qatar,3.0,1.0,False,AFC Asian Cup,Sidon,Lebanon,True,China PR,,Qatar
+2000,2000-10-23,Iran,South Korea,1.0,2.0,False,AFC Asian Cup,Tripoli,Lebanon,True,South Korea,,Iran
+2000,2000-10-24,Japan,Iraq,4.0,1.0,False,AFC Asian Cup,Beirut,Lebanon,True,Japan,,Iraq
+2000,2000-10-24,Kuwait,Saudi Arabia,2.0,3.0,False,AFC Asian Cup,Beirut,Lebanon,True,Saudi Arabia,,Kuwait
+2000,2000-10-26,China PR,Japan,2.0,3.0,False,AFC Asian Cup,Beirut,Lebanon,True,Japan,,China PR
+2000,2000-10-26,South Korea,Saudi Arabia,1.0,2.0,False,AFC Asian Cup,Beirut,Lebanon,True,Saudi Arabia,,South Korea
+2000,2000-10-29,China PR,South Korea,0.0,1.0,False,AFC Asian Cup,Beirut,Lebanon,True,South Korea,,China PR
+2000,2000-10-29,Japan,Saudi Arabia,1.0,0.0,False,AFC Asian Cup,Beirut,Lebanon,True,Japan,,Saudi Arabia
+2004,2004-07-17,China PR,Bahrain,2.0,2.0,False,AFC Asian Cup,Beijing,China PR,False,Draw,,Draw
+2004,2004-07-18,Iraq,Uzbekistan,0.0,1.0,False,AFC Asian Cup,Chengdu,China PR,True,Uzbekistan,,Iraq
+2004,2004-07-18,Qatar,Indonesia,1.0,2.0,False,AFC Asian Cup,Beijing,China PR,True,Indonesia,,Qatar
+2004,2004-07-18,Saudi Arabia,Turkmenistan,2.0,2.0,False,AFC Asian Cup,Chengdu,China PR,True,Draw,,Draw
+2004,2004-07-19,South Korea,Jordan,0.0,0.0,False,AFC Asian Cup,Jinan,China PR,True,Draw,,Draw
+2004,2004-07-19,Kuwait,United Arab Emirates,3.0,1.0,False,AFC Asian Cup,Jinan,China PR,True,Kuwait,,United Arab Emirates
+2004,2004-07-20,Iran,Thailand,3.0,0.0,False,AFC Asian Cup,Chongqing,China PR,True,Iran,,Thailand
+2004,2004-07-20,Japan,Oman,1.0,0.0,False,AFC Asian Cup,Chongqing,China PR,True,Japan,,Oman
+2004,2004-07-21,Bahrain,Qatar,1.0,1.0,False,AFC Asian Cup,Beijing,China PR,True,Draw,,Draw
+2004,2004-07-21,China PR,Indonesia,5.0,0.0,False,AFC Asian Cup,Beijing,China PR,False,China PR,,Indonesia
+2004,2004-07-22,Turkmenistan,Iraq,2.0,3.0,False,AFC Asian Cup,Chengdu,China PR,True,Iraq,,Turkmenistan
+2004,2004-07-22,Uzbekistan,Saudi Arabia,1.0,0.0,False,AFC Asian Cup,Chengdu,China PR,True,Uzbekistan,,Saudi Arabia
+2004,2004-07-23,Jordan,Kuwait,2.0,0.0,False,AFC Asian Cup,Jinan,China PR,True,Jordan,,Kuwait
+2004,2004-07-23,United Arab Emirates,South Korea,0.0,2.0,False,AFC Asian Cup,Jinan,China PR,True,South Korea,,United Arab Emirates
+2004,2004-07-24,Oman,Iran,2.0,2.0,False,AFC Asian Cup,Chongqing,China PR,True,Draw,,Draw
+2004,2004-07-24,Thailand,Japan,1.0,4.0,False,AFC Asian Cup,Chongqing,China PR,True,Japan,,Thailand
+2004,2004-07-25,Bahrain,Indonesia,3.0,1.0,False,AFC Asian Cup,Jinan,China PR,True,Bahrain,,Indonesia
+2004,2004-07-25,China PR,Qatar,1.0,0.0,False,AFC Asian Cup,Beijing,China PR,False,China PR,,Qatar
+2004,2004-07-26,Saudi Arabia,Iraq,1.0,2.0,False,AFC Asian Cup,Chengdu,China PR,True,Iraq,,Saudi Arabia
+2004,2004-07-26,Turkmenistan,Uzbekistan,0.0,1.0,False,AFC Asian Cup,Chongqing,China PR,True,Uzbekistan,,Turkmenistan
+2004,2004-07-27,Jordan,United Arab Emirates,0.0,0.0,False,AFC Asian Cup,Beijing,China PR,True,Draw,,Draw
+2004,2004-07-27,South Korea,Kuwait,4.0,0.0,False,AFC Asian Cup,Jinan,China PR,True,South Korea,,Kuwait
+2004,2004-07-28,Japan,Iran,0.0,0.0,False,AFC Asian Cup,Chongqing,China PR,True,Draw,,Draw
+2004,2004-07-28,Oman,Thailand,2.0,0.0,False,AFC Asian Cup,Chengdu,China PR,True,Oman,,Thailand
+2004,2004-07-30,China PR,Iraq,3.0,0.0,False,AFC Asian Cup,Beijing,China PR,False,China PR,,Iraq
+2004,2004-07-30,Uzbekistan,Bahrain,2.0,2.0,True,AFC Asian Cup,Chengdu,China PR,True,Bahrain,,Uzbekistan
+2004,2004-07-31,Japan,Jordan,1.0,1.0,True,AFC Asian Cup,Chongqing,China PR,True,Japan,,Jordan
+2004,2004-07-31,South Korea,Iran,3.0,4.0,False,AFC Asian Cup,Jinan,China PR,True,Iran,,South Korea
+2004,2004-08-03,Bahrain,Japan,3.0,4.0,False,AFC Asian Cup,Jinan,China PR,True,Japan,,Bahrain
+2004,2004-08-03,China PR,Iran,1.0,1.0,True,AFC Asian Cup,Beijing,China PR,False,China PR,,Iran
+2004,2004-08-06,Iran,Bahrain,4.0,2.0,False,AFC Asian Cup,Beijing,China PR,True,Iran,,Bahrain
+2004,2004-08-07,China PR,Japan,1.0,3.0,False,AFC Asian Cup,Beijing,China PR,False,Japan,,China PR
+2007,2007-07-07,Thailand,Iraq,1.0,1.0,False,AFC Asian Cup,Bangkok,Thailand,False,Draw,,Draw
+2007,2007-07-08,Australia,Oman,1.0,1.0,False,AFC Asian Cup,Bangkok,Thailand,True,Draw,,Draw
+2007,2007-07-08,Vietnam,United Arab Emirates,2.0,0.0,False,AFC Asian Cup,Hanoi,Vietnam,False,Vietnam,,United Arab Emirates
+2007,2007-07-09,Japan,Qatar,1.0,1.0,False,AFC Asian Cup,Hanoi,Vietnam,True,Draw,,Draw
+2007,2007-07-10,Indonesia,Bahrain,2.0,1.0,False,AFC Asian Cup,Jakarta,Indonesia,False,Indonesia,,Bahrain
+2007,2007-07-10,Malaysia,China PR,1.0,5.0,False,AFC Asian Cup,Kuala Lumpur,Malaysia,False,China PR,,Malaysia
+2007,2007-07-11,Iran,Uzbekistan,2.0,1.0,False,AFC Asian Cup,Kuala Lumpur,Malaysia,True,Iran,,Uzbekistan
+2007,2007-07-11,South Korea,Saudi Arabia,1.0,1.0,False,AFC Asian Cup,Jakarta,Indonesia,True,Draw,,Draw
+2007,2007-07-12,Thailand,Oman,2.0,0.0,False,AFC Asian Cup,Bangkok,Thailand,False,Thailand,,Oman
+2007,2007-07-12,Vietnam,Qatar,1.0,1.0,False,AFC Asian Cup,Hanoi,Vietnam,False,Draw,,Draw
+2007,2007-07-13,Iraq,Australia,3.0,1.0,False,AFC Asian Cup,Bangkok,Thailand,True,Iraq,,Australia
+2007,2007-07-13,United Arab Emirates,Japan,1.0,3.0,False,AFC Asian Cup,Hanoi,Vietnam,True,Japan,,United Arab Emirates
+2007,2007-07-14,Indonesia,Saudi Arabia,1.0,2.0,False,AFC Asian Cup,Jakarta,Indonesia,False,Saudi Arabia,,Indonesia
+2007,2007-07-14,Malaysia,Uzbekistan,0.0,5.0,False,AFC Asian Cup,Kuala Lumpur,Malaysia,False,Uzbekistan,,Malaysia
+2007,2007-07-15,Bahrain,South Korea,2.0,1.0,False,AFC Asian Cup,Jakarta,Indonesia,True,Bahrain,,South Korea
+2007,2007-07-15,China PR,Iran,2.0,2.0,False,AFC Asian Cup,Kuala Lumpur,Malaysia,True,Draw,,Draw
+2007,2007-07-16,Oman,Iraq,0.0,0.0,False,AFC Asian Cup,Bangkok,Thailand,True,Draw,,Draw
+2007,2007-07-16,Qatar,United Arab Emirates,1.0,2.0,False,AFC Asian Cup,Ho Chi Minh City,Vietnam,True,United Arab Emirates,,Qatar
+2007,2007-07-16,Thailand,Australia,0.0,4.0,False,AFC Asian Cup,Bangkok,Thailand,False,Australia,,Thailand
+2007,2007-07-16,Vietnam,Japan,1.0,4.0,False,AFC Asian Cup,Hanoi,Vietnam,False,Japan,,Vietnam
+2007,2007-07-18,Indonesia,South Korea,0.0,1.0,False,AFC Asian Cup,Jakarta,Indonesia,False,South Korea,,Indonesia
+2007,2007-07-18,Malaysia,Iran,0.0,2.0,False,AFC Asian Cup,Kuala Lumpur,Malaysia,False,Iran,,Malaysia
+2007,2007-07-18,Saudi Arabia,Bahrain,4.0,0.0,False,AFC Asian Cup,Palembang,Indonesia,True,Saudi Arabia,,Bahrain
+2007,2007-07-18,Uzbekistan,China PR,3.0,0.0,False,AFC Asian Cup,Shah Alam,Malaysia,True,Uzbekistan,,China PR
+2007,2007-07-21,Iraq,Vietnam,2.0,0.0,False,AFC Asian Cup,Bangkok,Thailand,True,Iraq,,Vietnam
+2007,2007-07-21,Japan,Australia,1.0,1.0,True,AFC Asian Cup,Hanoi,Vietnam,True,Japan,,Australia
+2007,2007-07-22,Iran,South Korea,0.0,0.0,True,AFC Asian Cup,Kuala Lumpur,Malaysia,True,South Korea,,Iran
+2007,2007-07-22,Saudi Arabia,Uzbekistan,2.0,1.0,False,AFC Asian Cup,Jakarta,Indonesia,True,Saudi Arabia,,Uzbekistan
+2007,2007-07-25,Iraq,South Korea,0.0,0.0,True,AFC Asian Cup,Kuala Lumpur,Malaysia,True,Iraq,,South Korea
+2007,2007-07-25,Japan,Saudi Arabia,2.0,3.0,False,AFC Asian Cup,Hanoi,Vietnam,True,Saudi Arabia,,Japan
+2007,2007-07-28,South Korea,Japan,0.0,0.0,True,AFC Asian Cup,Palembang,Indonesia,True,South Korea,,Japan
+2007,2007-07-29,Iraq,Saudi Arabia,1.0,0.0,False,AFC Asian Cup,Jakarta,Indonesia,True,Iraq,,Saudi Arabia
+2011,2011-01-07,Qatar,Uzbekistan,0.0,2.0,False,AFC Asian Cup,Doha,Qatar,False,Uzbekistan,,Qatar
+2011,2011-01-08,Kuwait,China PR,0.0,2.0,False,AFC Asian Cup,Doha,Qatar,True,China PR,,Kuwait
+2011,2011-01-09,Japan,Jordan,1.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+2011,2011-01-09,Saudi Arabia,Syria,1.0,2.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Syria,,Saudi Arabia
+2011,2011-01-10,India,Australia,0.0,4.0,False,AFC Asian Cup,Doha,Qatar,True,Australia,,India
+2011,2011-01-10,South Korea,Bahrain,2.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,South Korea,,Bahrain
+2011,2011-01-11,Iraq,Iran,1.0,2.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Iran,,Iraq
+2011,2011-01-11,North Korea,United Arab Emirates,0.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+2011,2011-01-12,Qatar,China PR,2.0,0.0,False,AFC Asian Cup,Doha,Qatar,False,Qatar,,China PR
+2011,2011-01-12,Uzbekistan,Kuwait,2.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Uzbekistan,,Kuwait
+2011,2011-01-13,Jordan,Saudi Arabia,1.0,0.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Jordan,,Saudi Arabia
+2011,2011-01-13,Syria,Japan,1.0,2.0,False,AFC Asian Cup,Doha,Qatar,True,Japan,,Syria
+2011,2011-01-14,Australia,South Korea,1.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+2011,2011-01-14,Bahrain,India,5.0,2.0,False,AFC Asian Cup,Doha,Qatar,True,Bahrain,,India
+2011,2011-01-15,Iran,North Korea,1.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Iran,,North Korea
+2011,2011-01-15,United Arab Emirates,Iraq,0.0,1.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Iraq,,United Arab Emirates
+2011,2011-01-16,China PR,Uzbekistan,2.0,2.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+2011,2011-01-16,Qatar,Kuwait,3.0,0.0,False,AFC Asian Cup,Doha,Qatar,False,Qatar,,Kuwait
+2011,2011-01-17,Jordan,Syria,2.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Jordan,,Syria
+2011,2011-01-17,Saudi Arabia,Japan,0.0,5.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Japan,,Saudi Arabia
+2011,2011-01-18,Australia,Bahrain,1.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Australia,,Bahrain
+2011,2011-01-18,South Korea,India,4.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,South Korea,,India
+2011,2011-01-19,Iraq,North Korea,1.0,0.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Iraq,,North Korea
+2011,2011-01-19,United Arab Emirates,Iran,0.0,3.0,False,AFC Asian Cup,Doha,Qatar,True,Iran,,United Arab Emirates
+2011,2011-01-21,Qatar,Japan,2.0,3.0,False,AFC Asian Cup,Doha,Qatar,False,Japan,,Qatar
+2011,2011-01-21,Uzbekistan,Jordan,2.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Uzbekistan,,Jordan
+2011,2011-01-22,Australia,Iraq,1.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Australia,,Iraq
+2011,2011-01-22,Iran,South Korea,0.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,South Korea,,Iran
+2011,2011-01-25,Japan,South Korea,2.0,2.0,True,AFC Asian Cup,Doha,Qatar,True,Japan,,South Korea
+2011,2011-01-25,Uzbekistan,Australia,0.0,6.0,False,AFC Asian Cup,Doha,Qatar,True,Australia,,Uzbekistan
+2011,2011-01-28,Uzbekistan,South Korea,2.0,3.0,False,AFC Asian Cup,Doha,Qatar,True,South Korea,,Uzbekistan
+2011,2011-01-29,Australia,Japan,0.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Japan,,Australia
+2015,2015-01-09,Australia,Kuwait,4.0,1.0,False,AFC Asian Cup,Melbourne,Australia,False,Australia,,Kuwait
+2015,2015-01-10,South Korea,Oman,1.0,0.0,False,AFC Asian Cup,Canberra,Australia,True,South Korea,,Oman
+2015,2015-01-10,Saudi Arabia,China PR,0.0,1.0,False,AFC Asian Cup,Brisbane,Australia,True,China PR,,Saudi Arabia
+2015,2015-01-10,Uzbekistan,North Korea,1.0,0.0,False,AFC Asian Cup,Sydney,Australia,True,Uzbekistan,,North Korea
+2015,2015-01-11,Iran,Bahrain,2.0,0.0,False,AFC Asian Cup,Melbourne,Australia,True,Iran,,Bahrain
+2015,2015-01-11,United Arab Emirates,Qatar,4.0,1.0,False,AFC Asian Cup,Canberra,Australia,True,United Arab Emirates,,Qatar
+2015,2015-01-12,Japan,Palestine,4.0,0.0,False,AFC Asian Cup,Newcastle,Australia,True,Japan,,Palestine
+2015,2015-01-12,Jordan,Iraq,0.0,1.0,False,AFC Asian Cup,Brisbane,Australia,True,Iraq,,Jordan
+2015,2015-01-13,Australia,Oman,4.0,0.0,False,AFC Asian Cup,Sydney,Australia,False,Australia,,Oman
+2015,2015-01-13,Kuwait,South Korea,0.0,1.0,False,AFC Asian Cup,Canberra,Australia,True,South Korea,,Kuwait
+2015,2015-01-14,China PR,Uzbekistan,2.0,1.0,False,AFC Asian Cup,Brisbane,Australia,True,China PR,,Uzbekistan
+2015,2015-01-14,North Korea,Saudi Arabia,1.0,4.0,False,AFC Asian Cup,Melbourne,Australia,True,Saudi Arabia,,North Korea
+2015,2015-01-15,Bahrain,United Arab Emirates,1.0,2.0,False,AFC Asian Cup,Canberra,Australia,True,United Arab Emirates,,Bahrain
+2015,2015-01-15,Qatar,Iran,0.0,1.0,False,AFC Asian Cup,Sydney,Australia,True,Iran,,Qatar
+2015,2015-01-16,Iraq,Japan,0.0,1.0,False,AFC Asian Cup,Brisbane,Australia,True,Japan,,Iraq
+2015,2015-01-16,Palestine,Jordan,1.0,5.0,False,AFC Asian Cup,Melbourne,Australia,True,Jordan,,Palestine
+2015,2015-01-17,Australia,South Korea,0.0,1.0,False,AFC Asian Cup,Brisbane,Australia,False,South Korea,,Australia
+2015,2015-01-17,Oman,Kuwait,1.0,0.0,False,AFC Asian Cup,Newcastle,Australia,True,Oman,,Kuwait
+2015,2015-01-18,China PR,North Korea,2.0,1.0,False,AFC Asian Cup,Canberra,Australia,True,China PR,,North Korea
+2015,2015-01-18,Uzbekistan,Saudi Arabia,3.0,1.0,False,AFC Asian Cup,Melbourne,Australia,True,Uzbekistan,,Saudi Arabia
+2015,2015-01-19,Iran,United Arab Emirates,1.0,0.0,False,AFC Asian Cup,Brisbane,Australia,True,Iran,,United Arab Emirates
+2015,2015-01-19,Qatar,Bahrain,1.0,2.0,False,AFC Asian Cup,Sydney,Australia,True,Bahrain,,Qatar
+2015,2015-01-20,Iraq,Palestine,2.0,0.0,False,AFC Asian Cup,Canberra,Australia,True,Iraq,,Palestine
+2015,2015-01-20,Japan,Jordan,2.0,0.0,False,AFC Asian Cup,Melbourne,Australia,True,Japan,,Jordan
+2015,2015-01-22,Australia,China PR,2.0,0.0,False,AFC Asian Cup,Brisbane,Australia,False,Australia,,China PR
+2015,2015-01-22,South Korea,Uzbekistan,2.0,0.0,False,AFC Asian Cup,Melbourne,Australia,True,South Korea,,Uzbekistan
+2015,2015-01-23,Iran,Iraq,3.0,3.0,True,AFC Asian Cup,Canberra,Australia,True,Iraq,,Iran
+2015,2015-01-23,Japan,United Arab Emirates,1.0,1.0,True,AFC Asian Cup,Sydney,Australia,True,United Arab Emirates,,Japan
+2015,2015-01-26,South Korea,Iraq,2.0,0.0,False,AFC Asian Cup,Sydney,Australia,True,South Korea,,Iraq
+2015,2015-01-27,Australia,United Arab Emirates,2.0,0.0,False,AFC Asian Cup,Newcastle,Australia,False,Australia,,United Arab Emirates
+2015,2015-01-30,Iraq,United Arab Emirates,2.0,3.0,False,AFC Asian Cup,Newcastle,Australia,True,United Arab Emirates,,Iraq
+2015,2015-01-31,Australia,South Korea,2.0,1.0,False,AFC Asian Cup,Sydney,Australia,False,Australia,,South Korea
+2019,2019-01-05,United Arab Emirates,Bahrain,1.0,1.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,False,Draw,,Draw
+2019,2019-01-06,Thailand,India,1.0,4.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,India,,Thailand
+2019,2019-01-06,Australia,Jordan,0.0,1.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Jordan,,Australia
+2019,2019-01-06,Syria,Palestine,0.0,0.0,False,AFC Asian Cup,Sharjah,United Arab Emirates,True,Draw,,Draw
+2019,2019-01-07,China PR,Kyrgyzstan,2.0,1.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,China PR,,Kyrgyzstan
+2019,2019-01-07,South Korea,Philippines,1.0,0.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,South Korea,,Philippines
+2019,2019-01-07,Iran,Yemen,5.0,0.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Iran,,Yemen
+2019,2019-01-08,Iraq,Vietnam,3.0,2.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Iraq,,Vietnam
+2019,2019-01-08,Saudi Arabia,North Korea,4.0,0.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Saudi Arabia,,North Korea
+2019,2019-01-09,Qatar,Lebanon,2.0,0.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Qatar,,Lebanon
+2019,2019-01-09,Japan,Turkmenistan,3.0,2.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Japan,,Turkmenistan
+2019,2019-01-09,Uzbekistan,Oman,2.0,1.0,False,AFC Asian Cup,Sharjah,United Arab Emirates,True,Uzbekistan,,Oman
+2019,2019-01-10,Bahrain,Thailand,0.0,1.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Thailand,,Bahrain
+2019,2019-01-10,Jordan,Syria,2.0,0.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Jordan,,Syria
+2019,2019-01-10,United Arab Emirates,India,2.0,0.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,False,United Arab Emirates,,India
+2019,2019-01-11,Palestine,Australia,0.0,3.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Australia,,Palestine
+2019,2019-01-11,Philippines,China PR,0.0,3.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,China PR,,Philippines
+2019,2019-01-11,Kyrgyzstan,South Korea,0.0,1.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,South Korea,,Kyrgyzstan
+2019,2019-01-12,Vietnam,Iran,0.0,2.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Iran,,Vietnam
+2019,2019-01-12,Yemen,Iraq,0.0,3.0,False,AFC Asian Cup,Sharjah,United Arab Emirates,True,Iraq,,Yemen
+2019,2019-01-12,Lebanon,Saudi Arabia,0.0,2.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Saudi Arabia,,Lebanon
+2019,2019-01-13,North Korea,Qatar,0.0,6.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Qatar,,North Korea
+2019,2019-01-13,Oman,Japan,0.0,1.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Japan,,Oman
+2019,2019-01-13,Turkmenistan,Uzbekistan,0.0,4.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Uzbekistan,,Turkmenistan
+2019,2019-01-14,India,Bahrain,0.0,1.0,False,AFC Asian Cup,Sharjah,United Arab Emirates,True,Bahrain,,India
+2019,2019-01-14,United Arab Emirates,Thailand,1.0,1.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,False,Draw,,Draw
+2019,2019-01-15,Australia,Syria,3.0,2.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Australia,,Syria
+2019,2019-01-15,Palestine,Jordan,0.0,0.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Draw,,Draw
+2019,2019-01-16,South Korea,China PR,2.0,0.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,South Korea,,China PR
+2019,2019-01-16,Kyrgyzstan,Philippines,3.0,1.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Kyrgyzstan,,Philippines
+2019,2019-01-16,Iran,Iraq,0.0,0.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Draw,,Draw
+2019,2019-01-16,Vietnam,Yemen,2.0,0.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Vietnam,,Yemen
+2019,2019-01-17,Lebanon,North Korea,4.0,1.0,False,AFC Asian Cup,Sharjah,United Arab Emirates,True,Lebanon,,North Korea
+2019,2019-01-17,Saudi Arabia,Qatar,0.0,2.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Qatar,,Saudi Arabia
+2019,2019-01-17,Japan,Uzbekistan,2.0,1.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Japan,,Uzbekistan
+2019,2019-01-17,Oman,Turkmenistan,3.0,1.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Oman,,Turkmenistan
+2019,2019-01-20,Iran,Oman,2.0,0.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Iran,,Oman
+2019,2019-01-20,Jordan,Vietnam,1.0,1.0,True,AFC Asian Cup,Dubai,United Arab Emirates,True,Vietnam,,Jordan
+2019,2019-01-20,Thailand,China PR,1.0,2.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,China PR,,Thailand
+2019,2019-01-21,Australia,Uzbekistan,0.0,0.0,True,AFC Asian Cup,Al Ain,United Arab Emirates,True,Australia,,Uzbekistan
+2019,2019-01-21,Japan,Saudi Arabia,1.0,0.0,False,AFC Asian Cup,Sharjah,United Arab Emirates,True,Japan,,Saudi Arabia
+2019,2019-01-21,United Arab Emirates,Kyrgyzstan,3.0,2.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,False,United Arab Emirates,,Kyrgyzstan
+2019,2019-01-22,South Korea,Bahrain,2.0,1.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,South Korea,,Bahrain
+2019,2019-01-22,Qatar,Iraq,1.0,0.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Qatar,,Iraq
+2019,2019-01-24,China PR,Iran,0.0,3.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Iran,,China PR
+2019,2019-01-24,Vietnam,Japan,0.0,1.0,False,AFC Asian Cup,Dubai,United Arab Emirates,True,Japan,,Vietnam
+2019,2019-01-25,South Korea,Qatar,0.0,1.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Qatar,,South Korea
+2019,2019-01-25,United Arab Emirates,Australia,1.0,0.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,False,United Arab Emirates,,Australia
+2019,2019-01-28,Iran,Japan,0.0,3.0,False,AFC Asian Cup,Al Ain,United Arab Emirates,True,Japan,,Iran
+2019,2019-01-29,United Arab Emirates,Qatar,0.0,4.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,False,Qatar,,United Arab Emirates
+2019,2019-02-01,Japan,Qatar,1.0,3.0,False,AFC Asian Cup,Abu Dhabi,United Arab Emirates,True,Qatar,,Japan
+2024,2024-01-12,Qatar,Lebanon,3.0,0.0,False,AFC Asian Cup,Lusail,Qatar,False,Qatar,,Lebanon
+2024,2024-01-13,China PR,Tajikistan,0.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+2024,2024-01-13,Australia,India,2.0,0.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Australia,,India
+2024,2024-01-13,Uzbekistan,Syria,0.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+2024,2024-01-14,United Arab Emirates,Hong Kong,3.0,1.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,United Arab Emirates,,Hong Kong
+2024,2024-01-14,Iran,Palestine,4.0,1.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Iran,,Palestine
+2024,2024-01-14,Japan,Vietnam,4.0,2.0,False,AFC Asian Cup,Doha,Qatar,True,Japan,,Vietnam
+2024,2024-01-15,Indonesia,Iraq,1.0,3.0,False,AFC Asian Cup,Doha,Qatar,True,Iraq,,Indonesia
+2024,2024-01-15,South Korea,Bahrain,3.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,South Korea,,Bahrain
+2024,2024-01-15,Malaysia,Jordan,0.0,4.0,False,AFC Asian Cup,Al Wakrah,Qatar,True,Jordan,,Malaysia
+2024,2024-01-16,Thailand,Kyrgyzstan,2.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Thailand,,Kyrgyzstan
+2024,2024-01-16,Saudi Arabia,Oman,2.0,1.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Saudi Arabia,,Oman
+2024,2024-01-17,Lebanon,China PR,0.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+2024,2024-01-17,Qatar,Tajikistan,1.0,0.0,False,AFC Asian Cup,Al Khor,Qatar,False,Qatar,,Tajikistan
+2024,2024-01-18,Syria,Australia,0.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Australia,,Syria
+2024,2024-01-18,India,Uzbekistan,0.0,3.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Uzbekistan,,India
+2024,2024-01-18,Palestine,United Arab Emirates,1.0,1.0,False,AFC Asian Cup,Al Wakrah,Qatar,True,Draw,,Draw
+2024,2024-01-19,Hong Kong,Iran,0.0,1.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Iran,,Hong Kong
+2024,2024-01-19,Iraq,Japan,2.0,1.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Iraq,,Japan
+2024,2024-01-19,Vietnam,Indonesia,0.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Indonesia,,Vietnam
+2024,2024-01-20,Jordan,South Korea,2.0,2.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+2024,2024-01-20,Bahrain,Malaysia,1.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Bahrain,,Malaysia
+2024,2024-01-21,Oman,Thailand,0.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+2024,2024-01-21,Kyrgyzstan,Saudi Arabia,0.0,2.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Saudi Arabia,,Kyrgyzstan
+2024,2024-01-22,Qatar,China PR,1.0,0.0,False,AFC Asian Cup,Al Rayyan,Qatar,False,Qatar,,China PR
+2024,2024-01-22,Tajikistan,Lebanon,2.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Tajikistan,,Lebanon
+2024,2024-01-23,Australia,Uzbekistan,1.0,1.0,False,AFC Asian Cup,Al Wakrah,Qatar,True,Draw,,Draw
+2024,2024-01-23,Syria,India,1.0,0.0,False,AFC Asian Cup,Al Khor,Qatar,True,Syria,,India
+2024,2024-01-23,Hong Kong,Palestine,0.0,3.0,False,AFC Asian Cup,Doha,Qatar,True,Palestine,,Hong Kong
+2024,2024-01-23,Iran,United Arab Emirates,2.0,1.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Iran,,United Arab Emirates
+2024,2024-01-24,Iraq,Vietnam,3.0,2.0,False,AFC Asian Cup,Doha,Qatar,True,Iraq,,Vietnam
+2024,2024-01-24,Japan,Indonesia,3.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Japan,,Indonesia
+2024,2024-01-25,Jordan,Bahrain,0.0,1.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Bahrain,,Jordan
+2024,2024-01-25,South Korea,Malaysia,3.0,3.0,False,AFC Asian Cup,Al Wakrah,Qatar,True,Draw,,Draw
+2024,2024-01-25,Kyrgyzstan,Oman,1.0,1.0,False,AFC Asian Cup,Doha,Qatar,True,Draw,,Draw
+2024,2024-01-25,Saudi Arabia,Thailand,0.0,0.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Draw,,Draw
+2024,2024-01-28,Australia,Indonesia,4.0,0.0,False,AFC Asian Cup,Doha,Qatar,True,Australia,,Indonesia
+2024,2024-01-28,Tajikistan,United Arab Emirates,1.0,1.0,True,AFC Asian Cup,Al Rayyan,Qatar,True,Tajikistan,Tajikistan,United Arab Emirates
+2024,2024-01-29,Iraq,Jordan,2.0,3.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Jordan,,Iraq
+2024,2024-01-29,Qatar,Palestine,2.0,1.0,False,AFC Asian Cup,Al Khor,Qatar,False,Qatar,,Palestine
+2024,2024-01-30,Saudi Arabia,South Korea,1.0,1.0,True,AFC Asian Cup,Al Rayyan,Qatar,True,South Korea,Saudi Arabia,Saudi Arabia
+2024,2024-01-30,Uzbekistan,Thailand,2.0,1.0,False,AFC Asian Cup,Al Wakrah,Qatar,True,Uzbekistan,,Thailand
+2024,2024-01-31,Bahrain,Japan,1.0,3.0,False,AFC Asian Cup,Doha,Qatar,True,Japan,,Bahrain
+2024,2024-01-31,Iran,Syria,1.0,1.0,True,AFC Asian Cup,Doha,Qatar,True,Iran,Iran,Syria
+2024,2024-02-02,Australia,South Korea,1.0,2.0,False,AFC Asian Cup,Al Wakrah,Qatar,True,South Korea,,Australia
+2024,2024-02-02,Tajikistan,Jordan,0.0,1.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Jordan,,Tajikistan
+2024,2024-02-03,Iran,Japan,2.0,1.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Iran,,Japan
+2024,2024-02-03,Qatar,Uzbekistan,1.0,1.0,True,AFC Asian Cup,Al Khor,Qatar,False,Qatar,Uzbekistan,Uzbekistan
+2024,2024-02-06,Jordan,South Korea,2.0,0.0,False,AFC Asian Cup,Al Rayyan,Qatar,True,Jordan,,South Korea
+2024,2024-02-07,Qatar,Iran,3.0,2.0,False,AFC Asian Cup,Doha,Qatar,False,Qatar,,Iran
+2024,2024-02-10,Qatar,Jordan,3.0,1.0,False,AFC Asian Cup,Lusail,Qatar,False,Qatar,,Jordan
