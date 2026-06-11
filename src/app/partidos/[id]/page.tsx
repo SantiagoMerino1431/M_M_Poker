@@ -4,6 +4,7 @@ import { TEAMS, parseFixtureId, getStadium, getMatchDate, getMatchTime } from "@
 import { predictMatch } from "@/lib/model/poisson"
 import { predictCards } from "@/lib/model/cards"
 import { predictCorners } from "@/lib/model/corners"
+import type { MatchData } from "@/lib/types"
 
 function pct(n: number) { return `${(n * 100).toFixed(1)}%` }
 function pct0(n: number) { return `${(n * 100).toFixed(0)}%` }
@@ -38,8 +39,23 @@ export default async function PartidoDetallePage({ params }: { params: Promise<{
   if (home.group !== away.group) notFound()
 
   const pred = predictMatch(home, away)
-  const cards = predictCards(3.8, 3.5, home.group <= "F" ? 1.0 : 1.05)
-  const corners = predictCorners(5.2, 4.8, (home.attackStrength - away.attackStrength) * 0.5)
+
+  const matchData: MatchData = {
+    fixture: { id: 0, date: "", stadium: "", city: "", altitudeM: 0, homeTeamId: home.id, awayTeamId: away.id, stage: "" },
+    teams: {
+      home: { id: home.id, name: home.name, country: home.country, groupName: home.group, fifaRanking: home.fifaRanking, attackStrength: home.attackStrength, defenseStrength: home.defenseStrength },
+      away: { id: away.id, name: away.name, country: away.country, groupName: away.group, fifaRanking: away.fifaRanking, attackStrength: away.attackStrength, defenseStrength: away.defenseStrength },
+    },
+    h2h: [], homeForm: [], awayForm: [],
+    injuries: { home: [], away: [] },
+    lineups: { home: null, away: null },
+    referee: null, weather: null, odds: [],
+    dataQuality: 40,
+    fetchedAt: new Date().toISOString(),
+  }
+
+  const cards = predictCards(matchData, home.group <= "F" ? 1.0 : 1.05)
+  const corners = predictCorners(matchData)
   const stadium = getStadium(home.id, away.id)
   const date = getMatchDate(home.id, away.id)
   const time = getMatchTime(home.id)
@@ -210,7 +226,7 @@ export default async function PartidoDetallePage({ params }: { params: Promise<{
           </h3>
           <StatRow label="CS Local"    val={pred.cleanSheetHome} color="var(--win)" />
           <StatRow label="CS Visitante" val={pred.cleanSheetAway} color="var(--win)" />
-          <StatRow label="+3.5 Tarjetas" val={cards.over35Cards} color="var(--loss)" />
+          <StatRow label="+3.5 Tarjetas" val={cards.over35} color="var(--loss)" />
           <StatRow label="Tarjeta Roja" val={cards.redCardProb} color="var(--loss)" />
           <div style={{ marginTop: 12, padding: "8px 0", display: "flex", justifyContent: "space-between" }}>
             <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Corners esperados</span>
@@ -218,7 +234,7 @@ export default async function PartidoDetallePage({ params }: { params: Promise<{
           </div>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Línea corners</span>
-            <span style={{ fontSize: 13 }}>Over {corners.line} → {pct0(corners.over)}</span>
+            <span style={{ fontSize: 13 }}>Over 9.5 → {pct0(corners.over95)}</span>
           </div>
         </div>
       </div>
