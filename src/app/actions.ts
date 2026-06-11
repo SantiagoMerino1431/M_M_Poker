@@ -187,17 +187,14 @@ export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boole
     const fixtures = await fetchTodayFixtures()
     const now = Date.now()
 
+    // When called manually (no fixtureId), process all of today's fixtures.
+    // Time-window filtering only makes sense for automated cron runs.
     const targets = fixtureId
       ? fixtures.filter(f => f.id === fixtureId)
-      : fixtures.filter(f => {
-          const minutesFromKickoff = (now - new Date(f.date).getTime()) / 60000
-          // catch: 55-65 min before kickoff OR already started (up to 120 min in)
-          const minutesBefore = -minutesFromKickoff
-          return (minutesBefore >= 55 && minutesBefore <= 65) || (minutesFromKickoff >= 0 && minutesFromKickoff <= 120)
-        })
+      : fixtures
 
     if (targets.length === 0) {
-      return { ok: true, message: fixtureId ? "Fixture no encontrado" : "Sin partidos en ventana (55-65 min antes o en curso)" }
+      return { ok: true, message: fixtureId ? "Fixture no encontrado" : "No hay partidos hoy en la base de datos" }
     }
 
     const names: string[] = []
