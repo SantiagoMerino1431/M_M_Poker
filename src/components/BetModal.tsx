@@ -1,5 +1,5 @@
 "use client"
-import { useState, useTransition } from "react"
+import { useState, useTransition, useRef, useEffect } from "react"
 import type { MarketResult } from "@/lib/types"
 import { registerBet } from "@/app/actions"
 
@@ -15,6 +15,11 @@ export function BetModal({ market, fixtureId, defaultAmount, onClose }: Props) {
   const [mode, setMode] = useState<"real" | "paper">("paper")
   const [isPending, startTransition] = useTransition()
   const [message, setMessage] = useState<string | null>(null)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => { if (timerRef.current) clearTimeout(timerRef.current) }
+  }, [])
 
   const handleConfirm = () => {
     startTransition(async () => {
@@ -38,7 +43,7 @@ export function BetModal({ market, fixtureId, defaultAmount, onClose }: Props) {
         settledAt: null,
       })
       setMessage(`Apuesta registrada — $${amount.toLocaleString("es-CO")} COP`)
-      setTimeout(() => onClose(true), 1500)
+      timerRef.current = setTimeout(() => onClose(true), 1500)
     })
   }
 
@@ -49,7 +54,7 @@ export function BetModal({ market, fixtureId, defaultAmount, onClose }: Props) {
           <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Registrar apuesta</div>
           <div style={{ fontSize: 16, fontWeight: 700, textTransform: "uppercase" }}>{market.name}</div>
           <div style={{ fontSize: 13, color: "var(--text-muted)" }}>{market.selection}{market.bookmaker ? ` · ${market.bookmaker}` : ""}</div>
-          {market.odds && (
+          {market.odds != null && (
             <div className="stat-number" style={{ fontSize: 28, color: "var(--accent)", marginTop: 4 }}>@{market.odds}</div>
           )}
         </div>
@@ -90,7 +95,7 @@ export function BetModal({ market, fixtureId, defaultAmount, onClose }: Props) {
         )}
 
         <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
-          <button onClick={() => onClose(false)} disabled={isPending} style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--text-muted)", cursor: "pointer", padding: "8px 16px", fontFamily: "inherit", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          <button onClick={() => onClose(false)} style={{ background: "transparent", border: "1px solid var(--border)", color: "var(--text-muted)", cursor: "pointer", padding: "8px 16px", fontFamily: "inherit", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.08em" }}>
             Cancelar
           </button>
           <button onClick={handleConfirm} disabled={isPending} style={{ background: "var(--accent)", border: "none", color: "#000", cursor: isPending ? "not-allowed" : "pointer", padding: "8px 16px", fontFamily: "inherit", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700, opacity: isPending ? 0.7 : 1 }}>
