@@ -78,10 +78,46 @@ export async function registerBet(bet: Omit<Bet, "id">): Promise<{ id: number }>
   return { id }
 }
 
-export async function getDashboardData() {
+async function ensureSchema() {
+  const { migrate } = await import("@/lib/db/schema")
+  await migrate()
+}
+
+export async function getUsers() {
+  await ensureSchema()
+  const rows = await db.execute("SELECT * FROM users ORDER BY created_at ASC")
+  return (rows.rows as any[]).map(r => ({
+    id: r.id as number,
+    name: r.name as string,
+    initialBankroll: r.initial_bankroll as number,
+    createdAt: r.created_at as string,
+  }))
+}
+
+export async function createUser(name: string, initialBankroll: number): Promise<{ id: number }> {
+  await ensureSchema()
+  const now = new Date().toISOString()
+  const result = await db.execute({
+    sql: "INSERT INTO users (name, initial_bankroll, created_at) VALUES (?, ?, ?)",
+    args: [name.trim(), initialBankroll, now],
+  })
+  const userId = Number(result.lastInsertRowid)
+  // Seed initial bankroll snapshots for this user
+  await db.execute({
+    sql: "INSERT INTO bankroll_snapshots (balance, snapshot_type, user_id, created_at) VALUES (?, 'weekly', ?, ?)",
+    args: [initialBankroll, userId, now],
+  })
+  await db.execute({
+    sql: "INSERT INTO bankroll_snapshots (balance, snapshot_type, user_id, created_at) VALUES (?, 'daily', ?, ?)",
+    args: [initialBankroll, userId, now],
+  })
+  return { id: userId }
+}
+
+export async function getDashboardData(userId?: number) {
   const [bankroll, bets] = await Promise.all([
-    getBankrollState(),
-    getBets({ mode: "real" }),
+    getBankrollState(userId),
+    getBets({ mode: "real", userId }),
   ])
   const metrics = calcMetrics(bets)
   const alertRows = await db.execute("SELECT * FROM alerts WHERE is_read = 0 ORDER BY created_at DESC LIMIT 5")
@@ -137,26 +173,46 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
       try {
         const matchData = await buildMatchData({ ...fixture, altitudeM: 0 }, home, away)
         const analysis = analyzeMatch(matchData, bankrollState.current)
-        await db.execute({
-          sql: `INSERT OR REPLACE INTO match_analyses
-                (fixture_id, is_preliminary, confidence, lambda_home, lambda_away,
-                 adjustments_applied, markets, alerts, data_quality, home_team, away_team, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          args: [
-            fixture.id,
-            analysis.isPreliminary ? 1 : 0,
-            analysis.confidence,
-            analysis.model.lambdaHome,
-            analysis.model.lambdaAway,
-            JSON.stringify(analysis.model.adjustmentsApplied),
-            JSON.stringify(analysis.markets),
-            JSON.stringify(analysis.alerts),
-            matchData.dataQuality,
-            fixture.homeTeamName,
-            fixture.awayTeamName,
-            new Date().toISOString(),
-          ],
+        const ts = new Date().toISOString()
+        const existingRow = await db.execute({
+          sql: "SELECT id FROM match_analyses WHERE fixture_id = ? ORDER BY created_at DESC LIMIT 1",
+          args: [fixture.id],
         })
+        if (existingRow.rows.length > 0) {
+          await db.execute({
+            sql: `UPDATE match_analyses SET
+                    is_preliminary = ?, confidence = ?, lambda_home = ?, lambda_away = ?,
+                    adjustments_applied = ?, markets = ?, alerts = ?, data_quality = ?,
+                    home_team = ?, away_team = ?, created_at = ?
+                  WHERE id = ?`,
+            args: [
+              analysis.isPreliminary ? 1 : 0, analysis.confidence,
+              analysis.model.lambdaHome, analysis.model.lambdaAway,
+              JSON.stringify(analysis.model.adjustmentsApplied),
+              JSON.stringify(analysis.markets), JSON.stringify(analysis.alerts),
+              matchData.dataQuality, fixture.homeTeamName, fixture.awayTeamName, ts,
+              (existingRow.rows[0] as any).id,
+            ],
+          })
+          await db.execute({
+            sql: "DELETE FROM match_analyses WHERE fixture_id = ? AND id != ?",
+            args: [fixture.id, (existingRow.rows[0] as any).id],
+          })
+        } else {
+          await db.execute({
+            sql: `INSERT INTO match_analyses
+                  (fixture_id, is_preliminary, confidence, lambda_home, lambda_away,
+                   adjustments_applied, markets, alerts, data_quality, home_team, away_team, created_at)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            args: [
+              fixture.id, analysis.isPreliminary ? 1 : 0, analysis.confidence,
+              analysis.model.lambdaHome, analysis.model.lambdaAway,
+              JSON.stringify(analysis.model.adjustmentsApplied),
+              JSON.stringify(analysis.markets), JSON.stringify(analysis.alerts),
+              matchData.dataQuality, fixture.homeTeamName, fixture.awayTeamName, ts,
+            ],
+          })
+        }
         processed++
       } catch (err: any) {
         errors.push(`${fixture.homeTeamName} vs ${fixture.awayTeamName}: ${err?.message ?? err}`)
@@ -175,20 +231,26 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
 
 export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boolean; message: string }> {
   try {
-    const { fetchTodayFixtures, fetchLineups } = await import("@/lib/data/api-football")
+    const { fetchTodayFixtures } = await import("@/lib/data/api-football")
+    const { fetchESPNLineups } = await import("@/lib/data/espn")
+    const { buildMatchData } = await import("@/lib/data/pipeline")
+    const { analyzeMatch } = await import("@/lib/engine/analyzer")
     const { fetchOdds } = await import("@/lib/data/odds-api")
 
     const teamsRows = await db.execute("SELECT * FROM teams")
     const teams = new Map<number, any>()
+    const teamsByName = new Map<string, any>()
     for (const row of teamsRows.rows as any[]) {
-      teams.set(row.id, { id: row.id, name: row.name })
+      const t = {
+        id: row.id, name: row.name, country: row.country, groupName: row.group_name,
+        fifaRanking: row.fifa_ranking, attackStrength: row.attack_strength,
+        defenseStrength: row.defense_strength,
+      }
+      teams.set(row.id, t)
+      teamsByName.set(normalizeName(row.name), t)
     }
 
     const fixtures = await fetchTodayFixtures()
-    const now = Date.now()
-
-    // When called manually (no fixtureId), process all of today's fixtures.
-    // Time-window filtering only makes sense for automated cron runs.
     const targets = fixtureId
       ? fixtures.filter(f => f.id === fixtureId)
       : fixtures
@@ -197,19 +259,98 @@ export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boole
       return { ok: true, message: fixtureId ? "Fixture no encontrado" : "No hay partidos hoy en la base de datos" }
     }
 
+    const bankrollState = await getBankrollState()
     const names: string[] = []
+    const noLineup: string[] = []
+
     for (const fixture of targets) {
-      const home = teams.get(fixture.homeTeamId)
-      const away = teams.get(fixture.awayTeamId)
+      const home = teams.get(fixture.homeTeamId) ?? teamsByName.get(normalizeName(fixture.homeTeamName))
+      const away = teams.get(fixture.awayTeamId) ?? teamsByName.get(normalizeName(fixture.awayTeamName))
       if (!home || !away) continue
 
-      const lineups = await fetchLineups(fixture.id)
+      const lineups = await fetchESPNLineups(home.name, away.name, fixture.date?.split("T")[0])
+
+      // Re-run full pipeline with ESPN lineup data injected
+      const matchData = await buildMatchData({ ...fixture, altitudeM: 0 }, home, away)
+      const matchDataWithLineups = lineups.home && lineups.away
+        ? { ...matchData, lineups }
+        : matchData
+
+      const analysis = analyzeMatch(matchDataWithLineups, bankrollState.current)
+
+      // Preserve any manually-entered odds from the existing analysis
+      const existingRow = await db.execute({
+        sql: "SELECT markets FROM match_analyses WHERE fixture_id = ? ORDER BY created_at DESC LIMIT 1",
+        args: [fixture.id],
+      })
+      const existingMarkets: any[] = JSON.parse((existingRow.rows[0] as any)?.markets ?? "[]")
+      const mergedMarkets = analysis.markets.map(m => {
+        const prev = existingMarkets.find(e => e.name === m.name && e.selection === m.selection)
+        if (prev?.odds != null) {
+          // Re-apply manual odds and recalculate EV with updated ourProbability
+          const EV = m.ourProbability * prev.odds - 1
+          const edge = m.ourProbability - 1 / prev.odds
+          const kellyFraction = EV > 0 ? (EV / (prev.odds - 1)) * 0.25 : 0
+          return { ...m, odds: prev.odds, bookmakerProbability: 1 / prev.odds, bookmaker: prev.bookmaker,
+                   EV, edge, kellyFraction, isRecommended: EV >= 0.08 && edge >= 0.02 && prev.odds >= 1.5 }
+        }
+        return m
+      })
+
+      const now = new Date().toISOString()
+      const existing = await db.execute({
+        sql: "SELECT id FROM match_analyses WHERE fixture_id = ? ORDER BY created_at DESC LIMIT 1",
+        args: [fixture.id],
+      })
+      if (existing.rows.length > 0) {
+        await db.execute({
+          sql: `UPDATE match_analyses SET
+                  is_preliminary = 0, confidence = ?, lambda_home = ?, lambda_away = ?,
+                  adjustments_applied = ?, markets = ?, alerts = ?, data_quality = ?,
+                  home_team = ?, away_team = ?, created_at = ?
+                WHERE id = ?`,
+          args: [
+            analysis.confidence, analysis.model.lambdaHome, analysis.model.lambdaAway,
+            JSON.stringify(analysis.model.adjustmentsApplied),
+            JSON.stringify(mergedMarkets), JSON.stringify(analysis.alerts),
+            matchDataWithLineups.dataQuality,
+            fixture.homeTeamName, fixture.awayTeamName, now,
+            (existing.rows[0] as any).id,
+          ],
+        })
+        // Delete any duplicate rows for this fixture
+        await db.execute({
+          sql: "DELETE FROM match_analyses WHERE fixture_id = ? AND id != ?",
+          args: [fixture.id, (existing.rows[0] as any).id],
+        })
+      } else {
+        await db.execute({
+          sql: `INSERT INTO match_analyses
+                (fixture_id, is_preliminary, confidence, lambda_home, lambda_away,
+                 adjustments_applied, markets, alerts, data_quality, home_team, away_team, created_at)
+                VALUES (?, 0, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          args: [
+            fixture.id, analysis.confidence,
+            analysis.model.lambdaHome, analysis.model.lambdaAway,
+            JSON.stringify(analysis.model.adjustmentsApplied),
+            JSON.stringify(mergedMarkets), JSON.stringify(analysis.alerts),
+            matchDataWithLineups.dataQuality,
+            fixture.homeTeamName, fixture.awayTeamName, now,
+          ],
+        })
+      }
+
       if (lineups.home && lineups.away) {
+        const starters = lineups.home.filter(p => p.isStarter).length
         await db.execute({
           sql: `INSERT INTO alerts (fixture_id, type, message, is_read, created_at) VALUES (?, ?, ?, 0, ?)`,
-          args: [fixture.id, "lineup_available", `Alineaciones confirmadas: ${home.name} vs ${away.name}`, new Date().toISOString()],
+          args: [fixture.id, "lineup_available",
+                 `Alineaciones ESPN: ${home.name} (${starters} titulares) vs ${away.name} (${lineups.away.filter(p => p.isStarter).length} titulares) — confianza ${analysis.confidence}`,
+                 new Date().toISOString()],
         })
-        names.push(`${home.name} vs ${away.name}`)
+        names.push(`${home.name} vs ${away.name} (conf. ${analysis.confidence})`)
+      } else {
+        noLineup.push(`${home.name} vs ${away.name}`)
       }
 
       const odds = await fetchOdds(home.name, away.name)
@@ -219,17 +360,12 @@ export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boole
           args: [fixture.id, "stale_odds", `Sin cuotas: ${home.name} vs ${away.name}`, new Date().toISOString()],
         })
       }
-
-      await db.execute({
-        sql: `UPDATE match_analyses SET is_preliminary = 0 WHERE fixture_id = ?`,
-        args: [fixture.id],
-      })
     }
 
-    const processed = targets.length
-    return { ok: true, message: names.length > 0
-      ? `Confirmado: ${names.join(", ")}`
-      : `${processed} partido${processed !== 1 ? "s" : ""} confirmado${processed !== 1 ? "s" : ""} — lineups no disponibles (API plan gratuito no cubre 2026)` }
+    if (names.length > 0) {
+      return { ok: true, message: `Análisis actualizado con lineups ESPN: ${names.join(", ")}` }
+    }
+    return { ok: true, message: `${noLineup.join(", ")} — análisis re-ejecutado, ESPN sin lineups aún` }
   } catch (err: any) {
     return { ok: false, message: err?.message ?? "Error en pre-match" }
   }
@@ -262,12 +398,13 @@ export async function settleBetAction(
 
 export async function adjustBankrollAction(
   amount: number,
+  userId?: number,
   reason?: string
 ): Promise<{ ok: boolean; message: string }> {
   try {
     await db.execute({
-      sql: `INSERT INTO bankroll_snapshots (snapshot_type, balance, created_at) VALUES (?, ?, ?)`,
-      args: ["manual", amount, new Date().toISOString()],
+      sql: `INSERT INTO bankroll_snapshots (snapshot_type, balance, user_id, created_at) VALUES (?, ?, ?, ?)`,
+      args: ["manual", amount, userId ?? null, new Date().toISOString()],
     })
     return { ok: true, message: `Bankroll ajustado a $${amount.toLocaleString("es-CO")} COP` }
   } catch (err: any) {

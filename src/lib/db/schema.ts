@@ -149,7 +149,15 @@ export async function migrate() {
     "ALTER TABLE fixtures ADD COLUMN city TEXT",
     "ALTER TABLE fixtures ADD COLUMN match_date TEXT",
     "ALTER TABLE fixtures ADD COLUMN altitude_m INTEGER DEFAULT 0",
+    `CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY,
+      name TEXT NOT NULL UNIQUE,
+      initial_bankroll REAL NOT NULL DEFAULT 100000,
+      created_at TEXT NOT NULL
+    )`,
+    "ALTER TABLE bets ADD COLUMN user_id INTEGER",
+    "ALTER TABLE bankroll_snapshots ADD COLUMN user_id INTEGER",
   ]) {
-    try { await db.execute(sql) } catch { /* column already exists */ }
+    try { await db.execute(sql) } catch { /* already exists */ }
   }
 }

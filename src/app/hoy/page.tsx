@@ -2,6 +2,7 @@ import { getTodayAnalyses, getDashboardData } from "../actions"
 import Link from "next/link"
 import { todayLabel } from "@/lib/utils/time"
 import { HoyActions } from "@/components/HoyActions"
+import { cookies } from "next/headers"
 
 function ConfidenceBadge({ score }: { score: number }) {
   const color = score >= 70 ? "var(--win)" : score >= 40 ? "var(--draw)" : "var(--loss)"
@@ -19,9 +20,12 @@ function pct(n: number | null) {
 }
 
 export default async function HoyPage() {
+  const cookieStore = await cookies()
+  const userId = cookieStore.get("mm_uid")?.value ? Number(cookieStore.get("mm_uid")!.value) : undefined
+
   const [analyses, dashboard] = await Promise.all([
     getTodayAnalyses(),
-    getDashboardData(),
+    getDashboardData(userId),
   ])
 
   const { bankroll, metrics } = dashboard

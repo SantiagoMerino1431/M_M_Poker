@@ -1,6 +1,8 @@
 import { getBets, calcMetrics } from "@/lib/kelly/tracker"
 import { HistorialActions } from "@/components/HistorialActions"
+import { BetTable } from "@/components/BetTable"
 import { getBankrollState } from "@/lib/kelly/bankroll"
+import { cookies } from "next/headers"
 
 function KPICard({ label, value, sub, color }: { label: string; value: string; sub?: string; color?: string }) {
   return (
@@ -15,10 +17,13 @@ function KPICard({ label, value, sub, color }: { label: string; value: string; s
 }
 
 export default async function HistorialPage() {
+  const cookieStore = await cookies()
+  const userId = cookieStore.get("mm_uid")?.value ? Number(cookieStore.get("mm_uid")!.value) : undefined
+
   const [realBets, paperBets, bankrollState] = await Promise.all([
-    getBets({ mode: "real" }),
-    getBets({ mode: "paper" }),
-    getBankrollState(),
+    getBets({ mode: "real", userId }),
+    getBets({ mode: "paper", userId }),
+    getBankrollState(userId),
   ])
 
   const realMetrics = calcMetrics(realBets)
@@ -63,19 +68,27 @@ export default async function HistorialPage() {
         />
       </div>
 
-      <HistorialActions
-        pendingBets={realBets.filter(b => b.result === null)}
-        currentBankroll={bankrollState.current}
-      />
+      <HistorialActions currentBankroll={bankrollState.current} />
 
       {paperMetrics.totalBets > 0 && (
-        <div style={{ background: "rgba(232,255,60,0.05)", border: "1px solid rgba(232,255,60,0.2)", padding: "14px 20px", marginBottom: 32 }}>
-          <span style={{ fontSize: 11, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.1em" }}>
-            Paper Trading · {paperMetrics.totalBets} simulaciones
-          </span>
-          <span style={{ fontSize: 13, color: "var(--text-muted)", marginLeft: 16 }}>
-            ROI simulado: {paperMetrics.ROI >= 0 ? "+" : ""}{paperMetrics.ROI.toFixed(1)}% · Strike: {(paperMetrics.strikeRate * 100).toFixed(0)}%
-          </span>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 12, marginBottom: 32, padding: "16px 20px", background: "rgba(234,179,8,0.05)", border: "1px solid rgba(234,179,8,0.2)" }}>
+          <div>
+            <div style={{ fontSize: 10, color: "var(--draw)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Paper · ROI</div>
+            <div className="stat-number" style={{ fontSize: 22, color: paperMetrics.ROI >= 0 ? "var(--win)" : "var(--loss)" }}>
+              {paperMetrics.ROI >= 0 ? "+" : ""}{paperMetrics.ROI.toFixed(1)}%
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 10, color: "var(--draw)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Strike rate</div>
+            <div className="stat-number" style={{ fontSize: 22 }}>{(paperMetrics.strikeRate * 100).toFixed(0)}%</div>
+            <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{paperMetrics.totalBets} simulaciones</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 10, color: "var(--draw)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>P/L simulado</div>
+            <div className="stat-number" style={{ fontSize: 22, color: paperMetrics.profitLoss >= 0 ? "var(--win)" : "var(--loss)" }}>
+              {paperMetrics.profitLoss >= 0 ? "+" : ""}${paperMetrics.profitLoss.toFixed(0)}
+            </div>
+          </div>
         </div>
       )}
 
@@ -84,39 +97,9 @@ export default async function HistorialPage() {
           Historial de apuestas
         </h2>
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "auto 1fr auto auto auto auto", gap: 12, padding: "8px 16px", borderBottom: "1px solid var(--border)", fontSize: 10, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            <span>Fixture</span><span>Mercado</span><span>Cuota</span><span>Monto</span><span>EV</span><span>Resultado</span>
-          </div>
-          {realBets.slice(0, 20).map(bet => (
-            <div key={bet.id} style={{
-              display: "grid",
-              gridTemplateColumns: "auto 1fr auto auto auto auto",
-              gap: 12,
-              padding: "10px 16px",
-              borderBottom: "1px solid var(--border)",
-              borderLeft: `3px solid ${bet.result === "win" ? "var(--win)" : bet.result === "loss" ? "var(--loss)" : "var(--border)"}`,
-            }}>
-              <span style={{ fontSize: 12, color: "var(--text-muted)" }}>#{bet.fixtureId}</span>
-              <span style={{ fontSize: 13 }}>{bet.market} · {bet.selection}</span>
-              <span className="stat-number" style={{ fontSize: 16 }}>{bet.oddsUsed}</span>
-              <span className="stat-number" style={{ fontSize: 16 }}>${bet.amount}</span>
-              <span style={{ fontSize: 12, color: bet.EV >= 0.03 ? "var(--win)" : "var(--text-muted)" }}>
-                +{(bet.EV * 100).toFixed(1)}%
-              </span>
-              <span className="stat-number" style={{
-                fontSize: 16,
-                color: bet.result === "win" ? "var(--win)" : bet.result === "loss" ? "var(--loss)" : "var(--text-muted)",
-              }}>
-                {bet.result === "win" ? `+$${bet.profitLoss?.toFixed(0)}` :
-                 bet.result === "loss" ? `-$${bet.amount}` : "PEND."}
-              </span>
-            </div>
-          ))}
-          {realBets.length === 0 && (
-            <div style={{ padding: "32px 16px", textAlign: "center", color: "var(--text-muted)", fontSize: 13 }}>
-              Sin apuestas registradas aún. Comienza con paper trading en /partido/[id].
-            </div>
-          )}
+          <BetTable
+            bets={[...realBets, ...paperBets].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 40)}
+          />
         </div>
       </div>
     </div>

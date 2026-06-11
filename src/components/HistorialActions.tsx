@@ -1,20 +1,18 @@
 "use client"
 import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
-import type { Bet } from "@/lib/types"
-import { SettleModal } from "./SettleModal"
 import { ConfirmDialog } from "./ConfirmDialog"
 import { ActionButton } from "./ActionButton"
 import { adjustBankrollAction, takeWeeklySnapshotAction } from "@/app/actions"
+import { useUser } from "./UserContext"
 
 interface Props {
-  pendingBets: Bet[]
   currentBankroll: number
 }
 
-export function HistorialActions({ pendingBets, currentBankroll }: Props) {
+export function HistorialActions({ currentBankroll }: Props) {
   const router = useRouter()
-  const [settleBet, setSettleBet] = useState<Bet | null>(null)
+  const { user } = useUser()
   const [showAdjust, setShowAdjust] = useState(false)
   const [adjustAmount, setAdjustAmount] = useState(currentBankroll)
   const [adjustReason, setAdjustReason] = useState("")
@@ -23,7 +21,7 @@ export function HistorialActions({ pendingBets, currentBankroll }: Props) {
 
   const handleAdjust = () => {
     startAdjustTransition(async () => {
-      const res = await adjustBankrollAction(adjustAmount, adjustReason || undefined)
+      const res = await adjustBankrollAction(adjustAmount, user?.id, adjustReason || undefined)
       setAdjustMsg(res.message)
       if (res.ok) {
         setShowAdjust(false)
@@ -55,29 +53,6 @@ export function HistorialActions({ pendingBets, currentBankroll }: Props) {
         />
       </div>
 
-      {pendingBets.length > 0 && (
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
-          {pendingBets.map(bet => (
-            <button
-              key={bet.id}
-              onClick={() => setSettleBet(bet)}
-              style={{ background: "transparent", border: "1px solid var(--loss)", color: "var(--loss)", cursor: "pointer", padding: "4px 10px", fontFamily: "inherit", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}
-            >
-              Liquidar #{bet.id}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {settleBet && (
-        <SettleModal
-          bet={settleBet}
-          onClose={(settled) => {
-            setSettleBet(null)
-            if (settled) router.refresh()
-          }}
-        />
-      )}
 
       <ConfirmDialog
         open={showAdjust}

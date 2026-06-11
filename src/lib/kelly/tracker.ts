@@ -5,12 +5,12 @@ export { calcMetrics, type BettingMetrics } from "./metrics"
 export async function saveBet(bet: Omit<Bet, "id">): Promise<number> {
   const result = await db.execute({
     sql: `INSERT INTO bets (
-      fixture_id, market, selection, our_probability, bookmaker_probability,
+      fixture_id, user_id, market, selection, our_probability, bookmaker_probability,
       odds_used, odds_closing, amount, kelly_suggested, ev, edge,
       result, profit_loss, mode, confidence_at_time, created_at, settled_at
-    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     args: [
-      bet.fixtureId, bet.market, bet.selection,
+      bet.fixtureId, bet.userId ?? null, bet.market, bet.selection,
       bet.ourProbability, bet.bookmakerProbability,
       bet.oddsUsed, bet.oddsClosing, bet.amount,
       bet.kellySuggested, bet.EV, bet.edge,
@@ -21,12 +21,13 @@ export async function saveBet(bet: Omit<Bet, "id">): Promise<number> {
   return Number(result.lastInsertRowid)
 }
 
-export async function getBets(filter?: { mode?: "real" | "paper" }): Promise<Bet[]> {
-  const sql = filter?.mode
-    ? "SELECT * FROM bets WHERE mode = ? ORDER BY created_at DESC"
-    : "SELECT * FROM bets ORDER BY created_at DESC"
-  const args = filter?.mode ? [filter.mode] : []
-  const rows = await db.execute({ sql, args })
+export async function getBets(filter?: { mode?: "real" | "paper"; userId?: number }): Promise<Bet[]> {
+  const conditions: string[] = []
+  const args: any[] = []
+  if (filter?.mode) { conditions.push("mode = ?"); args.push(filter.mode) }
+  if (filter?.userId != null) { conditions.push("user_id = ?"); args.push(filter.userId) }
+  const where = conditions.length > 0 ? ` WHERE ${conditions.join(" AND ")}` : ""
+  const rows = await db.execute({ sql: `SELECT * FROM bets${where} ORDER BY created_at DESC`, args })
   return (rows.rows as any[]).map(rowToBet)
 }
 
