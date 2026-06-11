@@ -18,6 +18,7 @@ export const TEAM_NAME_MAP: Record<string, string> = {
   "Australie":           "Australia",
   "Saudi-Arabia":        "Saudi Arabia",
   "KSA":                 "Saudi Arabia",
+  "West Germany":        "Germany",
 }
 
 /**
