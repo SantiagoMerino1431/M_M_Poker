@@ -226,7 +226,10 @@ export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boole
       })
     }
 
-    return { ok: true, message: names.length > 0 ? `Lineups: ${names.join(", ")}` : "Procesado — sin lineups disponibles" }
+    const processed = targets.length
+    return { ok: true, message: names.length > 0
+      ? `Confirmado: ${names.join(", ")}`
+      : `${processed} partido${processed !== 1 ? "s" : ""} confirmado${processed !== 1 ? "s" : ""} — lineups no disponibles (API plan gratuito no cubre 2026)` }
   } catch (err: any) {
     return { ok: false, message: err?.message ?? "Error en pre-match" }
   }
