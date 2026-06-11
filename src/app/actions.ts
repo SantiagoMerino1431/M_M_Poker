@@ -311,13 +311,15 @@ export async function updateMarketOddsAction(
     if (!row) return { ok: false, message: "Análisis no encontrado" }
 
     const markets = JSON.parse(row.markets || "[]") as any[]
-    const updated = markets.map(m =>
-      m.name === market && m.selection === selection
-        ? odds > 0
-          ? { ...m, odds, bookmakerProbability: 1 / odds, bookmaker: "manual" }
-          : { ...m, odds: null, bookmakerProbability: null, bookmaker: null }
-        : m
-    )
+    const updated = markets.map(m => {
+      if (m.name !== market || m.selection !== selection) return m
+      if (odds <= 0) return { ...m, odds: null, bookmakerProbability: null, bookmaker: null, EV: null, edge: null }
+      const bmProb = 1 / odds
+      const EV = m.ourProbability * odds - 1
+      const edge = m.ourProbability - bmProb
+      const kellyFraction = EV > 0 ? (EV / (odds - 1)) * 0.25 : 0
+      return { ...m, odds, bookmakerProbability: bmProb, bookmaker: "manual", EV, edge, kellyFraction, isRecommended: EV >= 0.08 && edge >= 0.02 && odds >= 1.5 }
+    })
 
     await db.execute({
       sql: `UPDATE match_analyses SET markets = ? WHERE fixture_id = ? AND created_at = ?`,
