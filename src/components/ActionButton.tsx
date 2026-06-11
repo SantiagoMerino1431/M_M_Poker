@@ -1,5 +1,5 @@
 "use client"
-import { useState, useTransition } from "react"
+import { useState, useTransition, useEffect, useRef } from "react"
 import type { CSSProperties } from "react"
 import { ConfirmDialog } from "./ConfirmDialog"
 
@@ -26,15 +26,25 @@ export function ActionButton({
   const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null)
   const [showConfirm, setShowConfirm] = useState(false)
   const [spinnerIdx, setSpinnerIdx] = useState(0)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const bannerTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+      if (bannerTimeoutRef.current) clearTimeout(bannerTimeoutRef.current)
+    }
+  }, [])
 
   const execute = () => {
+    setSpinnerIdx(0)
     setResult(null)
-    const interval = setInterval(() => setSpinnerIdx(i => (i + 1) % 4), 150)
+    intervalRef.current = setInterval(() => setSpinnerIdx(i => (i + 1) % 4), 150)
     startTransition(async () => {
       const res = await action()
-      clearInterval(interval)
+      if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null }
       setResult(res)
-      setTimeout(() => setResult(null), 5000)
+      bannerTimeoutRef.current = setTimeout(() => setResult(null), 5000)
     })
   }
 
@@ -53,7 +63,7 @@ export function ActionButton({
     opacity: isPending ? 0.7 : 1,
   }
 
-  const variantStyles: Record<string, CSSProperties> = {
+  const variantStyles: Record<"primary" | "secondary" | "ghost", CSSProperties> = {
     primary: { background: "var(--accent)", border: "none", color: "#000", fontWeight: 700 },
     secondary: { background: "transparent", border: "1px solid var(--border)", color: "var(--text-muted)" },
     ghost: { background: "transparent", border: "none", color: "var(--text-muted)" },
