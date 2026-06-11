@@ -90,7 +90,7 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
                 (fixture_id, is_preliminary, confidence, lambda_home, lambda_away,
                  adjustments_applied, markets, alerts, data_quality, created_at)
                 VALUES (?, 1, ?, 0, 0, '[]', '[]', '[]', ?, ?)`,
-          args: [fixture.id, matchData.dataQuality, matchData.dataQuality, new Date().toISOString()],
+          args: [fixture.id, 0, matchData.dataQuality, new Date().toISOString()],
         })
         processed++
       } catch {
@@ -235,7 +235,7 @@ export async function updateMarketOddsAction(
 ): Promise<{ ok: boolean; message: string }> {
   try {
     const rows = await db.execute({
-      sql: "SELECT markets FROM match_analyses WHERE fixture_id = ? ORDER BY created_at DESC LIMIT 1",
+      sql: "SELECT markets, created_at FROM match_analyses WHERE fixture_id = ? ORDER BY created_at DESC LIMIT 1",
       args: [fixtureId],
     })
     const row = rows.rows[0] as any
@@ -249,8 +249,8 @@ export async function updateMarketOddsAction(
     )
 
     await db.execute({
-      sql: `UPDATE match_analyses SET markets = ? WHERE fixture_id = ?`,
-      args: [JSON.stringify(updated), fixtureId],
+      sql: `UPDATE match_analyses SET markets = ? WHERE fixture_id = ? AND created_at = ?`,
+      args: [JSON.stringify(updated), fixtureId, row.created_at],
     })
     return { ok: true, message: `Cuota actualizada: ${market} ${selection} @${odds}` }
   } catch (err: any) {
