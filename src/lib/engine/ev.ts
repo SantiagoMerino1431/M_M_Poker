@@ -3,8 +3,12 @@ import type { MarketResult } from "../types"
 export function applyKellyToMarkets(
   markets: MarketResult[],
   bankroll: number,
-  confidenceMultiplier: number
+  confidenceMultiplier: number,
+  trialMode = false
 ): MarketResult[] {
+  const MAX = trialMode ? 0.005 : 0.08
+  const halfKelly = trialMode ? 0.05 : 0.5
+
   return markets.map(m => {
     if (m.EV === null || m.odds === null || !m.isRecommended) return m
 
@@ -12,9 +16,9 @@ export function applyKellyToMarkets(
     const p = m.ourProbability
     const q = 1 - p
     const rawKelly = (p * b - q) / b
-    const adjusted = rawKelly * 0.5 * confidenceMultiplier
-    const capped = Math.max(0.005, Math.min(0.08, adjusted))
-    const amount = Math.round(bankroll * capped * 100) / 100
+    const adjusted = rawKelly * halfKelly * confidenceMultiplier
+    const capped = Math.max(0.005, Math.min(MAX, adjusted))
+    const amount = Math.round(bankroll * capped)
 
     return { ...m, kellyFraction: capped, kellyAmount: amount }
   })

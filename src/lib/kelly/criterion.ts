@@ -3,6 +3,7 @@ export interface KellyInput {
   odds: number
   bankroll: number
   confidence: number
+  trialMode?: boolean
 }
 
 export interface KellyResult {
@@ -11,22 +12,15 @@ export interface KellyResult {
   isNegative: boolean
 }
 
-const CONFIDENCE_MULTIPLIER: Record<string, number> = {
-  high: 1.00,
-  medium: 0.75,
-  low: 0.50,
-  none: 0.00,
-}
-
 function confidenceMultiplier(confidence: number): number {
-  if (confidence >= 80) return CONFIDENCE_MULTIPLIER.high
-  if (confidence >= 60) return CONFIDENCE_MULTIPLIER.medium
-  if (confidence >= 40) return CONFIDENCE_MULTIPLIER.low
-  return CONFIDENCE_MULTIPLIER.none
+  if (confidence >= 80) return 1.00
+  if (confidence >= 60) return 0.75
+  if (confidence >= 40) return 0.50
+  return 0.00
 }
 
 export function calcKelly(input: KellyInput): KellyResult {
-  const { probability: p, odds, bankroll, confidence } = input
+  const { probability: p, odds, bankroll, confidence, trialMode = false } = input
   const b = odds - 1
   const q = 1 - p
   const rawKelly = (p * b - q) / b
@@ -34,11 +28,15 @@ export function calcKelly(input: KellyInput): KellyResult {
   if (rawKelly <= 0) return { fraction: 0, amount: 0, isNegative: rawKelly < 0 }
 
   const multiplier = confidenceMultiplier(confidence)
-  const adjusted = rawKelly * 0.5 * multiplier
+
+  // Primeros 4 partidos: Kelly al 10% del normal, tope 0.5%
+  const halfKelly = trialMode ? 0.05 : 0.5
   const MIN = 0.005
-  const MAX = 0.08
+  const MAX = trialMode ? 0.005 : 0.08
+
+  const adjusted = rawKelly * halfKelly * multiplier
   const capped = Math.max(MIN, Math.min(MAX, adjusted))
-  const amount = Math.round(bankroll * capped * 100) / 100
+  const amount = Math.round(bankroll * capped)
 
   return { fraction: capped, amount, isNegative: false }
 }
