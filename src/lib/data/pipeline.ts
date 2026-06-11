@@ -2,6 +2,7 @@ import type { MatchData, TeamStrength } from "../types"
 import { fetchTeamStats, fetchH2H, fetchRecentForm, fetchInjuries, fetchLineups, fetchReferee } from "./api-football"
 import { fetchOdds } from "./odds-api"
 import { fetchBDLOdds } from "./balldontlie"
+import { loadH2H, loadTeamFormRecords, getTeamStrengthFromCSV } from "./csv-loader"
 
 const ALTITUDE_BY_CITY: Record<string, number> = {
   "Ciudad de México": 2240,
@@ -53,20 +54,31 @@ export async function buildMatchData(
     fetchBDLOdds(homeTeam.name, awayTeam.name),
   ])
 
-  const resolvedHome = homeStatsUpdate.status === "fulfilled" ? homeStatsUpdate.value : {}
-  const resolvedAway = awayStatsUpdate.status === "fulfilled" ? awayStatsUpdate.value : {}
+  // API stats — fall back to CSV-derived strength when API has no 2026 data
+  const apiHomeStats = homeStatsUpdate.status === "fulfilled" ? homeStatsUpdate.value : {}
+  const apiAwayStats = awayStatsUpdate.status === "fulfilled" ? awayStatsUpdate.value : {}
+  const csvHomeStrength = Object.keys(apiHomeStats).length === 0
+    ? (getTeamStrengthFromCSV(homeTeam.name) ?? {}) : {}
+  const csvAwayStrength = Object.keys(apiAwayStats).length === 0
+    ? (getTeamStrengthFromCSV(awayTeam.name) ?? {}) : {}
 
-  const mergedHome: TeamStrength = { ...homeTeam, ...resolvedHome }
-  const mergedAway: TeamStrength = { ...awayTeam, ...resolvedAway }
+  const mergedHome: TeamStrength = { ...homeTeam, ...csvHomeStrength, ...apiHomeStats }
+  const mergedAway: TeamStrength = { ...awayTeam, ...csvAwayStrength, ...apiAwayStats }
 
-  const resolvedH2H = h2h.status === "fulfilled" ? h2h.value : []
-  const resolvedHomeForm = homeForm.status === "fulfilled" ? homeForm.value : []
-  const resolvedAwayForm = awayForm.status === "fulfilled" ? awayForm.value : []
-  const resolvedInjuries = injuries.status === "fulfilled" ? injuries.value : { home: [], away: [] }
-  const resolvedLineups = lineups.status === "fulfilled" ? lineups.value : { home: null, away: null }
-  const resolvedReferee = referee.status === "fulfilled" ? referee.value : null
-  const resolvedApiOdds = apiOdds.status === "fulfilled" ? apiOdds.value : []
-  const resolvedBdlOdds = bdlOdds.status === "fulfilled" ? bdlOdds.value : []
+  // H2H — fall back to CSV when API returns empty
+  const apiH2H = h2h.status === "fulfilled" ? h2h.value : []
+  const resolvedH2H = apiH2H.length > 0 ? apiH2H : loadH2H(homeTeam.name, awayTeam.name)
+
+  // Form — fall back to CSV when API returns empty
+  const apiHomeForm = homeForm.status === "fulfilled" ? homeForm.value : []
+  const apiAwayForm = awayForm.status === "fulfilled" ? awayForm.value : []
+  const resolvedHomeForm = apiHomeForm.length > 0 ? apiHomeForm : loadTeamFormRecords(homeTeam.name)
+  const resolvedAwayForm = apiAwayForm.length > 0 ? apiAwayForm : loadTeamFormRecords(awayTeam.name)
+  const resolvedInjuries    = injuries.status === "fulfilled" ? injuries.value : { home: [], away: [] }
+  const resolvedLineups     = lineups.status === "fulfilled"  ? lineups.value  : { home: null, away: null }
+  const resolvedReferee     = referee.status === "fulfilled"  ? referee.value  : null
+  const resolvedApiOdds     = apiOdds.status === "fulfilled"  ? apiOdds.value  : []
+  const resolvedBdlOdds     = bdlOdds.status === "fulfilled"  ? bdlOdds.value  : []
 
   const allOdds = [...resolvedApiOdds, ...resolvedBdlOdds]
   const oddsStale = allOdds.length > 0 &&
