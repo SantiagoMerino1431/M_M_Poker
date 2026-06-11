@@ -1,6 +1,9 @@
 import { getAnalysisForFixture } from "../../actions"
 import { notFound } from "next/navigation"
 import Link from "next/link"
+import { formatTime } from "@/lib/utils/time"
+import { PartidoActions } from "@/components/PartidoActions"
+import { getBankrollState } from "@/lib/kelly/bankroll"
 
 function pct(n: number | null) {
   if (n === null) return "--"
@@ -17,7 +20,10 @@ function evColor(ev: number | null) {
 export default async function PartidoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const fixtureId = Number(id)
-  const analysis = await getAnalysisForFixture(fixtureId)
+  const [analysis, bankrollState] = await Promise.all([
+    getAnalysisForFixture(fixtureId),
+    getBankrollState(),
+  ])
   if (!analysis) notFound()
 
   const recommended = analysis.markets.filter(m => m.isRecommended)
@@ -37,7 +43,7 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
             {analysis.isPreliminary ? "PRELIMINAR" : "FINAL"}
           </span>
           <span style={{ fontSize: 10, color: "var(--text-muted)" }}>
-            Actualizado: {new Date(analysis.lastUpdated).toLocaleTimeString("es")}
+            Actualizado: {formatTime(analysis.lastUpdated)} COT
           </span>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
@@ -160,14 +166,11 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
         </div>
       )}
 
-      <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: 20 }}>
-        <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 8 }}>
-          Registrar apuesta
-        </div>
-        <p style={{ fontSize: 12, color: "var(--text-muted)" }}>
-          Selecciona un mercado y registra tu apuesta. Configura <code style={{ color: "var(--accent)" }}>RAPIDAPI_KEY</code> y <code style={{ color: "var(--accent)" }}>ODDS_API_KEY</code> para obtener cuotas en tiempo real.
-        </p>
-      </div>
+      <PartidoActions
+        markets={analysis.markets}
+        fixtureId={fixtureId}
+        bankroll={bankrollState.current}
+      />
     </div>
   )
 }

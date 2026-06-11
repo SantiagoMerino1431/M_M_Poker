@@ -13,7 +13,7 @@ function confidenceMultiplier(score: number): number {
   return 0.00
 }
 
-export function analyzeMatch(data: MatchData, bankroll: number): MatchAnalysis {
+export function analyzeMatch(data: MatchData, bankroll: number, trialMode = false): MatchAnalysis {
   const alerts: string[] = []
   const adjustments: string[] = []
 
@@ -78,7 +78,7 @@ export function analyzeMatch(data: MatchData, bankroll: number): MatchAnalysis {
 
   const multiplier = confidenceMultiplier(data.dataQuality)
   let markets = calcAllMarkets(matrix, data)
-  markets = applyKellyToMarkets(markets, bankroll, multiplier)
+  markets = applyKellyToMarkets(markets, bankroll, multiplier, trialMode)
   markets = rankMarkets(markets)
 
   return {

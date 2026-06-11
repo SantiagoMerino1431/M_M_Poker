@@ -1,4 +1,6 @@
 import { getBets, calcMetrics } from "@/lib/kelly/tracker"
+import { HistorialActions } from "@/components/HistorialActions"
+import { getBankrollState } from "@/lib/kelly/bankroll"
 
 function KPICard({ label, value, sub, color }: { label: string; value: string; sub?: string; color?: string }) {
   return (
@@ -13,9 +15,10 @@ function KPICard({ label, value, sub, color }: { label: string; value: string; s
 }
 
 export default async function HistorialPage() {
-  const [realBets, paperBets] = await Promise.all([
+  const [realBets, paperBets, bankrollState] = await Promise.all([
     getBets({ mode: "real" }),
     getBets({ mode: "paper" }),
+    getBankrollState(),
   ])
 
   const realMetrics = calcMetrics(realBets)
@@ -59,6 +62,11 @@ export default async function HistorialPage() {
           color="var(--loss)"
         />
       </div>
+
+      <HistorialActions
+        pendingBets={realBets.filter(b => b.result === null)}
+        currentBankroll={bankrollState.current}
+      />
 
       {paperMetrics.totalBets > 0 && (
         <div style={{ background: "rgba(232,255,60,0.05)", border: "1px solid rgba(232,255,60,0.2)", padding: "14px 20px", marginBottom: 32 }}>
