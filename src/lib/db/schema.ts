@@ -145,6 +145,10 @@ export async function migrate() {
   for (const sql of [
     "ALTER TABLE match_analyses ADD COLUMN home_team TEXT DEFAULT ''",
     "ALTER TABLE match_analyses ADD COLUMN away_team TEXT DEFAULT ''",
+    "ALTER TABLE fixtures ADD COLUMN stadium TEXT",
+    "ALTER TABLE fixtures ADD COLUMN city TEXT",
+    "ALTER TABLE fixtures ADD COLUMN match_date TEXT",
+    "ALTER TABLE fixtures ADD COLUMN altitude_m INTEGER DEFAULT 0",
   ]) {
     try { await db.execute(sql) } catch { /* column already exists */ }
   }
