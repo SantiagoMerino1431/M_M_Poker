@@ -1,6 +1,7 @@
 import { getTodayAnalyses, getDashboardData } from "../actions"
 import Link from "next/link"
 import { todayLabel } from "@/lib/utils/time"
+import { HoyActions } from "@/components/HoyActions"
 
 function ConfidenceBadge({ score }: { score: number }) {
   const color = score >= 70 ? "var(--win)" : score >= 40 ? "var(--draw)" : "var(--loss)"
@@ -63,6 +64,9 @@ export default async function HoyPage() {
           <h1 className="stat-number" style={{ fontSize: "clamp(32px, 5vw, 56px)" }}>
             Análisis <span style={{ color: "var(--accent)" }}>Hoy</span>
           </h1>
+          <div style={{ marginTop: 16 }}>
+            <HoyActions />
+          </div>
         </div>
       </div>
 
