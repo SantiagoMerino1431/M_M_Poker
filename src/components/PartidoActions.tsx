@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import type { MarketResult } from "@/lib/types"
 import { BetModal } from "./BetModal"
@@ -17,16 +17,21 @@ export function PartidoActions({ markets, fixtureId, bankroll }: Props) {
   const [activeBetMarket, setActiveBetMarket] = useState<MarketResult | null>(null)
   const [oddsInputs, setOddsInputs] = useState<Record<string, string>>({})
   const [oddsMessages, setOddsMessages] = useState<Record<string, string>>({})
+  const oddsTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => { if (oddsTimerRef.current) clearTimeout(oddsTimerRef.current) }
+  }, [])
 
   const recommended = markets.filter(m => m.isRecommended)
 
-  const handleSaveOdds = async (market: MarketResult) => {
-    const key = `${market.name}|${market.selection}`
+  const handleSaveOdds = async (m: MarketResult) => {
+    const key = `${m.name}|${m.selection}`
     const val = parseFloat(oddsInputs[key] ?? "")
     if (isNaN(val) || val < 1) return
-    const res = await updateMarketOddsAction(fixtureId, market.name, market.selection, val)
+    const res = await updateMarketOddsAction(fixtureId, m.name, m.selection, val)
     setOddsMessages(prev => ({ ...prev, [key]: res.message }))
-    setTimeout(() => setOddsMessages(prev => {
+    oddsTimerRef.current = setTimeout(() => setOddsMessages(prev => {
       const n = { ...prev }
       delete n[key]
       return n
@@ -40,7 +45,11 @@ export function PartidoActions({ markets, fixtureId, bankroll }: Props) {
         <ActionButton
           label="Pre-match este partido"
           pendingLabel="Cargando lineups"
-          action={() => runPreMatchAction(fixtureId)}
+          action={async () => {
+            const res = await runPreMatchAction(fixtureId)
+            if (res.ok) router.refresh()
+            return res
+          }}
           variant="secondary"
         />
       </div>
