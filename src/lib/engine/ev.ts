@@ -7,7 +7,7 @@ export function applyKellyToMarkets(
   trialMode = false
 ): MarketResult[] {
   const MAX = trialMode ? 0.005 : 0.08
-  const halfKelly = trialMode ? 0.05 : 0.5
+  const halfKelly = trialMode ? 0.05 : 0.25
 
   return markets.map(m => {
     if (m.EV === null || m.odds === null || !m.isRecommended) return m

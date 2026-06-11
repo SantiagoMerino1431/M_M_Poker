@@ -1,4 +1,5 @@
 import { db } from "./client"
+import { loadWC2026Fixtures } from "../data/csv-loader"
 
 const TEAMS = [
   // Grupo A: México, Sudáfrica, República de Corea, Chequia
@@ -63,6 +64,20 @@ const TEAMS = [
   { id: 48, name: "Panamá",              country: "PAN", group_name: "L", fifa_ranking: 50,  attack_strength: 0.88, defense_strength: 1.08 },
 ]
 
+// Build a map from "homeEs|awayEs" → { date, city } using the real CSV schedule
+function buildFixtureScheduleFromCSV(): Map<string, { date: string; city: string }> {
+  const map = new Map<string, { date: string; city: string }>()
+  try {
+    const fixtures = loadWC2026Fixtures()
+    for (const f of fixtures) {
+      map.set(`${f.homeEs}|${f.awayEs}`, { date: `${f.date}T16:00:00Z`, city: f.city })
+    }
+  } catch {
+    // CSV not available — fall back to empty (dates will be null)
+  }
+  return map
+}
+
 export async function seed() {
   for (const t of TEAMS) {
     await db.execute({
@@ -72,17 +87,31 @@ export async function seed() {
     })
   }
 
+  const schedule = buildFixtureScheduleFromCSV()
   let fixtureId = 1
   const groups = ["A","B","C","D","E","F","G","H","I","J","K","L"]
   for (const g of groups) {
     const gTeams = TEAMS.filter(t => t.group_name === g)
     for (let i = 0; i < gTeams.length; i++) {
       for (let j = i + 1; j < gTeams.length; j++) {
+        const key = `${gTeams[i].name}|${gTeams[j].name}`
+        const sched = schedule.get(key)
         await db.execute({
-          sql: `INSERT OR REPLACE INTO fixtures (id, home_team_id, away_team_id, stage, status)
-                VALUES (?, ?, ?, ?, ?)`,
-          args: [fixtureId++, gTeams[i].id, gTeams[j].id, `group_${g}`, "scheduled"],
+          sql: `INSERT OR REPLACE INTO fixtures
+                (id, home_team_id, away_team_id, stage, status, match_date, stadium, city)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          args: [
+            fixtureId,
+            gTeams[i].id,
+            gTeams[j].id,
+            `group_${g}`,
+            "scheduled",
+            sched?.date ?? null,
+            null,
+            sched?.city ?? null,
+          ],
         })
+        fixtureId++
       }
     }
   }

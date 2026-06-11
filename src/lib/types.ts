@@ -117,6 +117,8 @@ export interface MatchAnalysis {
   model: ModelOutput
   markets: MarketResult[]
   alerts: string[]
+  homeTeam?: string
+  awayTeam?: string
   lastUpdated: string
 }
 
@@ -129,8 +131,16 @@ export interface BankrollState {
   lastUpdated: string
 }
 
+export interface User {
+  id: number
+  name: string
+  initialBankroll: number
+  createdAt: string
+}
+
 export interface Bet {
   id?: number
+  userId?: number
   fixtureId: number
   market: string
   selection: string

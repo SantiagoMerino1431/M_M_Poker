@@ -45,3 +45,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# large data files (exceed GitHub 100MB limit)
+data/odds_series.csv
+data/odds_series_b.csv
+data/closing_odds.csv
