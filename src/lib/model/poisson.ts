@@ -1,72 +1,55 @@
-export interface TeamStrengths {
-  attackStrength: number
-  defenseStrength: number
-  fifaRanking: number
-}
-
-export interface MatchPrediction {
+export interface MatchProbabilities {
   homeWin: number
   draw: number
   awayWin: number
   over15: number
   over25: number
   over35: number
+  over45: number
   btts: number
-  expectedHomeGoals: number
-  expectedAwayGoals: number
-  exactScores: { score: string; prob: number }[]
   cleanSheetHome: number
   cleanSheetAway: number
+  exactScores: { score: string; prob: number }[]
 }
 
-function factorial(n: number): number {
-  if (n <= 1) return 1
-  let r = 1
-  for (let i = 2; i <= n; i++) r *= i
-  return r
-}
+const RHO = -0.13
 
 function poissonProb(lambda: number, k: number): number {
-  return (Math.pow(lambda, k) * Math.exp(-lambda)) / factorial(k)
+  let p = Math.exp(-lambda)
+  for (let i = 1; i <= k; i++) p *= lambda / i
+  return p
 }
 
-function lambdaFromStrengths(
-  attacker: TeamStrengths,
-  defender: TeamStrengths,
-  homeAdvantage = 1.1,
-  isHome = true,
-  avgGoals = 1.4
-): number {
-  const rankFactor = 1 + (50 - attacker.fifaRanking) * 0.003
-  const base = avgGoals * attacker.attackStrength * defender.defenseStrength * rankFactor
-  return isHome ? base * homeAdvantage : base
+function dixonColesTau(h: number, a: number, lH: number, lA: number): number {
+  if (h === 0 && a === 0) return 1 - lH * lA * RHO
+  if (h === 0 && a === 1) return 1 + lH * RHO
+  if (h === 1 && a === 0) return 1 + lA * RHO
+  if (h === 1 && a === 1) return 1 - RHO
+  return 1
 }
 
-function buildScoreMatrix(lambdaHome: number, lambdaAway: number, maxGoals = 8) {
+export function buildScoreMatrix(lambdaHome: number, lambdaAway: number, maxGoals = 8): number[][] {
   const matrix: number[][] = []
+  let total = 0
   for (let h = 0; h <= maxGoals; h++) {
     matrix[h] = []
     for (let a = 0; a <= maxGoals; a++) {
-      matrix[h][a] = poissonProb(lambdaHome, h) * poissonProb(lambdaAway, a)
+      const raw = poissonProb(lambdaHome, h) * poissonProb(lambdaAway, a)
+      const tau = dixonColesTau(h, a, lambdaHome, lambdaAway)
+      matrix[h][a] = raw * tau
+      total += matrix[h][a]
     }
   }
+  for (let h = 0; h <= maxGoals; h++)
+    for (let a = 0; a <= maxGoals; a++)
+      matrix[h][a] /= total
   return matrix
 }
 
-export function predictMatch(
-  home: TeamStrengths,
-  away: TeamStrengths,
-  recentFormHome = 0,
-  recentFormAway = 0
-): MatchPrediction {
-  const lambdaHome = lambdaFromStrengths(home, away, 1.1, true) * (1 + recentFormHome * 0.05)
-  const lambdaAway = lambdaFromStrengths(away, home, 1.0, false) * (1 + recentFormAway * 0.05)
-
-  const matrix = buildScoreMatrix(lambdaHome, lambdaAway)
-
+export function extractMatchProbabilities(matrix: number[][]): MatchProbabilities {
   let homeWin = 0, draw = 0, awayWin = 0
-  let over15 = 0, over25 = 0, over35 = 0, btts = 0
-  let cleanSheetHome = 0, cleanSheetAway = 0
+  let over15 = 0, over25 = 0, over35 = 0, over45 = 0
+  let btts = 0, cleanSheetHome = 0, cleanSheetAway = 0
   const scores: { score: string; prob: number }[] = []
 
   for (let h = 0; h < matrix.length; h++) {
@@ -75,9 +58,10 @@ export function predictMatch(
       if (h > a) homeWin += p
       else if (h === a) draw += p
       else awayWin += p
-      if (h + a > 1.5) over15 += p
-      if (h + a > 2.5) over25 += p
-      if (h + a > 3.5) over35 += p
+      if (h + a > 1) over15 += p
+      if (h + a > 2) over25 += p
+      if (h + a > 3) over35 += p
+      if (h + a > 4) over45 += p
       if (h > 0 && a > 0) btts += p
       if (a === 0) cleanSheetHome += p
       if (h === 0) cleanSheetAway += p
@@ -89,11 +73,8 @@ export function predictMatch(
 
   return {
     homeWin, draw, awayWin,
-    over15, over25, over35, btts,
-    expectedHomeGoals: lambdaHome,
-    expectedAwayGoals: lambdaAway,
-    exactScores: scores.slice(0, 5),
-    cleanSheetHome,
-    cleanSheetAway,
+    over15, over25, over35, over45,
+    btts, cleanSheetHome, cleanSheetAway,
+    exactScores: scores.slice(0, 10),
   }
 }
