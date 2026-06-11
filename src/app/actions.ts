@@ -190,12 +190,14 @@ export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boole
     const targets = fixtureId
       ? fixtures.filter(f => f.id === fixtureId)
       : fixtures.filter(f => {
-          const minutesBefore = (new Date(f.date).getTime() - now) / 60000
-          return minutesBefore >= 55 && minutesBefore <= 65
+          const minutesFromKickoff = (now - new Date(f.date).getTime()) / 60000
+          // catch: 55-65 min before kickoff OR already started (up to 120 min in)
+          const minutesBefore = -minutesFromKickoff
+          return (minutesBefore >= 55 && minutesBefore <= 65) || (minutesFromKickoff >= 0 && minutesFromKickoff <= 120)
         })
 
     if (targets.length === 0) {
-      return { ok: true, message: fixtureId ? "Fixture no encontrado" : "Sin partidos en los próximos 65 min" }
+      return { ok: true, message: fixtureId ? "Fixture no encontrado" : "Sin partidos en ventana (55-65 min antes o en curso)" }
     }
 
     const names: string[] = []
