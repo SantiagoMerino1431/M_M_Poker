@@ -16,17 +16,18 @@ export interface TournamentResult {
 }
 
 function simulateGroup(
-  teams: (TeamStrengths & { id: number; name: string; group: string })[],
-  fixtures: { homeId: number; awayId: number }[]
+  groupTeams: (TeamStrengths & { id: number; name: string; group: string })[],
+  fixtures: { homeId: number; awayId: number }[],
+  allTeams: (TeamStrengths & { id: number; name: string; group: string })[]
 ): TeamStanding[] {
   const standings: Record<number, TeamStanding> = {}
-  for (const t of teams) {
+  for (const t of groupTeams) {
     standings[t.id] = { teamId: t.id, name: t.name, group: t.group, points: 0, gf: 0, ga: 0 }
   }
 
   for (const f of fixtures) {
-    const home = teams.find(t => t.id === f.homeId)!
-    const away = teams.find(t => t.id === f.awayId)!
+    const home = allTeams.find(t => t.id === f.homeId)!
+    const away = allTeams.find(t => t.id === f.awayId)!
     const pred = predictMatch(home, away)
 
     // Sample outcome from probability distribution
@@ -78,7 +79,7 @@ export function runMonteCarlo(
         .filter(f => f.stage === `group_${g}`)
         .map(f => ({ homeId: f.homeId, awayId: f.awayId }))
 
-      const standings = simulateGroup(gTeams, gFixtures)
+      const standings = simulateGroup(gTeams, gFixtures, teams)
       const top2 = standings.slice(0, 2).map(s => s.teamId)
       qualifiedIds.push(...top2)
 

@@ -21,13 +21,12 @@ const SAMPLE_FIXTURES = [
 function pct(n: number) { return `${(n * 100).toFixed(0)}%` }
 
 export default function HomePage() {
-  const mcResult = runMonteCarlo(
-    CONTENDERS,
-    CONTENDERS.flatMap((t1, i) => CONTENDERS.slice(i + 1).map(t2 => ({
-      homeId: t1.id, awayId: t2.id, stage: `group_${t1.group}`
-    }))),
-    2000
+  // Normalize all contenders to the same group so Monte Carlo simulateGroup works correctly
+  const mcTeams = CONTENDERS.map(t => ({ ...t, group: "MC" }))
+  const mcFixtures = CONTENDERS.flatMap((t1, i) =>
+    CONTENDERS.slice(i + 1).map(t2 => ({ homeId: t1.id, awayId: t2.id, stage: "group_MC" }))
   )
+  const mcResult = runMonteCarlo(mcTeams, mcFixtures, 2000)
 
   const champRanked = Object.entries(mcResult.champion)
     .map(([id, prob]) => ({ team: CONTENDERS.find(t => t.id === Number(id))!, prob }))
