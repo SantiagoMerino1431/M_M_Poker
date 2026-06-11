@@ -1,135 +1,284 @@
-import { getAnalysisForFixture } from "../../actions"
+import { getAnalysisForFixture, getFixtureDetails } from "../../actions"
+import { getBankrollState } from "@/lib/kelly/bankroll"
 import { notFound } from "next/navigation"
 import Link from "next/link"
-import { formatTime } from "@/lib/utils/time"
-import { PartidoActions } from "@/components/PartidoActions"
-import { getBankrollState } from "@/lib/kelly/bankroll"
+import { Bar, StatRow } from "@/components/StatBar"
+import { MarketBettingCard } from "@/components/MarketBettingCard"
+import type { MarketResult } from "@/lib/types"
 
-function pct(n: number | null) {
-  if (n === null) return "--"
-  return `${(n * 100).toFixed(1)}%`
+function pct0(n: number) { return `${Math.round(n * 100)}%` }
+function fmt(d: string | null) {
+  if (!d) return "Por confirmar"
+  const date = new Date(d)
+  return date.toLocaleDateString("es-CO", { weekday: "long", day: "numeric", month: "long", year: "numeric" })
+}
+function fmtTime(d: string | null) {
+  if (!d) return "--:--"
+  return new Date(d).toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit", timeZone: "America/Bogota" })
 }
 
-function evColor(ev: number | null) {
-  if (ev === null) return "var(--text-muted)"
-  if (ev >= 0.05) return "var(--win)"
-  if (ev >= 0.03) return "var(--draw)"
-  return "var(--text-muted)"
+function find(markets: MarketResult[], name: string, sel: string) {
+  return markets.find(m => m.name === name && m.selection === sel)
 }
+function prob(markets: MarketResult[], name: string, sel: string) {
+  return find(markets, name, sel)?.ourProbability ?? 0
+}
+
+function cleanSheet(lambda: number) { return Math.exp(-lambda) }
 
 export default async function PartidoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const fixtureId = Number(id)
-  const [analysis, bankrollState] = await Promise.all([
+
+  const [analysis, fixture, bankroll] = await Promise.all([
     getAnalysisForFixture(fixtureId),
+    getFixtureDetails(fixtureId),
     getBankrollState(),
   ])
   if (!analysis) notFound()
 
-  const recommended = analysis.markets.filter(m => m.isRecommended)
-  const others = analysis.markets.filter(m => !m.isRecommended && m.EV !== null)
+  const { model, markets, alerts, confidence } = analysis
+  const lH = model.lambdaHome
+  const lA = model.lambdaAway
+
+  const homeWin  = prob(markets, "1X2", "home")
+  const draw     = prob(markets, "1X2", "draw")
+  const awayWin  = prob(markets, "1X2", "away")
+  const over15   = prob(markets, "Over/Under", "over_1.5")
+  const over25   = prob(markets, "Over/Under", "over_2.5")
+  const over35   = prob(markets, "Over/Under", "over_3.5")
+  const btts     = prob(markets, "BTTS", "yes")
+  const csHome   = cleanSheet(lA)
+  const csAway   = cleanSheet(lH)
+
+  const exactScores = markets
+    .filter(m => m.name === "Marcador Exacto")
+    .sort((a, b) => b.ourProbability - a.ourProbability)
+    .slice(0, 8)
+  const maxExact = exactScores[0]?.ourProbability ?? 0.01
+
+  const markets1x2   = markets.filter(m => m.name === "1X2")
+  const marketsOU    = markets.filter(m => m.name === "Over/Under" && ["over_1.5","over_2.5","over_3.5"].includes(m.selection))
+  const marketsBTTS  = markets.filter(m => m.name === "BTTS")
+
+  const homeName = fixture?.home.name ?? analysis.homeTeam ?? `Equipo local`
+  const awayName = fixture?.away.name ?? analysis.awayTeam ?? `Equipo visitante`
+  const groupLabel = fixture?.groupName ? `Grupo ${fixture.groupName}` : "Grupo"
+
+  const confColor = confidence >= 70 ? "var(--win)" : confidence >= 40 ? "var(--draw)" : "var(--loss)"
+  const confLabel = confidence >= 70 ? "ALTO" : confidence >= 40 ? "MEDIO" : "BAJO"
 
   return (
-    <div style={{ maxWidth: 1000, margin: "0 auto", padding: "32px 24px" }}>
+    <div style={{ maxWidth: 920, margin: "0 auto", padding: "32px 24px" }}>
+
+      {/* Breadcrumb */}
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24, fontSize: 12, color: "var(--text-muted)" }}>
         <Link href="/hoy" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Hoy</Link>
         <span>/</span>
-        <span>Fixture #{fixtureId}</span>
+        <span style={{ color: "var(--accent)" }}>{groupLabel}</span>
+        <span>/</span>
+        <span>{homeName} vs {awayName}</span>
       </div>
 
-      <div style={{ marginBottom: 32 }}>
-        <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 12 }}>
-          <span style={{ fontSize: 10, padding: "2px 8px", background: analysis.isPreliminary ? "rgba(245,158,11,0.15)" : "rgba(34,197,94,0.15)", color: analysis.isPreliminary ? "var(--draw)" : "var(--win)" }}>
-            {analysis.isPreliminary ? "PRELIMINAR" : "FINAL"}
+      {/* Match header */}
+      <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "28px 28px 0", marginBottom: 12 }}>
+        {/* Badges */}
+        <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 11, background: "var(--accent-dim)", color: "var(--accent)", padding: "3px 10px", border: "1px solid rgba(232,255,60,0.2)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            {groupLabel}
           </span>
-          <span style={{ fontSize: 10, color: "var(--text-muted)" }}>
-            Actualizado: {formatTime(analysis.lastUpdated)} COT
+          <span style={{ fontSize: 11, color: "var(--text-muted)", border: "1px solid var(--border)", padding: "3px 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            Fase de Grupos
           </span>
+          <span style={{ fontSize: 11, color: "var(--text-muted)", border: "1px solid var(--border)", padding: "3px 10px", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            FIFA World Cup 2026
+          </span>
+          <span style={{ fontSize: 11, padding: "3px 10px", background: confColor + "22", color: confColor, border: `1px solid ${confColor}44`, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            Confianza {confLabel} {confidence}
+          </span>
+          {analysis.isPreliminary && (
+            <span style={{ fontSize: 11, padding: "3px 10px", background: "rgba(245,158,11,0.1)", color: "var(--draw)", border: "1px solid rgba(245,158,11,0.3)", textTransform: "uppercase" }}>
+              Preliminar
+            </span>
+          )}
         </div>
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-          {analysis.alerts.map((alert, i) => (
-            <div key={i} style={{ fontSize: 11, padding: "4px 10px", background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.3)", color: "var(--draw)" }}>
-              {alert}
+
+        {/* Teams */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: 16, marginBottom: 24 }}>
+          <div>
+            <div className="stat-number" style={{ fontSize: "clamp(22px,4vw,42px)", textTransform: "uppercase", lineHeight: 1.05 }}>
+              {homeName}
+            </div>
+            {fixture && (
+              <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 6 }}>
+                {fixture.home.country} · #{fixture.home.fifaRanking} FIFA · Local
+              </div>
+            )}
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <div className="stat-number" style={{ fontSize: 28, color: "var(--text-muted)", letterSpacing: "0.1em" }}>VS</div>
+            <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4, letterSpacing: "0.06em" }}>Pendiente</div>
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <div className="stat-number" style={{ fontSize: "clamp(22px,4vw,42px)", textTransform: "uppercase", lineHeight: 1.05 }}>
+              {awayName}
+            </div>
+            {fixture && (
+              <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 6 }}>
+                {fixture.away.country} · #{fixture.away.fifaRanking} FIFA · Visitante
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Match info bar */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px,1fr))", gap: 1, background: "var(--border)", margin: "0 -28px" }}>
+          {[
+            { label: "Fecha", val: fmt(fixture?.matchDate ?? null) },
+            { label: "Hora (COT)", val: fmtTime(fixture?.matchDate ?? null) },
+            { label: "Sede", val: fixture?.city ?? "Por confirmar" },
+            { label: "Estado", val: "Programado" },
+          ].map(({ label, val }) => (
+            <div key={label} style={{ background: "var(--surface-2)", padding: "10px 14px" }}>
+              <div style={{ fontSize: 10, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 3 }}>{label}</div>
+              <div style={{ fontSize: 13, fontWeight: 600 }}>{val}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: 20, marginBottom: 24 }}>
-        <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>
-          Modelo estadístico
-        </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 16 }}>
-          <div>
-            <div style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 4 }}>Goles esperados local</div>
-            <div className="stat-number" style={{ fontSize: 32, color: "var(--accent)" }}>
-              {analysis.model.lambdaHome.toFixed(2)}
+      {/* Alerts */}
+      {alerts.length > 0 && (
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 12 }}>
+          {alerts.map((a, i) => (
+            <div key={i} style={{ fontSize: 11, padding: "4px 10px", background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.25)", color: "var(--draw)" }}>
+              {a}
             </div>
-          </div>
-          <div>
-            <div style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 4 }}>Goles esperados visitante</div>
-            <div className="stat-number" style={{ fontSize: 32 }}>
-              {analysis.model.lambdaAway.toFixed(2)}
-            </div>
-          </div>
+          ))}
         </div>
-        {analysis.model.adjustmentsApplied.length > 0 && (
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-            {analysis.model.adjustmentsApplied.map((adj, i) => (
-              <span key={i} style={{ fontSize: 10, padding: "2px 6px", background: "var(--surface-2)", color: "var(--text-muted)", border: "1px solid var(--border)" }}>
-                {adj}
-              </span>
+      )}
+
+      {/* Stats grid row 1: 1X2 + xG */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+
+        {/* 1X2 */}
+        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "20px" }}>
+          <h3 style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>
+            Resultado 1X2
+          </h3>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6, marginBottom: 12 }}>
+            {[
+              { label: "1 Local", val: homeWin, color: "var(--win)" },
+              { label: "X Empate", val: draw,    color: "var(--draw)" },
+              { label: "2 Visitante", val: awayWin, color: "var(--loss)" },
+            ].map(({ label, val, color }) => (
+              <div key={label} style={{ textAlign: "center", padding: "14px 8px", background: "var(--surface-2)", borderBottom: `3px solid ${color}` }}>
+                <div style={{ fontSize: 10, color: "var(--text-muted)", marginBottom: 6, letterSpacing: "0.06em" }}>{label}</div>
+                <div className="stat-number" style={{ fontSize: 30, color }}>{pct0(val)}</div>
+                <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 3 }}>{(val * 100).toFixed(1)}%</div>
+              </div>
             ))}
           </div>
-        )}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 4 }}>
+            {[
+              { label: "1X", val: homeWin + draw },
+              { label: "12", val: homeWin + awayWin },
+              { label: "X2", val: draw + awayWin },
+            ].map(({ label, val }) => (
+              <div key={label} style={{ display: "flex", justifyContent: "space-between", padding: "5px 8px", background: "var(--bg)" }}>
+                <span style={{ fontSize: 11, color: "var(--text-muted)" }}>Doble {label}</span>
+                <span className="stat-number" style={{ fontSize: 15 }}>{pct0(val)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* xG */}
+        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "20px" }}>
+          <h3 style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>
+            Goles esperados (λ)
+          </h3>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 16 }}>
+            {[
+              { label: homeName.split(" ")[0], val: lH, color: "var(--accent)" },
+              { label: awayName.split(" ")[0], val: lA, color: "var(--text-muted)" },
+            ].map(({ label, val, color }) => (
+              <div key={label} style={{ textAlign: "center", padding: "14px", background: "var(--surface-2)" }}>
+                <div style={{ fontSize: 10, color: "var(--text-muted)", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</div>
+                <div className="stat-number" style={{ fontSize: 40, color, lineHeight: 1 }}>{val.toFixed(2)}</div>
+                <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 4 }}>xG</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <span style={{ fontSize: 11, color: "var(--text-muted)", width: 70 }}>{homeName.split(" ")[0]}</span>
+            <div style={{ flex: 1, display: "flex", gap: 2 }}>
+              <div style={{ height: 6, background: "var(--accent)", borderRadius: "2px 0 0 2px", width: `${(lH / (lH + lA)) * 100}%`, transition: "width 0.4s" }} />
+              <div style={{ height: 6, background: "var(--border)", borderRadius: "0 2px 2px 0", flex: 1 }} />
+            </div>
+            <span style={{ fontSize: 11, color: "var(--text-muted)", width: 70, textAlign: "right" }}>{awayName.split(" ")[0]}</span>
+          </div>
+        </div>
       </div>
 
-      {recommended.length > 0 && (
-        <div style={{ marginBottom: 24 }}>
-          <h2 className="stat-number" style={{ fontSize: 22, textTransform: "uppercase", marginBottom: 12, color: "var(--win)" }}>
-            Mercados recomendados
-          </h2>
-          <div style={{ display: "grid", gap: 6 }}>
-            {recommended.map((m, i) => (
-              <div key={i} style={{
-                background: "var(--surface)",
-                border: "1px solid var(--border)",
-                borderLeft: "3px solid var(--win)",
-                padding: "14px 16px",
-                display: "grid",
-                gridTemplateColumns: "1fr repeat(5, auto)",
-                alignItems: "center",
-                gap: 16,
+      {/* Stats grid row 2: O/U + CS */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
+        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "20px" }}>
+          <h3 style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>
+            Over / Under · Goles
+          </h3>
+          <StatRow label="+1.5 Goles" val={over15} color="var(--win)" />
+          <StatRow label="+2.5 Goles" val={over25} color="var(--accent)" />
+          <StatRow label="+3.5 Goles" val={over35} color="var(--draw)" />
+          <div style={{ marginTop: 12 }}>
+            <StatRow label="BTTS (Ambos)" val={btts} color="var(--accent)" />
+          </div>
+        </div>
+
+        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "20px" }}>
+          <h3 style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>
+            Clean Sheet · Ajustes modelo
+          </h3>
+          <StatRow label="CS Local"     val={csHome} color="var(--win)" />
+          <StatRow label="CS Visitante" val={csAway} color="var(--win)" />
+          <div style={{ marginTop: 16, display: "grid", gap: 4 }}>
+            {model.adjustmentsApplied.map((adj, i) => (
+              <div key={i} style={{ fontSize: 11, padding: "3px 8px", background: "var(--surface-2)", color: "var(--text-muted)", border: "1px solid var(--border)" }}>
+                {adj}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Exact scores */}
+      {exactScores.length > 0 && (
+        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: "20px", marginBottom: 12 }}>
+          <h3 style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 16 }}>
+            Marcadores exactos · Top 8
+          </h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 6 }}>
+            {exactScores.map((m, i) => (
+              <div key={m.selection} style={{
+                display: "flex", justifyContent: "space-between", alignItems: "center",
+                padding: "10px 14px",
+                background: i === 0 ? "var(--accent-dim)" : "var(--surface-2)",
+                border: i === 0 ? "1px solid rgba(232,255,60,0.25)" : "1px solid transparent",
               }}>
-                <div>
-                  <div style={{ fontSize: 12, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                    {m.name} — {m.selection}
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 10, color: "var(--text-muted)", width: 16 }}>#{i + 1}</span>
+                  <span className="stat-number" style={{ fontSize: 22, color: i === 0 ? "var(--accent)" : "var(--text)" }}>
+                    {m.selection}
+                  </span>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div className="stat-number" style={{ fontSize: 16 }}>{(m.ourProbability * 100).toFixed(1)}%</div>
+                  <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 2 }}>
+                    c. justa {(1 / m.ourProbability).toFixed(1)}x
                   </div>
-                  {m.bookmaker && (
-                    <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 2 }}>
-                      {m.bookmaker} · cuota {m.odds}
-                    </div>
-                  )}
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 10, color: "var(--text-muted)" }}>Prob. modelo</div>
-                  <div className="stat-number" style={{ fontSize: 18 }}>{pct(m.ourProbability)}</div>
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 10, color: "var(--text-muted)" }}>Prob. bm</div>
-                  <div className="stat-number" style={{ fontSize: 18, color: "var(--text-muted)" }}>{pct(m.bookmakerProbability)}</div>
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 10, color: "var(--text-muted)" }}>Edge</div>
-                  <div className="stat-number" style={{ fontSize: 18, color: "var(--win)" }}>+{pct(m.edge)}</div>
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 10, color: "var(--text-muted)" }}>EV</div>
-                  <div className="stat-number" style={{ fontSize: 18, color: evColor(m.EV) }}>+{pct(m.EV)}</div>
-                </div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 10, color: "var(--text-muted)" }}>Kelly</div>
-                  <div className="stat-number" style={{ fontSize: 20, color: "var(--accent)" }}>${m.kellyAmount}</div>
+                  <div style={{ height: 3, width: 60, background: "var(--border)", borderRadius: 2, marginTop: 3 }}>
+                    <div style={{ height: "100%", width: `${(m.ourProbability / maxExact) * 100}%`, background: i === 0 ? "var(--accent)" : "var(--text-muted)", borderRadius: 2 }} />
+                  </div>
                 </div>
               </div>
             ))}
@@ -137,40 +286,48 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
         </div>
       )}
 
-      {others.length > 0 && (
-        <div style={{ marginBottom: 24 }}>
-          <h2 className="stat-number" style={{ fontSize: 18, textTransform: "uppercase", marginBottom: 10, color: "var(--text-muted)" }}>
-            Otros mercados calculados
-          </h2>
-          <div style={{ display: "grid", gap: 4 }}>
-            {others.slice(0, 8).map((m, i) => (
-              <div key={i} style={{
-                background: "var(--surface)",
-                border: "1px solid var(--border)",
-                padding: "10px 16px",
-                display: "grid",
-                gridTemplateColumns: "1fr auto auto auto",
-                alignItems: "center",
-                gap: 12,
-                opacity: 0.65,
-              }}>
-                <div style={{ fontSize: 12 }}>{m.name} — {m.selection}</div>
-                <div className="stat-number" style={{ fontSize: 16 }}>{pct(m.ourProbability)}</div>
-                <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{m.odds ? `@${m.odds}` : "--"}</div>
-                <div className="stat-number" style={{ fontSize: 14, color: "var(--text-muted)" }}>
-                  EV {m.EV !== null ? `${(m.EV * 100).toFixed(1)}%` : "--"}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* Betting layer */}
+      <div style={{ marginTop: 28, marginBottom: 8 }}>
+        <h2 className="stat-number" style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--accent)", marginBottom: 4 }}>
+          Ingresa cuotas · Calcula EV en tiempo real
+        </h2>
+        <p style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 16 }}>
+          La cuota justa es el mínimo para EV positivo. Kelly al 25% fraccionado.
+        </p>
+      </div>
+
+      {markets1x2.length > 0 && (
+        <MarketBettingCard
+          fixtureId={fixtureId}
+          title="Resultado 1X2"
+          markets={markets1x2}
+          bankroll={bankroll.current}
+          confidence={confidence}
+        />
+      )}
+      {marketsOU.length > 0 && (
+        <MarketBettingCard
+          fixtureId={fixtureId}
+          title="Over / Under Goles"
+          markets={marketsOU}
+          bankroll={bankroll.current}
+          confidence={confidence}
+        />
+      )}
+      {marketsBTTS.length > 0 && (
+        <MarketBettingCard
+          fixtureId={fixtureId}
+          title="Ambos Anotan (BTTS)"
+          markets={marketsBTTS}
+          bankroll={bankroll.current}
+          confidence={confidence}
+        />
       )}
 
-      <PartidoActions
-        markets={analysis.markets}
-        fixtureId={fixtureId}
-        bankroll={bankrollState.current}
-      />
+      <div style={{ padding: "12px 16px", border: "1px solid var(--border)", fontSize: 11, color: "var(--text-muted)", display: "flex", justifyContent: "space-between", marginTop: 8 }}>
+        <span>Poisson + Dixon-Coles · CSV fallback H2H + form</span>
+        <span style={{ color: "var(--accent)" }}>Herramienta de análisis personal</span>
+      </div>
     </div>
   )
 }

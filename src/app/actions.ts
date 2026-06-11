@@ -29,6 +29,32 @@ export async function getTodayAnalyses(): Promise<MatchAnalysis[]> {
   }))
 }
 
+export async function getFixtureDetails(fixtureId: number) {
+  const rows = await db.execute({
+    sql: `SELECT f.match_date, f.stage, f.stadium, f.city,
+                 ht.name as home_name, ht.country as home_country,
+                 ht.group_name, ht.fifa_ranking as home_ranking,
+                 at.name as away_name, at.country as away_country,
+                 at.fifa_ranking as away_ranking
+          FROM fixtures f
+          JOIN teams ht ON ht.id = f.home_team_id
+          JOIN teams at ON at.id = f.away_team_id
+          WHERE f.id = ?`,
+    args: [fixtureId],
+  })
+  const r = rows.rows[0] as any
+  if (!r) return null
+  return {
+    matchDate: r.match_date as string | null,
+    stage: r.stage as string,
+    stadium: r.stadium as string | null,
+    city: r.city as string | null,
+    groupName: r.group_name as string,
+    home: { name: r.home_name as string, country: r.home_country as string, fifaRanking: r.home_ranking as number },
+    away: { name: r.away_name as string, country: r.away_country as string, fifaRanking: r.away_ranking as number },
+  }
+}
+
 export async function getAnalysisForFixture(fixtureId: number): Promise<MatchAnalysis | null> {
   const rows = await db.execute({
     sql: "SELECT * FROM match_analyses WHERE fixture_id = ? ORDER BY created_at DESC LIMIT 1",
@@ -287,7 +313,9 @@ export async function updateMarketOddsAction(
     const markets = JSON.parse(row.markets || "[]") as any[]
     const updated = markets.map(m =>
       m.name === market && m.selection === selection
-        ? { ...m, odds, bookmakerProbability: 1 / odds, bookmaker: "manual" }
+        ? odds > 0
+          ? { ...m, odds, bookmakerProbability: 1 / odds, bookmaker: "manual" }
+          : { ...m, odds: null, bookmakerProbability: null, bookmaker: null }
         : m
     )
 
