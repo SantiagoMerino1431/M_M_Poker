@@ -26,6 +26,59 @@ function prob(markets: MarketResult[], name: string, sel: string) {
 
 function cleanSheet(lambda: number) { return Math.exp(-lambda) }
 
+function selectionLabel(name: string, sel: string, home: string, away: string): string {
+  if (name === "1X2") {
+    if (sel === "home") return `${home} gana`
+    if (sel === "draw") return "Empate"
+    if (sel === "away") return `${away} gana`
+  }
+  if (name === "Over/Under") return sel.replace("over_", "Más de ").replace("under_", "Menos de ").replace("_", ".")
+  if (name === "BTTS") return sel === "yes" ? "Ambos anotan" : "No ambos anotan"
+  if (name === "Marcador Exacto") return `Exacto ${sel}`
+  return `${name} ${sel}`
+}
+
+function buildExplanation(
+  m: MarketResult,
+  lH: number, lA: number,
+  adjustments: string[],
+  confidence: number,
+  home: string, away: string
+): string {
+  const lines: string[] = []
+  const totalXG = lH + lA
+  const edge = m.bookmakerProbability ? ((m.ourProbability - m.bookmakerProbability) * 100).toFixed(1) : null
+
+  if (m.name === "1X2" && m.selection === "home") {
+    lines.push(`El modelo asigna ${(m.ourProbability * 100).toFixed(1)}% de probabilidad a ${home}, vs ${m.bookmakerProbability ? (m.bookmakerProbability * 100).toFixed(1) + "% implícito en la cuota" : "la cuota ingresada"}.`)
+    lines.push(`Con λ=${lH.toFixed(2)} goles esperados para local frente a λ=${lA.toFixed(2)} del visitante, el modelo ve clara ventaja ofensiva.`)
+  } else if (m.name === "1X2" && m.selection === "away") {
+    lines.push(`${away} tiene ${(m.ourProbability * 100).toFixed(1)}% según el modelo — el mercado está sobrevalorando al local.`)
+    lines.push(`λ visitante ${lA.toFixed(2)} vs λ local ${lH.toFixed(2)}.`)
+  } else if (m.name === "1X2" && m.selection === "draw") {
+    lines.push(`Empate con ${(m.ourProbability * 100).toFixed(1)}%: el modelo ve equipos equilibrados (λ ${lH.toFixed(2)} vs ${lA.toFixed(2)}).`)
+  } else if (m.name === "Over/Under" && m.selection.includes("over")) {
+    const line = m.selection.replace("over_", "").replace("_", ".")
+    lines.push(`Se esperan ${totalXG.toFixed(2)} goles totales (λ ${lH.toFixed(2)}+${lA.toFixed(2)}), dando ${(m.ourProbability * 100).toFixed(1)}% de probabilidad a más de ${line}.`)
+    lines.push(`El modelo ve un partido con buen ritmo ofensivo de ambos lados.`)
+  } else if (m.name === "BTTS" && m.selection === "yes") {
+    lines.push(`Con ${home} (λ=${lH.toFixed(2)}) y ${away} (λ=${lA.toFixed(2)}), la probabilidad de que ambos anoten es ${(m.ourProbability * 100).toFixed(1)}%.`)
+    lines.push(`Solo sería mala apuesta si un equipo cierra defensivamente — no hay señal de eso en el modelo.`)
+  } else {
+    lines.push(`Probabilidad modelo: ${(m.ourProbability * 100).toFixed(1)}%. Cuota justa: ${(1 / m.ourProbability).toFixed(2)}.`)
+  }
+
+  const adjFiltered = adjustments.filter(a => !a.includes("0%"))
+  if (adjFiltered.length > 0) {
+    lines.push(`Ajustes aplicados: ${adjFiltered.slice(0, 3).join(", ")}.`)
+  }
+
+  if (edge) lines.push(`Edge vs casa: +${edge}%.`)
+  lines.push(`Confianza del modelo: ${confidence}/100 — Kelly al 25%.`)
+
+  return lines.join(" ")
+}
+
 export default async function PartidoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const fixtureId = Number(id)
@@ -285,6 +338,85 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
           </div>
         </div>
       )}
+
+      {/* TOP APUESTAS — aparece cuando hay odds guardados con EV > 0 */}
+      {(() => {
+        const top = markets
+          .filter(m => m.odds != null && m.EV != null && m.EV > 0)
+          .sort((a, b) => (b.EV ?? 0) - (a.EV ?? 0))
+          .slice(0, 3)
+        if (top.length === 0) return null
+        return (
+          <div style={{ background: "rgba(232,255,60,0.04)", border: "1px solid rgba(232,255,60,0.25)", padding: "20px 24px", marginBottom: 12, marginTop: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
+              <h2 className="stat-number" style={{ fontSize: 13, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--accent)" }}>
+                ▲ Top {top.length} Apuestas con Valor
+              </h2>
+              <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
+                Recarga la página para actualizar después de ingresar cuotas
+              </span>
+            </div>
+
+            <div style={{ display: "grid", gap: 16 }}>
+              {top.map((m, i) => {
+                const kelly = m.kellyAmount ?? 0
+                const evPct = ((m.EV ?? 0) * 100).toFixed(1)
+                const evColor = (m.EV ?? 0) >= 0.08 ? "var(--win)" : "var(--draw)"
+                const explanation = buildExplanation(m, lH, lA, model.adjustmentsApplied, confidence, homeName, awayName)
+
+                return (
+                  <div key={`${m.name}|${m.selection}`} style={{
+                    borderLeft: `3px solid ${evColor}`,
+                    paddingLeft: 16,
+                  }}>
+                    {/* Header row */}
+                    <div style={{ display: "grid", gridTemplateColumns: "auto 1fr repeat(3, auto)", gap: 16, alignItems: "center", marginBottom: 10 }}>
+                      <span className="stat-number" style={{ fontSize: 28, color: evColor }}>#{i + 1}</span>
+                      <div>
+                        <div className="stat-number" style={{ fontSize: 16, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                          {selectionLabel(m.name, m.selection, homeName, awayName)}
+                        </div>
+                        <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>
+                          {m.name} · {m.bookmaker ?? "manual"}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontSize: 10, color: "var(--text-muted)" }}>Cuota</div>
+                        <div className="stat-number" style={{ fontSize: 22 }}>@{m.odds?.toFixed(2)}</div>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontSize: 10, color: "var(--text-muted)" }}>EV</div>
+                        <div className="stat-number" style={{ fontSize: 22, color: evColor }}>+{evPct}%</div>
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontSize: 10, color: "var(--text-muted)" }}>Kelly 25%</div>
+                        <div className="stat-number" style={{ fontSize: 22, color: "var(--accent)" }}>
+                          {kelly > 0 ? `$${Math.round(kelly).toLocaleString("es-CO")}` : "--"}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Por qué es viable */}
+                    <div style={{
+                      background: "var(--surface-2)",
+                      border: "1px solid var(--border)",
+                      padding: "10px 14px",
+                      fontSize: 12,
+                      color: "var(--text-muted)",
+                      lineHeight: 1.6,
+                    }}>
+                      <span style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", display: "block", marginBottom: 4 }}>
+                        Por qué invertir aquí
+                      </span>
+                      {explanation}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })()}
 
       {/* Betting layer */}
       <div style={{ marginTop: 28, marginBottom: 8 }}>
