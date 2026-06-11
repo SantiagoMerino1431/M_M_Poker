@@ -63,6 +63,84 @@ const TEAMS = [
   { id: 48, name: "Panamá",              country: "PAN", group_name: "L", fifa_ranking: 50,  attack_strength: 0.88, defense_strength: 1.08 },
 ]
 
+// WC 2026 group stage schedule. Each group has 6 fixtures (C(4,2)=6).
+// Seed order within a group: (0,1),(0,2),(0,3),(1,2),(1,3),(2,3)
+// WC matchday pairings: MD1=(0,1)+(2,3), MD2=(0,2)+(1,3), MD3=(0,3)+(1,2)
+// So by seed index: MD1=fixtures[0]+fixtures[5], MD2=fixtures[1]+fixtures[4], MD3=fixtures[2]+fixtures[3]
+// Group stage: June 11 - July 2, 2026. 2 groups per day for MD1/MD2, then simultaneous MD3.
+function buildFixtureSchedule(): Map<number, { date: string; stadium: string; city: string }> {
+  const schedule = new Map<number, { date: string; stadium: string; city: string }>()
+
+  const groups = ["A","B","C","D","E","F","G","H","I","J","K","L"]
+  // Venues for host cities (used when one team is a host nation)
+  const hostVenues: Record<string, { stadium: string; city: string }> = {
+    MEX: { stadium: "Estadio Azteca", city: "Ciudad de México" },
+    USA: { stadium: "SoFi Stadium",   city: "Los Angeles" },
+    CAN: { stadium: "BMO Field",      city: "Toronto" },
+  }
+  const neutralVenues = [
+    { stadium: "AT&T Stadium",       city: "Dallas" },
+    { stadium: "MetLife Stadium",    city: "New York" },
+    { stadium: "Hard Rock Stadium",  city: "Miami" },
+    { stadium: "Levi's Stadium",     city: "San Francisco" },
+    { stadium: "Lumen Field",        city: "Seattle" },
+    { stadium: "Arrowhead Stadium",  city: "Kansas City" },
+    { stadium: "Gillette Stadium",   city: "Boston" },
+    { stadium: "BC Place",           city: "Vancouver" },
+  ]
+
+  const startJune11 = new Date("2026-06-11T00:00:00Z")
+  const addDays = (base: Date, n: number) => {
+    const d = new Date(base)
+    d.setUTCDate(d.getUTCDate() + n)
+    return d.toISOString().split("T")[0]
+  }
+
+  // For each group, compute the base fixture ID (groups have 6 fixtures each)
+  groups.forEach((g, gi) => {
+    const gTeams = TEAMS.filter(t => t.group_name === g)
+    // Fixture IDs: gi*6+1 through gi*6+6
+    const base = gi * 6 + 1
+    // Seed order: (0,1)=base, (0,2)=base+1, (0,3)=base+2, (1,2)=base+3, (1,3)=base+4, (2,3)=base+5
+    // MD1: (0,1)=base and (2,3)=base+5   → day offset 0 for first group of day, 0 for second pair
+    // MD2: (0,2)=base+1 and (1,3)=base+4 → starts June 18
+    // MD3: (0,3)=base+2 and (1,2)=base+3 → starts June 25 (simultaneous)
+
+    // 2 groups per day: groups 0,1 share day 0; groups 2,3 share day 1; etc.
+    const md1Day = addDays(startJune11, Math.floor(gi / 2))
+    const md2Day = addDays(startJune11, 7 + Math.floor(gi / 2))
+    const md3Day = addDays(startJune11, 14 + Math.floor(gi / 2))
+
+    const slot1 = "T16:00:00Z"
+    const slot2 = "T19:00:00Z"
+
+    // Venue: prefer host nation venue, else cycle neutral venues
+    const venue = (teamIdx: number) => {
+      const country = gTeams[teamIdx].country
+      return hostVenues[country] ?? neutralVenues[gi % neutralVenues.length]
+    }
+
+    const v01 = venue(0)
+    const v23 = venue(2)
+    const v02 = venue(0)
+    const v13 = venue(1)
+    const v03 = venue(0)
+    const v12 = venue(1)
+
+    // MD1
+    schedule.set(base,     { date: `${md1Day}${slot1}`, ...v01 })
+    schedule.set(base + 5, { date: `${md1Day}${slot2}`, ...v23 })
+    // MD2
+    schedule.set(base + 1, { date: `${md2Day}${slot1}`, ...v02 })
+    schedule.set(base + 4, { date: `${md2Day}${slot2}`, ...v13 })
+    // MD3 (simultaneous — both same day same slots)
+    schedule.set(base + 2, { date: `${md3Day}${slot1}`, ...v03 })
+    schedule.set(base + 3, { date: `${md3Day}${slot2}`, ...v12 })
+  })
+
+  return schedule
+}
+
 export async function seed() {
   for (const t of TEAMS) {
     await db.execute({
@@ -72,17 +150,30 @@ export async function seed() {
     })
   }
 
+  const schedule = buildFixtureSchedule()
   let fixtureId = 1
   const groups = ["A","B","C","D","E","F","G","H","I","J","K","L"]
   for (const g of groups) {
     const gTeams = TEAMS.filter(t => t.group_name === g)
     for (let i = 0; i < gTeams.length; i++) {
       for (let j = i + 1; j < gTeams.length; j++) {
+        const sched = schedule.get(fixtureId)
         await db.execute({
-          sql: `INSERT OR REPLACE INTO fixtures (id, home_team_id, away_team_id, stage, status)
-                VALUES (?, ?, ?, ?, ?)`,
-          args: [fixtureId++, gTeams[i].id, gTeams[j].id, `group_${g}`, "scheduled"],
+          sql: `INSERT OR REPLACE INTO fixtures
+                (id, home_team_id, away_team_id, stage, status, match_date, stadium, city)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          args: [
+            fixtureId,
+            gTeams[i].id,
+            gTeams[j].id,
+            `group_${g}`,
+            "scheduled",
+            sched?.date ?? null,
+            sched?.stadium ?? null,
+            sched?.city ?? null,
+          ],
         })
+        fixtureId++
       }
     }
   }

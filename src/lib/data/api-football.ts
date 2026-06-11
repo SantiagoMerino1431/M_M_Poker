@@ -20,26 +20,37 @@ async function apiFetch<T>(path: string, noCache = false): Promise<T> {
   return data
 }
 
-export async function fetchTodayFixtures(): Promise<{
+type FixtureRow = {
   id: number; date: string; stadium: string; city: string;
   homeTeamId: number; awayTeamId: number; stage: string;
   homeTeamName: string; awayTeamName: string;
-}[]> {
+}
+
+// Queries local DB for today's fixtures. API-Football free plan doesn't cover season 2026.
+export async function fetchTodayFixtures(): Promise<FixtureRow[]> {
+  const { db } = await import("../db/client")
   const today = new Date().toISOString().split("T")[0]
-  const data = await apiFetch<any>(
-    `/fixtures?league=${WC_2026_LEAGUE_ID}&season=${WC_2026_SEASON}&date=${today}`,
-    true  // no-store: always fresh for today's schedule
-  )
-  return (data.response ?? []).map((f: any) => ({
-    id: f.fixture.id,
-    date: f.fixture.date,
-    stadium: f.fixture.venue?.name ?? "Unknown",
-    city: f.fixture.venue?.city ?? "Unknown",
-    homeTeamId: f.teams.home.id,
-    awayTeamId: f.teams.away.id,
-    homeTeamName: f.teams.home.name ?? `Team ${f.teams.home.id}`,
-    awayTeamName: f.teams.away.name ?? `Team ${f.teams.away.id}`,
-    stage: f.league.round ?? "Group Stage",
+  const rows = await db.execute({
+    sql: `SELECT f.id, f.match_date, f.stadium, f.city, f.stage,
+                 f.home_team_id, f.away_team_id,
+                 h.name AS home_name, a.name AS away_name
+          FROM fixtures f
+          JOIN teams h ON h.id = f.home_team_id
+          JOIN teams a ON a.id = f.away_team_id
+          WHERE f.match_date >= ? AND f.match_date < ?
+          ORDER BY f.match_date`,
+    args: [`${today}T00:00:00Z`, `${today}T23:59:59Z`],
+  })
+  return (rows.rows as any[]).map(r => ({
+    id: r.id,
+    date: r.match_date,
+    stadium: r.stadium ?? "Unknown",
+    city: r.city ?? "Unknown",
+    homeTeamId: r.home_team_id,
+    awayTeamId: r.away_team_id,
+    homeTeamName: r.home_name,
+    awayTeamName: r.away_name,
+    stage: r.stage,
   }))
 }
 
