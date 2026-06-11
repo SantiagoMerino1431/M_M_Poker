@@ -1,3 +1,5 @@
+export const maxDuration = 30
+
 import { getTodayAnalyses, getDashboardData } from "../actions"
 import Link from "next/link"
 import { todayLabel } from "@/lib/utils/time"

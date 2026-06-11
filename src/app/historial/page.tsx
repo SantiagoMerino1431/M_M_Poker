@@ -1,3 +1,5 @@
+export const maxDuration = 30
+
 import { getBets, calcMetrics } from "@/lib/kelly/tracker"
 import { HistorialActions } from "@/components/HistorialActions"
 import { BetTable } from "@/components/BetTable"

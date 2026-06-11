@@ -1,3 +1,5 @@
+export const maxDuration = 30
+
 import { getAnalysisForFixture, getFixtureDetails } from "../../actions"
 import { getBankrollState } from "@/lib/kelly/bankroll"
 import { notFound } from "next/navigation"
