@@ -29,13 +29,12 @@ export function calcKelly(input: KellyInput): KellyResult {
 
   const multiplier = confidenceMultiplier(confidence)
 
-  // Primeros 4 partidos: Kelly al 10% del normal, tope 0.5%
+  // Half-Kelly (50%) salvo en modo prueba (primeros partidos), tope 8% / 0.5%.
   const halfKelly = trialMode ? 0.05 : 0.5
-  const MIN = 0.005
   const MAX = trialMode ? 0.005 : 0.08
 
   const adjusted = rawKelly * halfKelly * multiplier
-  const capped = Math.max(MIN, Math.min(MAX, adjusted))
+  const capped = Math.min(MAX, Math.max(0, adjusted))
   const amount = Math.round(bankroll * capped)
 
   return { fraction: capped, amount, isNegative: false }

@@ -27,6 +27,14 @@ describe("calcKelly", () => {
     const low  = calcKelly({ probability: 0.55, odds: 2.10, bankroll: 1000, confidence: 50 })
     expect(low.amount).toBeLessThan(high.amount)
   })
+
+  it("edge minúsculo produce fracción proporcional al edge, no un piso forzado", () => {
+    // prob=0.502, odds=2.0 -> rawKelly=0.004, half=0.5 -> adjusted=0.002 (<0.005 floor)
+    // sin piso: fraction debe ser ~0.002, no 0.005
+    const result = calcKelly({ probability: 0.502, odds: 2.0, bankroll: 100000, confidence: 80 })
+    expect(result.fraction).toBeLessThan(0.005)
+    expect(result.fraction).toBeGreaterThan(0)
+  })
 })
 
 describe("applyDailyLimit", () => {

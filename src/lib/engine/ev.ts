@@ -1,26 +1,26 @@
 import type { MarketResult } from "../types"
+import { calcKelly } from "../kelly/criterion"
+
+// Convierte el confidenceMultiplier (0, 0.5, 0.75, 1.0) a un confidence
+// equivalente para que calcKelly aplique la escala correcta internamente.
+function multiplierToConfidence(mult: number): number {
+  if (mult >= 1.0) return 80
+  if (mult >= 0.75) return 60
+  if (mult >= 0.5) return 40
+  return 0
+}
 
 export function applyKellyToMarkets(
   markets: MarketResult[],
   bankroll: number,
   confidenceMultiplier: number,
-  trialMode = false
+  trialMode = false,
 ): MarketResult[] {
-  const MAX = trialMode ? 0.005 : 0.08
-  const halfKelly = trialMode ? 0.05 : 0.25
-
+  const confidence = multiplierToConfidence(confidenceMultiplier)
   return markets.map(m => {
     if (m.EV === null || m.odds === null || !m.isRecommended) return m
-
-    const b = m.odds - 1
-    const p = m.ourProbability
-    const q = 1 - p
-    const rawKelly = (p * b - q) / b
-    const adjusted = rawKelly * halfKelly * confidenceMultiplier
-    const capped = Math.max(0.005, Math.min(MAX, adjusted))
-    const amount = Math.round(bankroll * capped)
-
-    return { ...m, kellyFraction: capped, kellyAmount: amount }
+    const k = calcKelly({ probability: m.ourProbability, odds: m.odds, bankroll, confidence, trialMode })
+    return { ...m, kellyFraction: k.fraction, kellyAmount: k.amount }
   })
 }
 
