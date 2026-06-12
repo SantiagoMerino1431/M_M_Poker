@@ -216,6 +216,6 @@ export function getTeamStrengthFromCSV(teamName: string): { attackStrength: numb
   const LEAGUE_AVG = 1.4
   return {
     attackStrength:  Math.max(0.5, Math.min(2.0, avgScored   / LEAGUE_AVG)),
-    defenseStrength: Math.max(0.5, Math.min(2.0, LEAGUE_AVG  / Math.max(0.3, avgConceded))),
+    defenseStrength: Math.max(0.5, Math.min(2.0, avgConceded / LEAGUE_AVG)),
   }
 }
