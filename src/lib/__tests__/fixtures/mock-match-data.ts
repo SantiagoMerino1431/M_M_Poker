@@ -47,6 +47,8 @@ export function makeMockMarketResult(overrides: Partial<MarketResult> = {}): Mar
     name: "1X2",
     selection: "home",
     ourProbability: 0.48,
+    modelProbability: 0.50,
+    marketProbability: 0.45,
     bookmakerProbability: 0.42,
     odds: 2.10,
     bookmaker: "bet365",

@@ -97,7 +97,9 @@ export interface ModelOutput {
 export interface MarketResult {
   name: string
   selection: string
-  ourProbability: number
+  ourProbability: number          // prob usada para EV (blended con mercado)
+  modelProbability: number        // prob cruda del modelo (debug/UI)
+  marketProbability: number | null // consenso de-viggeado del mercado
   bookmakerProbability: number | null
   odds: number | null
   bookmaker: string | null

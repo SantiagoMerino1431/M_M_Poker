@@ -24,6 +24,6 @@ describe("cordura: el favorito del modelo coincide con el del mercado", () => {
     const markets = calcAllMarkets(matrix, data)
     const home = markets.find(m => m.name === "1X2" && m.selection === "home")!
     const away = markets.find(m => m.name === "1X2" && m.selection === "away")!
-    expect(home.ourProbability).toBeGreaterThan(away.ourProbability)
+    expect(home.modelProbability).toBeGreaterThan(away.modelProbability)
   })
 })
