@@ -23,7 +23,7 @@ export function BetModal({ market, fixtureId, defaultAmount, onClose }: Props) {
 
   const handleConfirm = () => {
     startTransition(async () => {
-      await registerBet({
+      const res = await registerBet({
         fixtureId,
         market: market.name,
         selection: market.selection,
@@ -42,7 +42,12 @@ export function BetModal({ market, fixtureId, defaultAmount, onClose }: Props) {
         createdAt: new Date().toISOString(),
         settledAt: null,
       })
-      setMessage(`Apuesta registrada — $${amount.toLocaleString("es-CO")} COP`)
+      if (!res.ok) { setMessage(res.message ?? "Apuesta rechazada"); return }
+      setMessage(
+        res.message
+          ? `Registrada con ajuste — $${amount.toLocaleString("es-CO")} COP (${res.message})`
+          : `Apuesta registrada — $${amount.toLocaleString("es-CO")} COP`,
+      )
       timerRef.current = setTimeout(() => onClose(true), 1500)
     })
   }

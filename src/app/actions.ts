@@ -1,5 +1,6 @@
 "use server"
 import { db } from "@/lib/db/client"
+import { migrate } from "@/lib/db/schema"
 import { getBankrollState } from "@/lib/kelly/bankroll"
 import { calcMetrics, getBets, saveBet } from "@/lib/kelly/tracker"
 import type { MatchAnalysis, Bet } from "@/lib/types"
@@ -73,13 +74,33 @@ export async function getAnalysisForFixture(fixtureId: number): Promise<MatchAna
   }
 }
 
-export async function registerBet(bet: Omit<Bet, "id">): Promise<{ id: number }> {
-  const id = await saveBet(bet)
-  return { id }
+export async function registerBet(bet: Omit<Bet, "id">): Promise<{ ok: boolean; id?: number; message?: string }> {
+  const { checkBetAllowed } = await import("@/lib/kelly/portfolio")
+  const state = await getBankrollState(bet.userId)
+
+  // Exposición real ya comprometida hoy (apuestas reales sin liquidar o de hoy).
+  const today = new Date().toISOString().split("T")[0]
+  const stakedRow = await db.execute({
+    sql: `SELECT COALESCE(SUM(amount),0) AS s FROM bets
+          WHERE mode='real' AND created_at >= ?${bet.userId != null ? " AND user_id = ?" : ""}`,
+    args: bet.userId != null ? [`${today}T00:00:00Z`, bet.userId] : [`${today}T00:00:00Z`],
+  })
+  const todayRealStaked = Number((stakedRow.rows[0] as any).s ?? 0)
+
+  const check = checkBetAllowed({
+    mode: state.mode,
+    bankroll: state.current,
+    todayRealStaked,
+    newAmount: bet.amount,
+    betMode: bet.mode,
+  })
+  if (!check.allowed) return { ok: false, message: check.reason }
+
+  const id = await saveBet({ ...bet, amount: check.adjustedAmount })
+  return { ok: true, id, message: check.reason }
 }
 
 async function ensureSchema() {
-  const { migrate } = await import("@/lib/db/schema")
   await migrate()
 }
 
@@ -128,10 +149,10 @@ export async function getDashboardData(userId?: number) {
 
 export async function runDailyCronAction(): Promise<{ ok: boolean; message: string }> {
   try {
-    const { migrate } = await import("@/lib/db/schema")
     const { seed } = await import("@/lib/db/seed")
     const { fetchTodayFixtures } = await import("@/lib/data/api-football")
     const { buildMatchData } = await import("@/lib/data/pipeline")
+    await migrate()
 
     await migrate()
     await seed()

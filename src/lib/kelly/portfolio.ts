@@ -30,3 +30,40 @@ export function applyDailyLimit(
     kellyFraction: b.kellyFraction * scale,
   }))
 }
+
+export interface BetCheckInput {
+  mode: "normal" | "conservative" | "paused"
+  bankroll: number
+  todayRealStaked: number
+  newAmount: number
+  betMode: "real" | "paper"
+}
+
+export interface BetCheckResult {
+  allowed: boolean
+  adjustedAmount: number
+  reason?: string
+}
+
+const MAX_DAILY_EXPOSURE = 0.15
+
+export function checkBetAllowed(input: BetCheckInput): BetCheckResult {
+  const { mode, bankroll, todayRealStaked, newAmount, betMode } = input
+
+  // Paper no consume bankroll ni riesgo real.
+  if (betMode === "paper") return { allowed: true, adjustedAmount: newAmount }
+
+  if (mode === "paused") {
+    return { allowed: false, adjustedAmount: 0, reason: "Sistema en pausa por 5 pérdidas consecutivas" }
+  }
+
+  const maxAllowed = bankroll * MAX_DAILY_EXPOSURE
+  const remaining = Math.max(0, maxAllowed - todayRealStaked)
+  if (remaining <= 0) {
+    return { allowed: false, adjustedAmount: 0, reason: "Límite de exposición diaria (15%) alcanzado" }
+  }
+  if (newAmount > remaining) {
+    return { allowed: true, adjustedAmount: Math.round(remaining), reason: "Monto recortado al límite de exposición diaria" }
+  }
+  return { allowed: true, adjustedAmount: newAmount }
+}

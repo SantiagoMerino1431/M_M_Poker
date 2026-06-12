@@ -71,7 +71,7 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
     if (!amount || amount <= 0) return
     const mode = modeMap[key] ?? "real"
     setConfirming(key)
-    await registerBet({
+    const res = await registerBet({
       fixtureId,
       userId: user?.id,
       market: m.name,
@@ -92,6 +92,7 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
       settledAt: null,
     })
     setConfirming(null)
+    if (!res.ok) { alert(res.message ?? "Apuesta rechazada por control de riesgo"); return }
     setRegistering(null)
     setRegistered(prev => new Map(prev).set(key, mode))
   }
