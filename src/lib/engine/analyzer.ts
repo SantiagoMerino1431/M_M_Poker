@@ -24,6 +24,15 @@ export function calcConfidence(dataQuality: number, maxDivergence1x2: number): n
   return Math.max(0, Math.min(100, confidence))
 }
 
+function calcRestDays(form: import("../types").FormRecord[], matchDate: string): number {
+  if (!form.length) return 5
+  const sorted = [...form].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  const days = Math.round(
+    (new Date(matchDate).getTime() - new Date(sorted[0].date).getTime()) / (1000 * 60 * 60 * 24)
+  )
+  return Math.max(1, Math.min(30, days))
+}
+
 export function analyzeMatch(data: MatchData, bankroll: number, trialMode = false): MatchAnalysis {
   const alerts: string[] = []
   const adjustments: string[] = []
@@ -48,8 +57,8 @@ export function analyzeMatch(data: MatchData, bankroll: number, trialMode = fals
     city: data.fixture.city,
     altitudeM: data.fixture.altitudeM,
     tempC: data.weather?.tempC ?? null,
-    homeRestDays: 5,
-    awayRestDays: 5,
+    homeRestDays: calcRestDays(data.homeForm, data.fixture.date),
+    awayRestDays: calcRestDays(data.awayForm, data.fixture.date),
     refereeAvgYellows: data.referee?.avgYellowsPerGame ?? null,
   })
 
