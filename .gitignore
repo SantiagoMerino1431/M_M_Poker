@@ -50,3 +50,5 @@ next-env.d.ts
 data/odds_series.csv
 data/odds_series_b.csv
 data/closing_odds.csv
+
+.playwright-mcp
