@@ -66,7 +66,8 @@ export async function fetchTeamStats(teamId: number): Promise<Partial<TeamStreng
   const goalsAgainst = stats.goals?.against?.total?.total ?? played * 1.2
   return {
     attackStrength: goalsFor / played / 1.4,
-    defenseStrength: 1.4 / (goalsAgainst / played),
+    // Convención: menor = mejor defensa. Goles recibidos por partido sobre la media.
+    defenseStrength: (goalsAgainst / played) / 1.4,
   }
 }
 
