@@ -13,6 +13,17 @@ function confidenceMultiplier(score: number): number {
   return 0.00
 }
 
+// Confidence = calidad de datos penalizada por divergencia modelo/mercado.
+// Una divergencia grande en 1X2 casi nunca es "valor": suele ser ruido o bug,
+// así que reduce la confianza y, por la regla <40, puede bloquear la recomendación.
+export function calcConfidence(dataQuality: number, maxDivergence1x2: number): number {
+  let confidence = dataQuality
+  if (maxDivergence1x2 > 0.20) confidence -= 30
+  else if (maxDivergence1x2 > 0.12) confidence -= 15
+  else if (maxDivergence1x2 > 0.08) confidence -= 5
+  return Math.max(0, Math.min(100, confidence))
+}
+
 export function analyzeMatch(data: MatchData, bankroll: number, trialMode = false): MatchAnalysis {
   const alerts: string[] = []
   const adjustments: string[] = []
@@ -76,14 +87,23 @@ export function analyzeMatch(data: MatchData, bankroll: number, trialMode = fals
     scoreMatrix: matrix,
   }
 
-  const multiplier = confidenceMultiplier(data.dataQuality)
   let markets = calcAllMarkets(matrix, data)
+
+  // Divergencia máxima entre modelo y mercado en las 3 vías 1X2.
+  const oneX2 = markets.filter(m => m.name === "1X2" && m.marketProbability !== null)
+  const maxDivergence = oneX2.reduce(
+    (mx, m) => Math.max(mx, Math.abs(m.modelProbability - (m.marketProbability ?? m.modelProbability))),
+    0,
+  )
+  const confidence = calcConfidence(data.dataQuality, maxDivergence)
+
+  const multiplier = confidenceMultiplier(confidence)
   markets = applyKellyToMarkets(markets, bankroll, multiplier, trialMode)
   markets = rankMarkets(markets)
 
   return {
     fixtureId: data.fixture.id,
-    confidence: data.dataQuality,
+    confidence,
     isPreliminary: !data.lineups.home || !data.lineups.away,
     model: modelOutput,
     markets,
