@@ -463,6 +463,44 @@ export async function clearAlertsAction(): Promise<{ ok: boolean; message: strin
   }
 }
 
+export async function captureClosingOddsAction(fixtureId: number): Promise<{ ok: boolean; message: string }> {
+  try {
+    const fixtureRow = await db.execute({
+      sql: "SELECT home_team, away_team FROM match_analyses WHERE fixture_id = ? ORDER BY created_at DESC LIMIT 1",
+      args: [fixtureId],
+    })
+    const row = fixtureRow.rows[0] as any
+    if (!row) return { ok: false, message: "Fixture no encontrado en análisis" }
+
+    const { fetchOdds } = await import("@/lib/data/odds-api")
+    const { closingOddsForBet } = await import("@/lib/kelly/metrics")
+
+    const closing = await fetchOdds(row.home_team, row.away_team)
+    if (closing.length === 0) return { ok: false, message: "Sin cuotas de cierre disponibles" }
+
+    const betsRows = await db.execute({
+      sql: "SELECT id, market, selection FROM bets WHERE fixture_id = ? AND result IS NULL",
+      args: [fixtureId],
+    })
+
+    let updated = 0
+    for (const bet of betsRows.rows as any[]) {
+      const closingOdds = closingOddsForBet(closing, bet.market, bet.selection, row.home_team, row.away_team)
+      if (closingOdds !== null) {
+        await db.execute({
+          sql: "UPDATE bets SET odds_closing = ? WHERE id = ?",
+          args: [closingOdds, bet.id],
+        })
+        updated++
+      }
+    }
+
+    return { ok: true, message: `CLV capturado para ${updated} apuesta${updated !== 1 ? "s" : ""} (fixture ${fixtureId})` }
+  } catch (err: any) {
+    return { ok: false, message: err?.message ?? "Error al capturar closing odds" }
+  }
+}
+
 export async function updateMarketOddsAction(
   fixtureId: number,
   market: string,

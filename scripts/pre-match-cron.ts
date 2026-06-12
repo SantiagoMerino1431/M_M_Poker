@@ -56,6 +56,25 @@ async function run() {
     if (odds.length === 0) {
       await createAlert(fixture.id, "stale_odds",
         `Sin cuotas actualizadas para ${home.name} vs ${away.name} — ingresar manualmente`)
+    } else {
+      // Capturar closing odds para CLV antes de que el partido empiece
+      const { closingOddsForBet } = await import("../src/lib/kelly/metrics")
+      const betsRows = await db.execute({
+        sql: "SELECT id, market, selection FROM bets WHERE fixture_id = ? AND result IS NULL",
+        args: [fixture.id],
+      })
+      let clvCount = 0
+      for (const bet of betsRows.rows as any[]) {
+        const closingOdds = closingOddsForBet(odds, bet.market, bet.selection, home.name, away.name)
+        if (closingOdds !== null) {
+          await db.execute({
+            sql: "UPDATE bets SET odds_closing = ? WHERE id = ?",
+            args: [closingOdds, bet.id],
+          })
+          clvCount++
+        }
+      }
+      if (clvCount > 0) console.log(`[pre-match] CLV capturado para ${clvCount} apuesta(s) — fixture ${fixture.id}`)
     }
 
     await db.execute({

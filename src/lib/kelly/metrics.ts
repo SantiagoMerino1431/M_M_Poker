@@ -1,4 +1,6 @@
-import type { Bet } from "../types"
+import type { Bet, MarketOdds } from "../types"
+import { median } from "../model/devig"
+import { matchesTeam } from "../data/team-names"
 
 export interface BettingMetrics {
   ROI: number
@@ -44,4 +46,41 @@ export function calcMetrics(bets: Bet[]): BettingMetrics {
     totalStaked,
     profitLoss,
   }
+}
+
+export function closingOddsForBet(
+  closing: MarketOdds[],
+  market: string,
+  selection: string,
+  homeName: string,
+  awayName: string,
+): number | null {
+  let matcher: (o: MarketOdds) => boolean
+
+  if (market === "1X2") {
+    if (selection === "home") {
+      matcher = o => o.market === "h2h" && matchesTeam(o.selection, homeName)
+    } else if (selection === "away") {
+      matcher = o => o.market === "h2h" && matchesTeam(o.selection, awayName)
+    } else {
+      matcher = o => o.market === "h2h" && o.selection.toLowerCase().replace(/[^a-z]/g, "") === "draw"
+    }
+  } else if (market === "Over/Under") {
+    const label = selection
+      .replace("over_", "Over ")
+      .replace("under_", "Under ")
+      .replace("_", " ")
+      .replace(/\s+/g, " ")
+      .trim()
+    const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9.]/g, "")
+    matcher = o => o.market === "totals" && norm(o.selection) === norm(label)
+  } else if (market === "BTTS") {
+    const target = selection === "yes" ? "yes" : "no"
+    matcher = o => o.market === "btts" && o.selection.toLowerCase() === target
+  } else {
+    return null
+  }
+
+  const prices = closing.filter(matcher).map(o => o.odds)
+  return prices.length ? median(prices) : null
 }
