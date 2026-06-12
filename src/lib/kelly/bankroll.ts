@@ -68,6 +68,17 @@ export async function updateBankroll(newBalance: number, type: "daily" | "weekly
   })
 }
 
+export function nextBalanceAfterSettle(
+  current: number,
+  result: "win" | "loss" | "void",
+  amount: number,
+  oddsUsed: number,
+): number {
+  if (result === "win") return current + Math.round(amount * (oddsUsed - 1))
+  if (result === "loss") return current - amount
+  return current
+}
+
 export async function initBankroll() {
   const existing = await db.execute(
     "SELECT COUNT(*) as n FROM bankroll_snapshots"

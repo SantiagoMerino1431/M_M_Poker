@@ -410,6 +410,13 @@ export async function settleBetAction(
       args: [result, profitLoss, new Date().toISOString(), betId],
     })
 
+    if (bet.mode === "real") {
+      const { nextBalanceAfterSettle, updateBankroll } = await import("@/lib/kelly/bankroll")
+      const state = await getBankrollState(bet.user_id ?? undefined)
+      const nextBalance = nextBalanceAfterSettle(state.current, result, bet.amount, bet.odds_used)
+      await updateBankroll(nextBalance, "daily", bet.user_id ?? undefined)
+    }
+
     const label = result === "win" ? `+$${profitLoss}` : result === "loss" ? `-$${bet.amount}` : "Void"
     return { ok: true, message: `Liquidada: ${label} COP` }
   } catch (err: any) {
