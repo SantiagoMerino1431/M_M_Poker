@@ -12,7 +12,8 @@
     "db:migrate": "tsx --env-file=.env.local scripts/migrate.ts",
     "db:init": "tsx --env-file=.env.local scripts/init-bankroll.ts",
     "test": "vitest",
-    "backtest:run": "tsx --env-file=.env.local scripts/backtest-2022.ts"
+    "backtest:run": "tsx --env-file=.env.local scripts/backtest-2022.ts",
+    "calibrate:run": "tsx --env-file=.env.local scripts/calibrate.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
