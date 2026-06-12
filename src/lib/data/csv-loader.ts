@@ -1,70 +1,9 @@
 import * as fs from "fs"
 import * as path from "path"
 import type { H2HRecord, FormRecord } from "../types"
+import { toSpanish, toEnglish, normName } from "./team-names"
 
 const DATA_DIR = path.join(process.cwd(), "data")
-
-// Maps English team names (used in CSVs) to Spanish names used in the seed/DB
-const EN_TO_ES: Record<string, string> = {
-  "Mexico": "México",
-  "South Africa": "Sudáfrica",
-  "South Korea": "República de Corea",
-  "Czech Republic": "Chequia",
-  "Canada": "Canadá",
-  "Bosnia and Herzegovina": "Bosnia y Herzegovina",
-  "Qatar": "Catar",
-  "Switzerland": "Suiza",
-  "Brazil": "Brasil",
-  "Morocco": "Marruecos",
-  "Haiti": "Haití",
-  "Scotland": "Escocia",
-  "United States": "Estados Unidos",
-  "Paraguay": "Paraguay",
-  "Australia": "Australia",
-  "Turkey": "Turquía",
-  "Germany": "Alemania",
-  "Curaçao": "Curazao",
-  "Ivory Coast": "Costa de Marfil",
-  "Ecuador": "Ecuador",
-  "Netherlands": "Países Bajos",
-  "Japan": "Japón",
-  "Sweden": "Suecia",
-  "Tunisia": "Túnez",
-  "Belgium": "Bélgica",
-  "Egypt": "Egipto",
-  "Iran": "RI de Irán",
-  "New Zealand": "Nueva Zelanda",
-  "Spain": "España",
-  "Cape Verde": "Islas de Cabo Verde",
-  "Saudi Arabia": "Arabia Saudí",
-  "Uruguay": "Uruguay",
-  "France": "Francia",
-  "Senegal": "Senegal",
-  "Iraq": "Irak",
-  "Norway": "Noruega",
-  "Argentina": "Argentina",
-  "Algeria": "Argelia",
-  "Austria": "Austria",
-  "Jordan": "Jordania",
-  "Portugal": "Portugal",
-  "DR Congo": "RD Congo",
-  "Uzbekistan": "Uzbekistán",
-  "Colombia": "Colombia",
-  "England": "Inglaterra",
-  "Croatia": "Croacia",
-  "Ghana": "Ghana",
-  "Panama": "Panamá",
-}
-const ES_TO_EN: Record<string, string> = Object.fromEntries(
-  Object.entries(EN_TO_ES).map(([en, es]) => [es, en])
-)
-
-function toSpanish(name: string): string { return EN_TO_ES[name] ?? name }
-function toEnglish(name: string): string  { return ES_TO_EN[name] ?? name }
-
-function normName(name: string): string {
-  return name.toLowerCase().normalize("NFD").replace(/\p{Mn}/gu, "").replace(/[\s'\-.]/g, "")
-}
 
 // --- results.csv --------------------------------------------------------
 
