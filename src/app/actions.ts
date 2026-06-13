@@ -3,6 +3,8 @@ import { db } from "@/lib/db/client"
 import { migrate } from "@/lib/db/schema"
 import { getBankrollState } from "@/lib/kelly/bankroll"
 import { calcMetrics, getBets, saveBet } from "@/lib/kelly/tracker"
+import { kellyStake } from "@/lib/kelly/sizing"
+import { appendOdds } from "@/lib/db/odds-history"
 import type { MatchAnalysis, Bet } from "@/lib/types"
 
 function normalizeName(name: string): string {
@@ -528,7 +530,7 @@ export async function updateMarketOddsAction(
       const bmProb = 1 / odds
       const EV = m.ourProbability * odds - 1
       const edge = m.ourProbability - bmProb
-      const kellyFraction = EV > 0 ? (EV / (odds - 1)) * 0.25 : 0
+      const kellyFraction = kellyStake({ probability: m.ourProbability, odds, bankroll: 1, confidence: 60 }).fraction
       return { ...m, odds, bookmakerProbability: bmProb, bookmaker: "manual", EV, edge, kellyFraction, isRecommended: EV >= 0.08 && edge >= 0.02 && odds >= 1.5 }
     })
 
@@ -536,6 +538,11 @@ export async function updateMarketOddsAction(
       sql: `UPDATE match_analyses SET markets = ? WHERE fixture_id = ? AND created_at = ?`,
       args: [JSON.stringify(updated), fixtureId, row.created_at],
     })
+
+    if (odds > 0) {
+      await appendOdds(fixtureId, market, selection, odds, "manual")
+    }
+
     return { ok: true, message: `Cuota actualizada: ${market} ${selection} @${odds}` }
   } catch (err: any) {
     return { ok: false, message: err?.message ?? "Error al actualizar cuota" }

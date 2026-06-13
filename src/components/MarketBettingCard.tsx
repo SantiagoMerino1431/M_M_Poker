@@ -3,6 +3,8 @@
 import { useState } from "react"
 import { updateMarketOddsAction, registerBet } from "@/app/actions"
 import { useUser } from "./UserContext"
+import { kellyStake } from "@/lib/kelly/sizing"
+import { selectionLabel } from "@/lib/engine/market-labels"
 import type { MarketResult } from "@/lib/types"
 
 interface Props {
@@ -11,28 +13,21 @@ interface Props {
   markets: MarketResult[]
   bankroll: number
   confidence: number
+  homeName?: string
+  awayName?: string
+  exposureRemaining?: number
 }
 
-function confMultiplier(c: number) {
-  if (c >= 80) return 1.0
-  if (c >= 60) return 0.75
-  if (c >= 40) return 0.5
-  return 0
-}
-
-function labelFor(name: string, selection: string): string {
-  if (name === "1X2") {
-    if (selection === "home") return "Local gana (1)"
-    if (selection === "draw") return "Empate (X)"
-    if (selection === "away") return "Visitante gana (2)"
-  }
-  if (name === "Over/Under") return selection.replace("over_", "Más de ").replace("under_", "Menos de ").replace("_", ".")
-  if (name === "BTTS") return selection === "yes" ? "Ambos anotan — Sí" : "Ambos anotan — No"
-  if (name === "Marcador Exacto") return `Exacto ${selection}`
-  return `${name} ${selection}`
-}
-
-export function MarketBettingCard({ fixtureId, title, markets, bankroll, confidence }: Props) {
+export function MarketBettingCard({
+  fixtureId,
+  title,
+  markets,
+  bankroll,
+  confidence,
+  homeName = "Local",
+  awayName = "Visitante",
+  exposureRemaining = Infinity,
+}: Props) {
   const { user } = useUser()
   const [oddsMap, setOddsMap] = useState<Record<string, string>>(
     Object.fromEntries(
@@ -47,9 +42,11 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
   const [registered, setRegistered] = useState<Map<string, "real" | "paper">>(new Map())
 
   function calcEV(prob: number, odds: number) { return prob * odds - 1 }
-  function calcKelly(prob: number, odds: number, ev: number) {
-    if (ev <= 0 || odds <= 1) return 0
-    return bankroll * (ev / (odds - 1)) * 0.25 * confMultiplier(confidence)
+
+  function calcKellyAmount(prob: number, odds: number): number | null {
+    if (odds <= 1) return null
+    const res = kellyStake({ probability: prob, odds, bankroll, confidence })
+    return res.amount > 0 ? res.amount : null
   }
 
   async function handleBlur(market: string, selection: string, value: string) {
@@ -60,9 +57,14 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
     setSaving(null)
   }
 
-  function openRegister(key: string, kellyAmount: number | null) {
+  function openRegister(key: string, kelly: number | null, fairOdds: string, currentOddsRaw: string, prob: number) {
+    // If no odds entered, prefill with fair odds
+    if (!currentOddsRaw || parseFloat(currentOddsRaw) <= 1) {
+      const fair = (1 / prob).toFixed(2)
+      setOddsMap(p => ({ ...p, [key]: fair }))
+    }
     setRegistering(key)
-    setAmountMap(p => ({ ...p, [key]: kellyAmount ? String(Math.round(kellyAmount)) : "" }))
+    setAmountMap(p => ({ ...p, [key]: kelly ? String(Math.round(kelly)) : "" }))
     setModeMap(p => ({ ...p, [key]: "real" }))
   }
 
@@ -71,6 +73,7 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
     if (!amount || amount <= 0) return
     const mode = modeMap[key] ?? "real"
     setConfirming(key)
+    const kellyAmt = calcKellyAmount(m.ourProbability, odds)
     const res = await registerBet({
       fixtureId,
       userId: user?.id,
@@ -81,7 +84,7 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
       oddsUsed: odds,
       oddsClosing: null,
       amount,
-      kellySuggested: calcKelly(m.ourProbability, odds, ev),
+      kellySuggested: kellyAmt ?? 0,
       EV: ev,
       edge: m.ourProbability - 1 / odds,
       result: null,
@@ -117,15 +120,20 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
         const raw = oddsMap[key] ?? ""
         const odds = parseFloat(raw)
         const fairOdds = (1 / m.ourProbability).toFixed(2)
-        const ev = !isNaN(odds) && odds > 1 ? calcEV(m.ourProbability, odds) : null
-        const kelly = ev !== null && ev > 0 ? calcKelly(m.ourProbability, odds, ev) : null
+        const hasOdds = !isNaN(odds) && odds > 1
+        const ev = hasOdds ? calcEV(m.ourProbability, odds) : null
+        const kelly = hasOdds ? calcKellyAmount(m.ourProbability, odds) : null
         const isSaving = saving === key
         const isRegistering = registering === key
         const isConfirming = confirming === key
         const registeredMode = registered.get(key)
         const wasRegistered = registeredMode != null
         const betMode = modeMap[key] ?? "real"
-        const hasOdds = !isNaN(odds) && odds > 1
+
+        // When registering, re-read odds from map (may have been prefilled)
+        const activeOdds = isRegistering ? parseFloat(oddsMap[key] ?? "") : odds
+        const activeEv = !isNaN(activeOdds) && activeOdds > 1 ? calcEV(m.ourProbability, activeOdds) : null
+        const activeKelly = !isNaN(activeOdds) && activeOdds > 1 ? calcKellyAmount(m.ourProbability, activeOdds) : null
 
         const evColor = ev === null ? "var(--text-muted)"
           : ev >= 0.05 ? "var(--win)"
@@ -137,13 +145,25 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
           : ev > 0 ? "var(--draw)"
           : "var(--border)"
 
+        const betAmount = parseInt(amountMap[key] || "0") || 0
+        const exposureExceeded = isFinite(exposureRemaining) && betAmount > exposureRemaining
+
         return (
           <div key={key} style={{ borderBottom: "1px solid var(--border)" }}>
             <div style={{
               display: "grid", gridTemplateColumns: COLS, gap: 8,
               alignItems: "center", padding: "10px 0",
             }}>
-              <div style={{ fontSize: 13, fontWeight: 600 }}>{labelFor(m.name, m.selection)}</div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600 }}>
+                  {selectionLabel(m.name, m.selection, homeName, awayName)}
+                </div>
+                <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 2 }}>
+                  modelo {(m.modelProbability * 100).toFixed(0)}%
+                  {m.marketProbability != null && <> · mercado {(m.marketProbability * 100).toFixed(0)}%</>}
+                  {" "}· mezcla {(m.ourProbability * 100).toFixed(0)}%
+                </div>
+              </div>
 
               <div className="stat-number" style={{ fontSize: 17 }}>
                 {(m.ourProbability * 100).toFixed(1)}%
@@ -175,20 +195,8 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
               <div>
                 {wasRegistered ? (
                   <span style={{ fontSize: 11, color: registeredMode === "paper" ? "var(--draw)" : "var(--win)", fontWeight: 700 }}>
-                    ✓ {registeredMode === "paper" ? "PAPER" : "REAL"}
+                    {registeredMode === "paper" ? "PAPER" : "REAL"}
                   </span>
-                ) : hasOdds && !isRegistering ? (
-                  <button
-                    onClick={() => openRegister(key, kelly)}
-                    style={{
-                      background: "transparent", border: "1px solid var(--accent)",
-                      color: "var(--accent)", padding: "5px 10px", fontSize: 11,
-                      fontWeight: 700, letterSpacing: "0.06em", cursor: "pointer",
-                      textTransform: "uppercase", width: "100%",
-                    }}
-                  >
-                    APOSTAR
-                  </button>
                 ) : isRegistering ? (
                   <button
                     onClick={() => setRegistering(null)}
@@ -198,27 +206,39 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
                       cursor: "pointer", width: "100%",
                     }}
                   >
-                    ✕
+                    X
                   </button>
-                ) : null}
+                ) : (
+                  <button
+                    onClick={() => openRegister(key, kelly, fairOdds, raw, m.ourProbability)}
+                    style={{
+                      background: "transparent", border: "1px solid var(--accent)",
+                      color: "var(--accent)", padding: "5px 10px", fontSize: 11,
+                      fontWeight: 700, letterSpacing: "0.06em", cursor: "pointer",
+                      textTransform: "uppercase", width: "100%",
+                    }}
+                  >
+                    APOSTAR
+                  </button>
+                )}
               </div>
             </div>
 
-            {isRegistering && ev !== null && (
+            {isRegistering && (
               <div style={{
                 padding: "14px 0 16px",
                 display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap",
               }}>
                 <div style={{ display: "flex", gap: 0 }}>
-                  {(["real", "paper"] as const).map(m => (
-                    <button key={m} onClick={() => setModeMap(p => ({ ...p, [key]: m }))} style={{
+                  {(["real", "paper"] as const).map(mode => (
+                    <button key={mode} onClick={() => setModeMap(p => ({ ...p, [key]: mode }))} style={{
                       padding: "6px 14px", fontSize: 11, fontWeight: 700,
                       letterSpacing: "0.06em", textTransform: "uppercase", cursor: "pointer",
                       border: "1px solid",
-                      borderColor: betMode === m ? (m === "paper" ? "var(--draw)" : "var(--accent)") : "var(--border)",
-                      background: betMode === m ? (m === "paper" ? "rgba(234,179,8,0.15)" : "rgba(232,255,60,0.12)") : "transparent",
-                      color: betMode === m ? (m === "paper" ? "var(--draw)" : "var(--accent)") : "var(--text-muted)",
-                    }}>{m}</button>
+                      borderColor: betMode === mode ? (mode === "paper" ? "var(--draw)" : "var(--accent)") : "var(--border)",
+                      background: betMode === mode ? (mode === "paper" ? "rgba(234,179,8,0.15)" : "rgba(232,255,60,0.12)") : "transparent",
+                      color: betMode === mode ? (mode === "paper" ? "var(--draw)" : "var(--accent)") : "var(--text-muted)",
+                    }}>{mode}</button>
                   ))}
                 </div>
                 <span style={{ fontSize: 12, color: "var(--text-muted)", whiteSpace: "nowrap" }}>
@@ -239,20 +259,24 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
                     outline: "none",
                   }}
                 />
-                {kelly && (
+                {activeKelly && (
                   <button
-                    onClick={() => setAmountMap(p => ({ ...p, [key]: String(Math.round(kelly)) }))}
+                    onClick={() => setAmountMap(p => ({ ...p, [key]: String(Math.round(activeKelly)) }))}
                     style={{
                       background: "transparent", border: "none",
                       color: "var(--text-muted)", fontSize: 11, cursor: "pointer",
                       textDecoration: "underline", padding: 0,
                     }}
                   >
-                    Kelly: ${Math.round(kelly).toLocaleString("es-CO")}
+                    Kelly: ${Math.round(activeKelly).toLocaleString("es-CO")}
                   </button>
                 )}
                 <button
-                  onClick={() => handleConfirmBet(m, key, odds, ev)}
+                  onClick={() => {
+                    const currentOdds = parseFloat(oddsMap[key] ?? "")
+                    const currentEv = !isNaN(currentOdds) && currentOdds > 1 ? calcEV(m.ourProbability, currentOdds) : 0
+                    void handleConfirmBet(m, key, currentOdds, currentEv)
+                  }}
                   disabled={isConfirming || !amountMap[key]}
                   style={{
                     background: "var(--accent)", border: "none",
@@ -263,9 +287,18 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
                 >
                   {isConfirming ? "GUARDANDO..." : "CONFIRMAR"}
                 </button>
-                <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
-                  cuota {odds.toFixed(2)} · EV {ev > 0 ? "+" : ""}{(ev * 100).toFixed(1)}% · ganancia potencial ${Math.round((odds - 1) * parseInt(amountMap[key] || "0")).toLocaleString("es-CO")}
-                </span>
+                <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                  {activeEv !== null && (
+                    <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
+                      cuota {parseFloat(oddsMap[key] ?? "0").toFixed(2)} · EV {activeEv > 0 ? "+" : ""}{(activeEv * 100).toFixed(1)}% · ganancia potencial ${Math.round((parseFloat(oddsMap[key] ?? "1") - 1) * betAmount).toLocaleString("es-CO")}
+                    </span>
+                  )}
+                  {isFinite(exposureRemaining) && (
+                    <span style={{ fontSize: 11, color: exposureExceeded ? "var(--loss)" : "var(--text-muted)" }}>
+                      exposición restante hoy: ${Math.round(exposureRemaining).toLocaleString("es-CO")}
+                    </span>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -273,7 +306,7 @@ export function MarketBettingCard({ fixtureId, title, markets, bankroll, confide
       })}
 
       <div style={{ marginTop: 10, fontSize: 11, color: "var(--text-muted)" }}>
-        C. justa = mínimo para EV &gt; 0 · Kelly al 25% · confianza {confidence}
+        C. justa = mínimo para EV &gt; 0 · Kelly al 50% (half-Kelly), tope 8% · confianza {confidence}
       </div>
     </div>
   )
