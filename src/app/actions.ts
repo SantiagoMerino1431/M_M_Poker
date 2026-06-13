@@ -2,7 +2,7 @@
 import { db } from "@/lib/db/client"
 import { migrate } from "@/lib/db/schema"
 import { getBankrollState } from "@/lib/kelly/bankroll"
-import { calcMetrics, getBets, saveBet } from "@/lib/kelly/tracker"
+import { calcMetrics, getBets, saveBet, deleteBet, updateBet } from "@/lib/kelly/tracker"
 import { kellyStake } from "@/lib/kelly/sizing"
 import { appendOdds } from "@/lib/db/odds-history"
 import { reblendSelection } from "@/lib/engine/reblend"
@@ -677,5 +677,40 @@ export async function getManualLineup(fixtureId: number): Promise<{ homeMissing:
     awayMissing: JSON.parse(r.away_missing || "[]"),
     homeConfirmed: Boolean(r.home_confirmed),
     awayConfirmed: Boolean(r.away_confirmed),
+  }
+}
+
+export async function deleteBetAction(betId: number): Promise<{ ok: boolean; message: string }> {
+  try {
+    const rows = await db.execute({ sql: "SELECT * FROM bets WHERE id = ?", args: [betId] })
+    const bet = rows.rows[0] as any
+    if (!bet) return { ok: false, message: "Apuesta no encontrada" }
+    // Revert bankroll effect if real settled bet
+    if (bet.mode === "real" && bet.result && bet.result !== "void") {
+      const { updateBankroll } = await import("@/lib/kelly/bankroll")
+      const state = await getBankrollState(bet.user_id ?? undefined)
+      const reverted = bet.result === "win"
+        ? state.current - Math.round(bet.amount * (bet.odds_used - 1))
+        : state.current + bet.amount
+      await updateBankroll(reverted, "daily", bet.user_id ?? undefined)
+    }
+    await deleteBet(betId)
+    return { ok: true, message: "Apuesta eliminada" }
+  } catch (err: any) {
+    return { ok: false, message: err?.message ?? "Error al eliminar" }
+  }
+}
+
+export async function updateBetAction(
+  betId: number,
+  patch: { amount?: number; oddsUsed?: number },
+): Promise<{ ok: boolean; message: string }> {
+  try {
+    if (patch.amount != null && patch.amount <= 0) return { ok: false, message: "Monto inválido" }
+    if (patch.oddsUsed != null && patch.oddsUsed <= 1) return { ok: false, message: "Cuota inválida" }
+    await updateBet(betId, patch)
+    return { ok: true, message: "Apuesta actualizada" }
+  } catch (err: any) {
+    return { ok: false, message: err?.message ?? "Error al actualizar" }
   }
 }
