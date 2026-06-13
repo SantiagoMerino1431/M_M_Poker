@@ -541,3 +541,42 @@ export async function updateMarketOddsAction(
     return { ok: false, message: err?.message ?? "Error al actualizar cuota" }
   }
 }
+
+export async function saveManualLineupAction(
+  fixtureId: number,
+  homeMissing: string[],
+  awayMissing: string[],
+  homeConfirmed: boolean,
+  awayConfirmed: boolean,
+): Promise<{ ok: boolean; message: string }> {
+  try {
+    await db.execute({
+      sql: `INSERT INTO manual_lineups (fixture_id, home_missing, away_missing, home_confirmed, away_confirmed, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(fixture_id) DO UPDATE SET
+              home_missing=excluded.home_missing, away_missing=excluded.away_missing,
+              home_confirmed=excluded.home_confirmed, away_confirmed=excluded.away_confirmed,
+              updated_at=excluded.updated_at`,
+      args: [fixtureId, JSON.stringify(homeMissing), JSON.stringify(awayMissing),
+             homeConfirmed ? 1 : 0, awayConfirmed ? 1 : 0, new Date().toISOString()],
+    })
+    if (homeConfirmed && awayConfirmed) {
+      await db.execute({ sql: `UPDATE match_analyses SET is_preliminary = 0 WHERE fixture_id = ?`, args: [fixtureId] })
+    }
+    return { ok: true, message: "Lineup/lesiones guardados" }
+  } catch (err: any) {
+    return { ok: false, message: err?.message ?? "Error al guardar lineup" }
+  }
+}
+
+export async function getManualLineup(fixtureId: number): Promise<{ homeMissing: string[]; awayMissing: string[]; homeConfirmed: boolean; awayConfirmed: boolean } | null> {
+  const rows = await db.execute({ sql: "SELECT * FROM manual_lineups WHERE fixture_id = ?", args: [fixtureId] })
+  const r = rows.rows[0] as any
+  if (!r) return null
+  return {
+    homeMissing: JSON.parse(r.home_missing || "[]"),
+    awayMissing: JSON.parse(r.away_missing || "[]"),
+    homeConfirmed: Boolean(r.home_confirmed),
+    awayConfirmed: Boolean(r.away_confirmed),
+  }
+}

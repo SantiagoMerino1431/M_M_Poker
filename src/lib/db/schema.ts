@@ -151,6 +151,15 @@ export async function migrate() {
     );
     CREATE INDEX IF NOT EXISTS idx_odds_history_fixture
       ON odds_history (fixture_id, market, selection, recorded_at);
+
+    CREATE TABLE IF NOT EXISTS manual_lineups (
+      fixture_id INTEGER PRIMARY KEY,
+      home_missing TEXT NOT NULL DEFAULT '[]',
+      away_missing TEXT NOT NULL DEFAULT '[]',
+      home_confirmed INTEGER NOT NULL DEFAULT 0,
+      away_confirmed INTEGER NOT NULL DEFAULT 0,
+      updated_at TEXT NOT NULL
+    );
   `)
 
   // Add columns to existing tables (safe to run multiple times)
