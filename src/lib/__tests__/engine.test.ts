@@ -65,7 +65,7 @@ describe("analyzeMatch", () => {
     const data = makeMockMatchData()
     const result = analyzeMatch(data, 1000)
     expect(result.fixtureId).toBe(1)
-    expect(result.confidence).toBe(55)
+    expect(result.confidence).toBe(50)
     expect(result.markets.length).toBeGreaterThan(5)
     expect(result.lastUpdated).toBeDefined()
   })

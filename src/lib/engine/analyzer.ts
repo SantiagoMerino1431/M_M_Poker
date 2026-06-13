@@ -5,6 +5,7 @@ import { calcFormFactor } from "../model/form"
 import { calcContextAdjustments } from "../model/context"
 import { calcAllMarkets } from "./markets"
 import { applyKellyToMarkets, rankMarkets } from "./ev"
+import { lineupAttackMultiplier, lineupConcedeMultiplier, type MissingPlayer } from "../model/lineup"
 
 function confidenceMultiplier(score: number): number {
   if (score >= 80) return 1.00
@@ -22,6 +23,18 @@ export function calcConfidence(dataQuality: number, maxDivergence1x2: number): n
   else if (maxDivergence1x2 > 0.12) confidence -= 15
   else if (maxDivergence1x2 > 0.08) confidence -= 5
   return Math.max(0, Math.min(100, confidence))
+}
+
+export function dataQualityFromData(data: MatchData): number {
+  let score = 40
+  if (data.h2h.length >= 3) score += 15
+  if (data.homeForm.length >= 3 && data.awayForm.length >= 3) score += 15
+  const hasLineup = !!(data.lineups.home && data.lineups.away)
+  if (hasLineup) score += 15
+  if (data.lineupConfirmed) score += 5
+  if (data.odds.length > 0) score += 10
+  if (data.referee) score += 5
+  return Math.min(100, score)
 }
 
 function calcRestDays(form: import("../types").FormRecord[], matchDate: string): number {
@@ -67,6 +80,19 @@ export function analyzeMatch(data: MatchData, bankroll: number, trialMode = fals
   if (awayForm.description) adjustments.push(`Visitante: ${awayForm.description}`)
   adjustments.push(...context.adjustments)
 
+  const toMissing = (inj: typeof data.injuries.home): MissingPlayer[] =>
+    inj.filter(i => i.status === "out").map(i => ({ position: i.position, key: true }))
+  const homeMissing = toMissing(data.injuries.home)
+  const awayMissing = toMissing(data.injuries.away)
+
+  const homeAtkMult = lineupAttackMultiplier(homeMissing)
+  const awayAtkMult = lineupAttackMultiplier(awayMissing)
+  const homeConcedeMult = lineupConcedeMultiplier(homeMissing)
+  const awayConcedeMult = lineupConcedeMultiplier(awayMissing)
+
+  if (homeMissing.length) adjustments.push(`Bajas local: ${homeMissing.length} (ataque x${homeAtkMult.toFixed(2)})`)
+  if (awayMissing.length) adjustments.push(`Bajas visitante: ${awayMissing.length} (ataque x${awayAtkMult.toFixed(2)})`)
+
   const lambdaHome =
     data.teams.home.attackStrength *
     data.teams.away.defenseStrength *
@@ -76,7 +102,9 @@ export function analyzeMatch(data: MatchData, bankroll: number, trialMode = fals
     homeForm.factor *
     context.altitudeFactorHome *
     context.heatFactorHome *
-    context.fatigueFactor
+    context.fatigueFactor *
+    homeAtkMult *
+    awayConcedeMult
 
   const lambdaAway =
     data.teams.away.attackStrength *
@@ -86,7 +114,9 @@ export function analyzeMatch(data: MatchData, bankroll: number, trialMode = fals
     awayForm.factor *
     context.altitudeFactorAway *
     context.heatFactorAway *
-    context.fatigueFactor
+    context.fatigueFactor *
+    awayAtkMult *
+    homeConcedeMult
 
   const matrix = buildScoreMatrix(lambdaHome, lambdaAway)
   const modelOutput: ModelOutput = {
@@ -104,7 +134,8 @@ export function analyzeMatch(data: MatchData, bankroll: number, trialMode = fals
     (mx, m) => Math.max(mx, Math.abs(m.modelProbability - (m.marketProbability ?? m.modelProbability))),
     0,
   )
-  const confidence = calcConfidence(data.dataQuality, maxDivergence)
+  const effectiveDataQuality = dataQualityFromData(data)
+  const confidence = calcConfidence(effectiveDataQuality, maxDivergence)
 
   const multiplier = confidenceMultiplier(confidence)
   markets = applyKellyToMarkets(markets, bankroll, multiplier, trialMode)

@@ -80,6 +80,7 @@ export interface MatchData {
   awayForm: FormRecord[]
   injuries: { home: Injury[]; away: Injury[] }
   lineups: { home: Player[] | null; away: Player[] | null }
+  lineupConfirmed?: boolean
   referee: RefereeStats | null
   weather: { tempC: number; humidity: number } | null
   odds: MarketOdds[]
