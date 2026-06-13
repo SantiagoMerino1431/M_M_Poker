@@ -41,3 +41,31 @@ function rowToBet(r: any): Bet {
     confidenceAtTime: r.confidence_at_time, createdAt: r.created_at, settledAt: r.settled_at,
   }
 }
+
+export async function deleteBet(id: number): Promise<void> {
+  await db.execute({ sql: "DELETE FROM bets WHERE id = ?", args: [id] })
+}
+
+const EDITABLE_COLUMNS: Record<string, string> = {
+  amount: "amount",
+  oddsUsed: "odds_used",
+  oddsClosing: "odds_closing",
+  selection: "selection",
+}
+
+export async function updateBet(
+  id: number,
+  patch: Partial<Pick<Bet, "amount" | "oddsUsed" | "oddsClosing" | "selection">>,
+): Promise<void> {
+  const sets: string[] = []
+  const args: any[] = []
+  for (const [k, col] of Object.entries(EDITABLE_COLUMNS)) {
+    if ((patch as any)[k] !== undefined) {
+      sets.push(`${col} = ?`)
+      args.push((patch as any)[k])
+    }
+  }
+  if (sets.length === 0) return
+  args.push(id)
+  await db.execute({ sql: `UPDATE bets SET ${sets.join(", ")} WHERE id = ?`, args })
+}
