@@ -1,11 +1,13 @@
 export const maxDuration = 30
 
-import { getAnalysisForFixture, getFixtureDetails } from "../../actions"
+import { getAnalysisForFixture, getFixtureDetails, getManualLineup } from "../../actions"
 import { getBankrollState } from "@/lib/kelly/bankroll"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Bar, StatRow } from "@/components/StatBar"
 import { MarketBettingCard } from "@/components/MarketBettingCard"
+import { LineupEditor } from "@/components/LineupEditor"
+import { MARKET_GROUPS } from "@/lib/engine/market-labels"
 import type { MarketResult } from "@/lib/types"
 
 function pct0(n: number) { return `${Math.round(n * 100)}%` }
@@ -85,12 +87,15 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
   const { id } = await params
   const fixtureId = Number(id)
 
-  const [analysis, fixture, bankroll] = await Promise.all([
+  const [analysis, fixture, bankroll, manualLineup] = await Promise.all([
     getAnalysisForFixture(fixtureId),
     getFixtureDetails(fixtureId),
     getBankrollState(),
+    getManualLineup(fixtureId),
   ])
   if (!analysis) notFound()
+
+  const exposureRemaining = bankroll.current * 0.15
 
   const { model, markets, alerts, confidence } = analysis
   const lH = model.lambdaHome
@@ -111,10 +116,6 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
     .sort((a, b) => b.ourProbability - a.ourProbability)
     .slice(0, 8)
   const maxExact = exactScores[0]?.ourProbability ?? 0.01
-
-  const markets1x2   = markets.filter(m => m.name === "1X2")
-  const marketsOU    = markets.filter(m => m.name === "Over/Under" && ["over_1.5","over_2.5","over_3.5"].includes(m.selection))
-  const marketsBTTS  = markets.filter(m => m.name === "BTTS")
 
   const homeName = fixture?.home.name ?? analysis.homeTeam ?? `Equipo local`
   const awayName = fixture?.away.name ?? analysis.awayTeam ?? `Equipo visitante`
@@ -430,33 +431,30 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
         </p>
       </div>
 
-      {markets1x2.length > 0 && (
-        <MarketBettingCard
-          fixtureId={fixtureId}
-          title="Resultado 1X2"
-          markets={markets1x2}
-          bankroll={bankroll.current}
-          confidence={confidence}
-        />
-      )}
-      {marketsOU.length > 0 && (
-        <MarketBettingCard
-          fixtureId={fixtureId}
-          title="Over / Under Goles"
-          markets={marketsOU}
-          bankroll={bankroll.current}
-          confidence={confidence}
-        />
-      )}
-      {marketsBTTS.length > 0 && (
-        <MarketBettingCard
-          fixtureId={fixtureId}
-          title="Ambos Anotan (BTTS)"
-          markets={marketsBTTS}
-          bankroll={bankroll.current}
-          confidence={confidence}
-        />
-      )}
+      <LineupEditor
+        fixtureId={fixtureId}
+        homeName={homeName}
+        awayName={awayName}
+        initial={manualLineup ?? undefined}
+      />
+
+      {MARKET_GROUPS.filter(g => g.key !== "Marcador").map(group => {
+        const groupMarkets = markets.filter(m => group.marketNames.includes(m.name))
+        if (groupMarkets.length === 0) return null
+        return (
+          <MarketBettingCard
+            key={group.key}
+            fixtureId={fixtureId}
+            title={group.title}
+            markets={groupMarkets}
+            bankroll={bankroll.current}
+            confidence={confidence}
+            homeName={homeName}
+            awayName={awayName}
+            exposureRemaining={exposureRemaining}
+          />
+        )
+      })}
 
       <div style={{ padding: "12px 16px", border: "1px solid var(--border)", fontSize: 11, color: "var(--text-muted)", display: "flex", justifyContent: "space-between", marginTop: 8 }}>
         <span>Poisson + Dixon-Coles · CSV fallback H2H + form</span>
