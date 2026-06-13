@@ -139,6 +139,18 @@ export async function migrate() {
       is_read INTEGER DEFAULT 0,
       created_at TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS odds_history (
+      id INTEGER PRIMARY KEY,
+      fixture_id INTEGER NOT NULL,
+      market TEXT NOT NULL,
+      selection TEXT NOT NULL,
+      odds REAL NOT NULL,
+      source TEXT NOT NULL DEFAULT 'manual',
+      recorded_at TEXT NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS idx_odds_history_fixture
+      ON odds_history (fixture_id, market, selection, recorded_at);
   `)
 
   // Add columns to existing tables (safe to run multiple times)
@@ -149,6 +161,9 @@ export async function migrate() {
     "ALTER TABLE fixtures ADD COLUMN city TEXT",
     "ALTER TABLE fixtures ADD COLUMN match_date TEXT",
     "ALTER TABLE fixtures ADD COLUMN altitude_m INTEGER DEFAULT 0",
+    "ALTER TABLE fixtures ADD COLUMN status TEXT DEFAULT 'scheduled'",
+    "ALTER TABLE fixtures ADD COLUMN home_score INTEGER",
+    "ALTER TABLE fixtures ADD COLUMN away_score INTEGER",
     `CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY,
       name TEXT NOT NULL UNIQUE,
