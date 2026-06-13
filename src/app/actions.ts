@@ -567,10 +567,90 @@ export async function saveManualLineupAction(
       args: [fixtureId, JSON.stringify(homeMissing), JSON.stringify(awayMissing),
              homeConfirmed ? 1 : 0, awayConfirmed ? 1 : 0, new Date().toISOString()],
     })
-    if (homeConfirmed && awayConfirmed) {
-      await db.execute({ sql: `UPDATE match_analyses SET is_preliminary = 0 WHERE fixture_id = ?`, args: [fixtureId] })
+
+    // Re-analyze with missing players as "out" injuries
+    const { buildMatchData } = await import("@/lib/data/pipeline")
+    const { analyzeMatch } = await import("@/lib/engine/analyzer")
+    const fxRows = await db.execute({
+      sql: `SELECT f.id, f.match_date, f.stadium, f.city, f.altitude_m, f.stage,
+                   f.home_team_id, f.away_team_id, h.name AS home_name, a.name AS away_name
+            FROM fixtures f JOIN teams h ON h.id=f.home_team_id JOIN teams a ON a.id=f.away_team_id
+            WHERE f.id = ?`, args: [fixtureId],
+    })
+    const r = fxRows.rows[0] as any
+    if (!r) return { ok: true, message: "Lineup guardado (sin fixture para re-analizar)" }
+
+    const tRows = await db.execute({ sql: "SELECT * FROM teams WHERE id IN (?, ?)", args: [r.home_team_id, r.away_team_id] })
+    const tById = new Map((tRows.rows as any[]).map(t => [t.id, {
+      id: t.id, name: t.name, country: t.country, groupName: t.group_name,
+      fifaRanking: t.fifa_ranking, attackStrength: t.attack_strength, defenseStrength: t.defense_strength,
+    }]))
+    const home = tById.get(r.home_team_id)
+    const away = tById.get(r.away_team_id)
+    if (!home || !away) return { ok: true, message: "Lineup guardado" }
+
+    const fixture = {
+      id: r.id, date: r.match_date, stadium: r.stadium ?? "", city: r.city ?? "",
+      altitudeM: r.altitude_m ?? 0, stage: r.stage,
+      homeTeamId: r.home_team_id, awayTeamId: r.away_team_id,
     }
-    return { ok: true, message: "Lineup/lesiones guardados" }
+    const matchData = await buildMatchData(fixture as any, home as any, away as any)
+
+    // Inject manual absences as "out" injuries and set lineupConfirmed
+    const mkInj = (names: string[]) => names.map((n, i) => ({
+      playerId: -(i + 1), playerName: n, position: "Unknown", reason: "Manual", status: "out" as const,
+    }))
+    const withManual = {
+      ...matchData,
+      injuries: {
+        home: [...matchData.injuries.home, ...mkInj(homeMissing)],
+        away: [...matchData.injuries.away, ...mkInj(awayMissing)],
+      },
+      lineupConfirmed: homeConfirmed && awayConfirmed,
+    }
+
+    const { getBankrollState } = await import("@/lib/kelly/bankroll")
+    const bankroll = await getBankrollState()
+    const analysis = analyzeMatch(withManual, bankroll.current, bankroll.trialMode)
+
+    // Preserve previously entered manual odds
+    const existing = await db.execute({
+      sql: "SELECT markets FROM match_analyses WHERE fixture_id = ? ORDER BY created_at DESC LIMIT 1",
+      args: [fixtureId],
+    })
+    const prevMarkets: any[] = JSON.parse((existing.rows[0] as any)?.markets ?? "[]")
+    const merged = analysis.markets.map(m => {
+      const prev = prevMarkets.find((e: any) => e.name === m.name && e.selection === m.selection)
+      if (prev?.odds != null) {
+        const EV = m.ourProbability * prev.odds - 1
+        const edge = m.ourProbability - 1 / prev.odds
+        return { ...m, odds: prev.odds, bookmakerProbability: 1 / prev.odds, bookmaker: prev.bookmaker, EV, edge, isRecommended: EV >= 0.08 && edge >= 0.02 && prev.odds >= 1.5 }
+      }
+      return m
+    })
+
+    const now = new Date().toISOString()
+    const isPrelim = homeConfirmed && awayConfirmed ? 0 : 1
+    const existingRow = await db.execute({ sql: "SELECT id FROM match_analyses WHERE fixture_id = ?", args: [fixtureId] })
+    if ((existingRow.rows as any[]).length > 0) {
+      await db.execute({
+        sql: `UPDATE match_analyses SET is_preliminary = ?, confidence = ?, lambda_home = ?, lambda_away = ?,
+                adjustments_applied = ?, markets = ?, alerts = ?, data_quality = ?, created_at = ? WHERE fixture_id = ?`,
+        args: [isPrelim, analysis.confidence, analysis.model.lambdaHome, analysis.model.lambdaAway,
+               JSON.stringify(analysis.model.adjustmentsApplied), JSON.stringify(merged),
+               JSON.stringify(analysis.alerts), withManual.dataQuality, now, fixtureId],
+      })
+    } else {
+      await db.execute({
+        sql: `INSERT INTO match_analyses (fixture_id, is_preliminary, confidence, lambda_home, lambda_away,
+                adjustments_applied, markets, alerts, data_quality, home_team, away_team, created_at)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        args: [fixtureId, isPrelim, analysis.confidence, analysis.model.lambdaHome, analysis.model.lambdaAway,
+               JSON.stringify(analysis.model.adjustmentsApplied), JSON.stringify(merged),
+               JSON.stringify(analysis.alerts), withManual.dataQuality, home.name, away.name, now],
+      })
+    }
+    return { ok: true, message: `Lineup aplicado · confianza ${analysis.confidence} · λ ${analysis.model.lambdaHome.toFixed(2)}/${analysis.model.lambdaAway.toFixed(2)}` }
   } catch (err: any) {
     return { ok: false, message: err?.message ?? "Error al guardar lineup" }
   }
