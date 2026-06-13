@@ -5,6 +5,7 @@ import { getBankrollState } from "@/lib/kelly/bankroll"
 import { calcMetrics, getBets, saveBet } from "@/lib/kelly/tracker"
 import { kellyStake } from "@/lib/kelly/sizing"
 import { appendOdds } from "@/lib/db/odds-history"
+import { reblendSelection } from "@/lib/engine/reblend"
 import type { MatchAnalysis, Bet } from "@/lib/types"
 
 function normalizeName(name: string): string {
@@ -527,11 +528,20 @@ export async function updateMarketOddsAction(
     const updated = markets.map(m => {
       if (m.name !== market || m.selection !== selection) return m
       if (odds <= 0) return { ...m, odds: null, bookmakerProbability: null, bookmaker: null, EV: null, edge: null }
-      const bmProb = 1 / odds
-      const EV = m.ourProbability * odds - 1
-      const edge = m.ourProbability - bmProb
-      const kellyFraction = kellyStake({ probability: m.ourProbability, odds, bankroll: 1, confidence: 60 }).fraction
-      return { ...m, odds, bookmakerProbability: bmProb, bookmaker: "manual", EV, edge, kellyFraction, isRecommended: EV >= 0.08 && edge >= 0.02 && odds >= 1.5 }
+      // Find opposite side for symmetric markets (Over/Under, BTTS) to de-vig properly
+      const opposite = markets.find((x: any) =>
+        x.name === market && x.selection !== selection && x.odds != null &&
+        (market === "Over/Under" || market === "BTTS")
+      )
+      const { marketProbability, ourProbability } = reblendSelection(
+        m.modelProbability ?? m.ourProbability,
+        odds,
+        opposite?.odds ?? null,
+      )
+      const EV = ourProbability * odds - 1
+      const edge = ourProbability - marketProbability
+      const kellyFraction = kellyStake({ probability: ourProbability, odds, bankroll: 1, confidence: 60 }).fraction
+      return { ...m, odds, bookmakerProbability: marketProbability, bookmaker: "manual", ourProbability, EV, edge, kellyFraction, isRecommended: EV >= 0.08 && edge >= 0.02 && odds >= 1.5 }
     })
 
     await db.execute({
@@ -557,6 +567,7 @@ export async function saveManualLineupAction(
   awayConfirmed: boolean,
 ): Promise<{ ok: boolean; message: string }> {
   try {
+    await ensureSchema()
     await db.execute({
       sql: `INSERT INTO manual_lineups (fixture_id, home_missing, away_missing, home_confirmed, away_confirmed, updated_at)
             VALUES (?, ?, ?, ?, ?, ?)
@@ -657,6 +668,7 @@ export async function saveManualLineupAction(
 }
 
 export async function getManualLineup(fixtureId: number): Promise<{ homeMissing: string[]; awayMissing: string[]; homeConfirmed: boolean; awayConfirmed: boolean } | null> {
+  await ensureSchema()
   const rows = await db.execute({ sql: "SELECT * FROM manual_lineups WHERE fixture_id = ?", args: [fixtureId] })
   const r = rows.rows[0] as any
   if (!r) return null
