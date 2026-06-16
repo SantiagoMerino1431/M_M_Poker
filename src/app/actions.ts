@@ -519,11 +519,12 @@ export async function updateMarketOddsAction(
 ): Promise<{ ok: boolean; message: string }> {
   try {
     const rows = await db.execute({
-      sql: "SELECT markets, created_at FROM match_analyses WHERE fixture_id = ? ORDER BY created_at DESC LIMIT 1",
+      sql: "SELECT markets, created_at, confidence FROM match_analyses WHERE fixture_id = ? ORDER BY created_at DESC LIMIT 1",
       args: [fixtureId],
     })
     const row = rows.rows[0] as any
     if (!row) return { ok: false, message: "Análisis no encontrado" }
+    const matchConfidence = Number(row.confidence ?? 0)
 
     const markets = JSON.parse(row.markets || "[]") as any[]
     const updated = markets.map(m => {
@@ -541,8 +542,9 @@ export async function updateMarketOddsAction(
       )
       const EV = ourProbability * odds - 1
       const edge = ourProbability - marketProbability
-      const kellyFraction = kellyStake({ probability: ourProbability, odds, bankroll: 1, confidence: 60 }).fraction
-      return { ...m, odds, bookmakerProbability: marketProbability, bookmaker: "manual", ourProbability, EV, edge, kellyFraction, isRecommended: EV >= 0.08 && edge >= 0.02 && odds >= 1.5 }
+      const kellyFraction = kellyStake({ probability: ourProbability, odds, bankroll: 1, confidence: matchConfidence }).fraction
+      const recommended = EV >= 0.08 && edge >= 0.02 && odds >= 1.5 && matchConfidence >= 40
+      return { ...m, odds, bookmakerProbability: marketProbability, bookmaker: "manual", ourProbability, EV, edge, kellyFraction, isRecommended: recommended }
     })
 
     await db.execute({
