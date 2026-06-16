@@ -264,7 +264,6 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
 
 export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boolean; message: string }> {
   try {
-    const { fetchLineups } = await import("@/lib/data/api-football")
     const { fetchESPNLineups } = await import("@/lib/data/espn")
     const { buildMatchData } = await import("@/lib/data/pipeline")
     const { analyzeMatch, confidenceBreakdown } = await import("@/lib/engine/analyzer")
@@ -315,20 +314,14 @@ export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boole
       const away = teams.get(fixture.awayTeamId) ?? teamsByName.get(normalizeName(fixture.awayTeamName))
       if (!home || !away) continue
 
-      // Lineup chain: ESPN -> API-Football -> skip (user can enter manually)
+      // Lineups automáticos: solo ESPN (rosters disponibles ~1h antes del pitazo).
+      // API-Football se omite: los fixtures son ids de seed locales, no ids de API-Football.
       let lineups: { home: any[] | null; away: any[] | null } = { home: null, away: null }
       let lineupSource = "none"
       try {
         const espn = await fetchESPNLineups(home.name, away.name, fixture.date?.split("T")[0])
         if (espn.home && espn.away) { lineups = espn; lineupSource = "ESPN" }
-      } catch { /* ignore ESPN errors */ }
-
-      if (!lineups.home || !lineups.away) {
-        try {
-          const af = await fetchLineups(fixture.id)
-          if (af.home && af.away) { lineups = af; lineupSource = "API-Football" }
-        } catch { /* no network or no data */ }
-      }
+      } catch { /* ESPN sin datos o sin red */ }
 
       const matchData = await buildMatchData(
         { id: fixture.id, date: fixture.date, stadium: fixture.stadium, city: fixture.city, altitudeM: fixture.altitudeM, stage: fixture.stage, homeTeamId: fixture.homeTeamId, awayTeamId: fixture.awayTeamId },
@@ -404,9 +397,9 @@ export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boole
       else noLineup.push(`${home.name} vs ${away.name}`)
     }
 
-    if (ok.length > 0 && noLineup.length === 0) return { ok: true, message: `Pre-match OK: ${ok.join(", ")}` }
-    if (ok.length > 0) return { ok: true, message: `Pre-match parcial. Con lineup: ${ok.join(", ")}. Sin lineup (ingresar manual): ${noLineup.join(", ")}` }
-    return { ok: true, message: `Sin lineups automáticos para: ${noLineup.join(", ")}. Usa "Lineup manual" en el partido.` }
+    if (ok.length > 0 && noLineup.length === 0) return { ok: true, message: `Pre-match OK con alineaciones: ${ok.join(", ")}` }
+    if (ok.length > 0) return { ok: true, message: `Análisis actualizado. Con alineaciones (ESPN): ${ok.join(", ")}. Sin alineaciones todavía (llegan ~1h antes; usa "Lineup manual"): ${noLineup.join(", ")}` }
+    return { ok: true, message: `Análisis preliminar actualizado. Las alineaciones de ESPN aparecen ~1h antes del partido. Por ahora usa "Lineup manual" en cada partido para confirmar bajas: ${noLineup.join(", ")}` }
   } catch (err: any) {
     return { ok: false, message: err?.message ?? "Error en pre-match" }
   }
