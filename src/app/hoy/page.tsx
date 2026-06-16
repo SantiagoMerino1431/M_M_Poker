@@ -1,6 +1,9 @@
 export const maxDuration = 30
 
 import { getTodayAnalyses, getDashboardData, getOpenBetsToday } from "../actions"
+import { getSettingsAction } from "@/app/actions"
+import { calibrationReport } from "@/lib/engine/calibration"
+import { getBets } from "@/lib/kelly/tracker"
 import Link from "next/link"
 import { todayLabel } from "@/lib/utils/time"
 import { HoyActions } from "@/components/HoyActions"
@@ -18,7 +21,7 @@ function ConfidenceBadge({ score }: { score: number }) {
 }
 
 function pct(n: number | null) {
-  if (n === null) return "--"
+  if (n === null) return "—"
   return `${(n * 100).toFixed(0)}%`
 }
 
@@ -26,11 +29,14 @@ export default async function HoyPage() {
   const cookieStore = await cookies()
   const userId = cookieStore.get("mm_uid")?.value ? Number(cookieStore.get("mm_uid")!.value) : undefined
 
-  const [analyses, dashboard, openBets] = await Promise.all([
+  const [analyses, dashboard, openBets, settings, allBets] = await Promise.all([
     getTodayAnalyses(),
     getDashboardData(userId),
     getOpenBetsToday(),
+    getSettingsAction(),
+    getBets({}),
   ])
+  const calib = calibrationReport(allBets)
 
   const { bankroll, metrics } = dashboard
   const realExposure = openBets.filter(b => b.mode === "real").reduce((s, b) => s + b.amount, 0)
@@ -111,9 +117,18 @@ export default async function HoyPage() {
         </div>
       )}
 
+      {settings.paperOnly && (
+        <div style={{ marginBottom: 20, padding: "10px 14px", background: "rgba(234,179,8,0.1)", border: "1px solid var(--draw)", fontSize: 12, color: "var(--draw)" }}>
+          MODO PAPEL — las apuestas no usan dinero real. Objetivo: validar el edge.{" "}
+          CLV promedio: <strong>{calib.clvAvg == null ? "sin datos" : `${(calib.clvAvg * 100).toFixed(1)}%`}</strong>{" "}
+          · Brier: <strong>{calib.brierScore == null ? "—" : calib.brierScore.toFixed(3)}</strong>{" "}
+          <a href="/calibracion" style={{ color: "var(--accent)" }}>ver calibración →</a>
+        </div>
+      )}
+
       {analyses.length === 0 && (
         <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-muted)" }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>--</div>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>○</div>
           <p>No hay partidos analizados hoy. El cron corre a las 08:00 AM.</p>
           <p style={{ fontSize: 12, marginTop: 8 }}>
             Configura <code style={{ color: "var(--accent)" }}>RAPIDAPI_KEY</code> y ejecuta <code>pnpm cron:run</code>
