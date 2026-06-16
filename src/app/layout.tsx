@@ -23,10 +23,12 @@ export const metadata: Metadata = {
 }
 
 const NAV_LINKS = [
-  { href: "/hoy",      label: "HOY" },
-  { href: "/partidos", label: "PARTIDOS" },
-  { href: "/grupos",   label: "GRUPOS" },
-  { href: "/historial", label: "HISTORIAL" },
+  { href: "/hoy",        label: "HOY" },
+  { href: "/partidos",   label: "PARTIDOS" },
+  { href: "/grupos",     label: "GRUPOS" },
+  { href: "/historial",  label: "HISTORIAL" },
+  { href: "/calibracion", label: "CALIBRACIÓN" },
+  { href: "/config",     label: "CONFIG" },
 ]
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
