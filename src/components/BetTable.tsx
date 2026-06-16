@@ -126,7 +126,7 @@ export function BetTable({ bets }: Props) {
   const cols = "52px 48px 1fr 70px 90px 60px 60px 1fr 80px"
 
   return (
-    <div>
+    <div className="table-scroll">
       {/* Header */}
       <div style={{
         display: "grid",
@@ -135,6 +135,7 @@ export function BetTable({ bets }: Props) {
         borderBottom: "1px solid var(--border)",
         fontSize: 10, color: "var(--text-muted)",
         textTransform: "uppercase", letterSpacing: "0.08em",
+        minWidth: 700,
       }}>
         <span>Modo</span>
         <span>Fix.</span>
@@ -167,6 +168,7 @@ export function BetTable({ bets }: Props) {
               borderBottom: inlineEditing.has(bet.id!) ? "none" : "1px solid var(--border)",
               borderLeft: `3px solid ${borderColor}`,
               alignItems: "center",
+              minWidth: 700,
             }}>
               <span style={{
                 fontSize: 10, fontWeight: 700, letterSpacing: "0.06em",

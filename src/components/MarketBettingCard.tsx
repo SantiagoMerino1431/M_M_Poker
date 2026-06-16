@@ -114,7 +114,8 @@ export function MarketBettingCard({
         {title}
       </h3>
 
-      <div style={{ display: "grid", gridTemplateColumns: COLS, gap: 8, marginBottom: 8 }}>
+      <div className="table-scroll">
+      <div style={{ display: "grid", gridTemplateColumns: COLS, gap: 8, marginBottom: 8, minWidth: 560 }}>
         {HEADERS.map((h, i) => (
           <div key={i} style={{ fontSize: 10, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.06em" }}>{h}</div>
         ))}
@@ -158,6 +159,7 @@ export function MarketBettingCard({
             <div style={{
               display: "grid", gridTemplateColumns: COLS, gap: 8,
               alignItems: "center", padding: "10px 0",
+              minWidth: 560,
             }}>
               <div>
                 <div style={{ fontSize: 13, fontWeight: 600 }}>
@@ -314,6 +316,7 @@ export function MarketBettingCard({
           </div>
         )
       })}
+      </div>{/* end table-scroll */}
 
       <div style={{ marginTop: 10, fontSize: 11, color: "var(--text-muted)" }}>
         C. justa = mínimo para EV &gt; 0 · Kelly al 50% (half-Kelly), tope 8% · confianza {confidence}
