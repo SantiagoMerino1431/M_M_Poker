@@ -11,6 +11,7 @@ import { LineupEditor } from "@/components/LineupEditor"
 import { MARKET_GROUPS } from "@/lib/engine/market-labels"
 import { CustomBetForm } from "@/components/CustomBetForm"
 import type { MarketResult } from "@/lib/types"
+import { MatchResultModal } from "@/components/MatchResultModal"
 
 function pct0(n: number) { return `${Math.round(n * 100)}%` }
 function fmt(d: string | null) {
@@ -204,6 +205,15 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Register result */}
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+        <MatchResultModal
+          fixtureId={fixtureId}
+          initialHome={fixture?.homeScore ?? null}
+          initialAway={fixture?.awayScore ?? null}
+        />
       </div>
 
       {/* Alerts */}
