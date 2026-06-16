@@ -2,6 +2,7 @@ export const maxDuration = 30
 
 import { getAnalysisForFixture, getFixtureDetails, getManualLineup } from "../../actions"
 import { getBankrollState } from "@/lib/kelly/bankroll"
+import { listAllOddsHistory } from "@/lib/db/odds-history"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { Bar, StatRow } from "@/components/StatBar"
@@ -88,11 +89,12 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
   const { id } = await params
   const fixtureId = Number(id)
 
-  const [analysis, fixture, bankroll, manualLineup] = await Promise.all([
+  const [analysis, fixture, bankroll, manualLineup, allOddsHistory] = await Promise.all([
     getAnalysisForFixture(fixtureId),
     getFixtureDetails(fixtureId),
     getBankrollState(),
     getManualLineup(fixtureId),
+    listAllOddsHistory(fixtureId),
   ])
   if (!analysis) notFound()
 
@@ -455,6 +457,11 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
             homeName={homeName}
             awayName={awayName}
             exposureRemaining={exposureRemaining}
+            oddsHistory={group.marketNames.reduce<Record<string, import("@/lib/db/odds-history").OddsPoint[]>>((acc, mName) => {
+              const mHistory = allOddsHistory[mName]
+              if (mHistory) Object.assign(acc, mHistory)
+              return acc
+            }, {})}
           />
         )
       })}
