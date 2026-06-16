@@ -6,6 +6,7 @@ import { calcMetrics, getBets, saveBet, deleteBet, updateBet } from "@/lib/kelly
 import { kellyStake } from "@/lib/kelly/sizing"
 import { appendOdds } from "@/lib/db/odds-history"
 import { reblendSelection } from "@/lib/engine/reblend"
+import { bogotaDayRangeUtc } from "@/lib/utils/time"
 import type { MatchAnalysis, Bet } from "@/lib/types"
 
 function normalizeName(name: string): string {
@@ -15,7 +16,6 @@ function normalizeName(name: string): string {
 }
 
 export async function getTodayAnalyses(): Promise<MatchAnalysis[]> {
-  const { bogotaDayRangeUtc } = await import("@/lib/utils/time")
   const { startUtc, endUtc } = bogotaDayRangeUtc()
   const rows = await db.execute({
     sql: `SELECT ma.* FROM match_analyses ma
@@ -282,7 +282,6 @@ export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boole
                 f.home_team_id, f.away_team_id, h.name AS home_name, a.name AS away_name
          FROM fixtures f JOIN teams h ON h.id=f.home_team_id JOIN teams a ON a.id=f.away_team_id
          WHERE f.match_date >= ? AND f.match_date < ?`
-    const { bogotaDayRangeUtc } = await import("@/lib/utils/time")
     const { startUtc, endUtc } = bogotaDayRangeUtc()
     const fxArgs = fixtureId != null ? [fixtureId] : [startUtc, endUtc]
     const fxRows = await db.execute({ sql: fxSql, args: fxArgs })
