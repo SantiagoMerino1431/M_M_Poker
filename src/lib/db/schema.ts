@@ -162,6 +162,12 @@ export async function migrate() {
       away_confirmed INTEGER NOT NULL DEFAULT 0,
       updated_at TEXT NOT NULL
     );
+
+    CREATE TABLE IF NOT EXISTS settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updated_at TEXT NOT NULL
+    );
   `)
 
   // Add columns to existing tables (safe to run multiple times)
