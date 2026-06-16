@@ -7,6 +7,8 @@ import { getBets } from "@/lib/kelly/tracker"
 import Link from "next/link"
 import { todayLabel } from "@/lib/utils/time"
 import { HoyActions } from "@/components/HoyActions"
+import { HoyFilters } from "@/components/HoyFilters"
+import type { HoyRow } from "@/components/HoyFilters"
 import { correlationWarnings } from "@/lib/engine/correlation"
 import { cookies } from "next/headers"
 
@@ -45,6 +47,12 @@ export default async function HoyPage() {
     .flatMap(a => a.markets)
     .filter(m => m.isRecommended && m.kellyAmount)
     .reduce((s, m) => s + (m.kellyAmount ?? 0), 0)
+
+  const rows: HoyRow[] = analyses.map(a => ({
+    fixtureId: a.fixtureId,
+    confidence: a.confidence,
+    recommended: Boolean(a.markets.find(m => m.isRecommended)),
+  }))
 
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px" }}>
@@ -136,8 +144,9 @@ export default async function HoyPage() {
         </div>
       )}
 
-      <div style={{ display: "grid", gap: 8 }}>
-        {analyses.map(analysis => {
+      <HoyFilters rows={rows}>{(visible) => (
+        <div style={{ display: "grid", gap: 8 }}>
+        {analyses.filter(a => visible.some(v => v.fixtureId === a.fixtureId)).map(analysis => {
           const bestMarket = analysis.markets.find(m => m.isRecommended)
           const evColor = bestMarket?.EV && bestMarket.EV >= 0.05 ? "var(--win)" : "var(--draw)"
 
@@ -189,7 +198,8 @@ export default async function HoyPage() {
             </Link>
           )
         })}
-      </div>
+        </div>
+      )}</HoyFilters>
     </div>
   )
 }
