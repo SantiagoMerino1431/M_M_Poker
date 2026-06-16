@@ -14,6 +14,7 @@ import type { MarketResult } from "@/lib/types"
 import { MatchResultModal } from "@/components/MatchResultModal"
 import { LiveStatusBadge } from "@/components/LiveStatusBadge"
 import { CaptureClosingOddsButton } from "@/components/CaptureClosingOddsButton"
+import { PreMatchFixtureButton } from "@/components/PreMatchFixtureButton"
 
 function pct0(n: number) { return `${Math.round(n * 100)}%` }
 function fmt(d: string | null) {
@@ -226,7 +227,8 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
       </div>
 
       {/* Register result */}
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 12 }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", gap: 12, marginBottom: 12 }}>
+        <PreMatchFixtureButton fixtureId={fixtureId} />
         <MatchResultModal
           fixtureId={fixtureId}
           initialHome={fixture?.homeScore ?? null}
