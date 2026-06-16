@@ -9,7 +9,9 @@ export async function migrate() {
       group_name TEXT NOT NULL,
       fifa_ranking INTEGER DEFAULT 50,
       attack_strength REAL DEFAULT 1.0,
-      defense_strength REAL DEFAULT 1.0
+      defense_strength REAL DEFAULT 1.0,
+      attack_seed REAL NOT NULL DEFAULT 1.0,
+      defense_seed REAL NOT NULL DEFAULT 1.0
     );
 
     CREATE TABLE IF NOT EXISTS players (
@@ -181,6 +183,8 @@ export async function migrate() {
     )`,
     "ALTER TABLE bets ADD COLUMN user_id INTEGER",
     "ALTER TABLE bankroll_snapshots ADD COLUMN user_id INTEGER",
+    "ALTER TABLE teams ADD COLUMN attack_seed REAL NOT NULL DEFAULT 1.0",
+    "ALTER TABLE teams ADD COLUMN defense_seed REAL NOT NULL DEFAULT 1.0",
   ]) {
     try { await db.execute(sql) } catch { /* already exists */ }
   }
