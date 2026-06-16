@@ -37,3 +37,16 @@ export function todayLabel(): string {
     month: "long",
   })
 }
+
+// Bogotá es UTC-5 sin horario de verano. Devuelve los límites UTC del día
+// calendario de Bogotá que contiene `now`.
+export function bogotaDayRangeUtc(now: Date = new Date()): { startUtc: string; endUtc: string } {
+  const offsetMs = 5 * 60 * 60 * 1000 // UTC-5
+  const local = new Date(now.getTime() - offsetMs)
+  const y = local.getUTCFullYear()
+  const m = local.getUTCMonth()
+  const d = local.getUTCDate()
+  const startUtc = new Date(Date.UTC(y, m, d, 0, 0, 0) + offsetMs)
+  const endUtc = new Date(startUtc.getTime() + 24 * 60 * 60 * 1000)
+  return { startUtc: startUtc.toISOString(), endUtc: endUtc.toISOString() }
+}
