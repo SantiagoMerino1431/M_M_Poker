@@ -38,4 +38,10 @@ test.describe("Smoke tests — critical flows", () => {
     const body = await page.textContent("body")
     expect(body).not.toContain("Application error")
   })
+
+  test("/config carga y muestra el interruptor de modo papel", async ({ page }) => {
+    const res = await page.goto("/config")
+    expect(res?.status()).toBeLessThan(500)
+    await expect(page.getByText(/modo papel/i)).toBeVisible()
+  })
 })
