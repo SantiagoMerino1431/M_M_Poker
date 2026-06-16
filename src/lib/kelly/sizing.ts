@@ -15,6 +15,8 @@ export interface KellyStakeInput {
   bankroll: number
   confidence: number
   trialMode?: boolean
+  kellyFraction?: number
+  maxStakeFraction?: number
 }
 
 export interface KellyStakeResult {
@@ -30,8 +32,8 @@ export function kellyStake(input: KellyStakeInput): KellyStakeResult {
   const rawKelly = (p * b - (1 - p)) / b
   if (rawKelly <= 0) return { fraction: 0, amount: 0, rawKelly }
 
-  const base = trialMode ? 0.05 : KELLY_FRACTION
-  const max = trialMode ? 0.005 : MAX_STAKE_FRACTION
+  const base = trialMode ? 0.05 : (input.kellyFraction ?? KELLY_FRACTION)
+  const max = trialMode ? 0.005 : (input.maxStakeFraction ?? MAX_STAKE_FRACTION)
   const adjusted = rawKelly * base * confidenceMultiplier(confidence)
   const fraction = Math.min(max, Math.max(0, adjusted))
   return { fraction, amount: Math.round(bankroll * fraction), rawKelly }
