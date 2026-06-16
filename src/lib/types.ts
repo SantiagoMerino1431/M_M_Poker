@@ -122,6 +122,7 @@ export interface MatchAnalysis {
   alerts: string[]
   homeTeam?: string
   awayTeam?: string
+  confidenceBreakdown?: string[] | null
   lastUpdated: string
 }
 

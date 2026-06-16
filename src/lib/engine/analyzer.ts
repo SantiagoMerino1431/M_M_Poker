@@ -37,6 +37,18 @@ export function dataQualityFromData(data: MatchData): number {
   return Math.min(100, score)
 }
 
+export function confidenceBreakdown(data: MatchData): string[] {
+  const items: string[] = [`Base: 40pts`]
+  if (data.h2h.length >= 3) items.push(`H2H (${data.h2h.length} partidos): +15pts`)
+  if (data.homeForm.length >= 3 && data.awayForm.length >= 3) items.push(`Forma reciente (ambos): +15pts`)
+  const hasLineup = !!(data.lineups.home && data.lineups.away)
+  if (hasLineup) items.push(`Alineaciones disponibles: +15pts`)
+  if (data.lineupConfirmed) items.push(`Alineación confirmada: +5pts`)
+  if (data.odds.length > 0) items.push(`Cuotas de mercado (${data.odds.length}): +10pts`)
+  if (data.referee) items.push(`Datos de árbitro: +5pts`)
+  return items
+}
+
 function calcRestDays(form: import("../types").FormRecord[], matchDate: string): number {
   if (!form.length) return 5
   const sorted = [...form].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())

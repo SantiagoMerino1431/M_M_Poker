@@ -76,6 +76,7 @@ export async function getAnalysisForFixture(fixtureId: number): Promise<MatchAna
     model: { lambdaHome: r.lambda_home, lambdaAway: r.lambda_away, adjustmentsApplied: JSON.parse(r.adjustments_applied || "[]"), scoreMatrix: [] },
     markets: JSON.parse(r.markets || "[]"),
     alerts: JSON.parse(r.alerts || "[]"),
+    confidenceBreakdown: r.confidence_breakdown ? JSON.parse(r.confidence_breakdown as string) : null,
     lastUpdated: r.created_at,
   }
 }
@@ -176,7 +177,7 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
       teamsByName.set(normalizeName(row.name), t)
     }
 
-    const { analyzeMatch } = await import("@/lib/engine/analyzer")
+    const { analyzeMatch, confidenceBreakdown } = await import("@/lib/engine/analyzer")
     const bankrollState = await getBankrollState()
 
     const fixtures = await fetchTodayFixtures()
@@ -200,6 +201,7 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
       try {
         const matchData = await buildMatchData({ ...fixture, altitudeM: 0 }, home, away)
         const analysis = analyzeMatch(matchData, bankrollState.current)
+        const breakdown = JSON.stringify(confidenceBreakdown(matchData))
         const ts = new Date().toISOString()
         const existingRow = await db.execute({
           sql: "SELECT id FROM match_analyses WHERE fixture_id = ? ORDER BY created_at DESC LIMIT 1",
@@ -210,14 +212,14 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
             sql: `UPDATE match_analyses SET
                     is_preliminary = ?, confidence = ?, lambda_home = ?, lambda_away = ?,
                     adjustments_applied = ?, markets = ?, alerts = ?, data_quality = ?,
-                    home_team = ?, away_team = ?, created_at = ?
+                    home_team = ?, away_team = ?, confidence_breakdown = ?, created_at = ?
                   WHERE id = ?`,
             args: [
               analysis.isPreliminary ? 1 : 0, analysis.confidence,
               analysis.model.lambdaHome, analysis.model.lambdaAway,
               JSON.stringify(analysis.model.adjustmentsApplied),
               JSON.stringify(analysis.markets), JSON.stringify(analysis.alerts),
-              matchData.dataQuality, fixture.homeTeamName, fixture.awayTeamName, ts,
+              matchData.dataQuality, fixture.homeTeamName, fixture.awayTeamName, breakdown, ts,
               (existingRow.rows[0] as any).id,
             ],
           })
@@ -229,14 +231,14 @@ export async function runDailyCronAction(): Promise<{ ok: boolean; message: stri
           await db.execute({
             sql: `INSERT INTO match_analyses
                   (fixture_id, is_preliminary, confidence, lambda_home, lambda_away,
-                   adjustments_applied, markets, alerts, data_quality, home_team, away_team, created_at)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                   adjustments_applied, markets, alerts, data_quality, home_team, away_team, confidence_breakdown, created_at)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             args: [
               fixture.id, analysis.isPreliminary ? 1 : 0, analysis.confidence,
               analysis.model.lambdaHome, analysis.model.lambdaAway,
               JSON.stringify(analysis.model.adjustmentsApplied),
               JSON.stringify(analysis.markets), JSON.stringify(analysis.alerts),
-              matchData.dataQuality, fixture.homeTeamName, fixture.awayTeamName, ts,
+              matchData.dataQuality, fixture.homeTeamName, fixture.awayTeamName, breakdown, ts,
             ],
           })
         }
@@ -261,7 +263,7 @@ export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boole
     const { fetchLineups } = await import("@/lib/data/api-football")
     const { fetchESPNLineups } = await import("@/lib/data/espn")
     const { buildMatchData } = await import("@/lib/data/pipeline")
-    const { analyzeMatch } = await import("@/lib/engine/analyzer")
+    const { analyzeMatch, confidenceBreakdown } = await import("@/lib/engine/analyzer")
     const { fetchOdds } = await import("@/lib/data/odds-api")
     const { appendOdds } = await import("@/lib/db/odds-history")
     const { median } = await import("@/lib/model/devig")
@@ -349,26 +351,28 @@ export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boole
 
       const now = new Date().toISOString()
       const isPrelim = (lineups.home && lineups.away) ? 0 : 1
+      const breakdown = JSON.stringify(confidenceBreakdown(matchDataWithLineups))
 
       // Upsert analysis
       const existingRow = await db.execute({ sql: "SELECT id FROM match_analyses WHERE fixture_id = ?", args: [fixture.id] })
       if ((existingRow.rows as any[]).length > 0) {
         await db.execute({
           sql: `UPDATE match_analyses SET is_preliminary = ?, confidence = ?, lambda_home = ?, lambda_away = ?,
-                  adjustments_applied = ?, markets = ?, alerts = ?, data_quality = ?, home_team = ?, away_team = ?, created_at = ?
+                  adjustments_applied = ?, markets = ?, alerts = ?, data_quality = ?, home_team = ?, away_team = ?,
+                  confidence_breakdown = ?, created_at = ?
                 WHERE fixture_id = ?`,
           args: [isPrelim, analysis.confidence, analysis.model.lambdaHome, analysis.model.lambdaAway,
                  JSON.stringify(analysis.model.adjustmentsApplied), JSON.stringify(merged), JSON.stringify(analysis.alerts),
-                 matchDataWithLineups.dataQuality, home.name, away.name, now, fixture.id],
+                 matchDataWithLineups.dataQuality, home.name, away.name, breakdown, now, fixture.id],
         })
       } else {
         await db.execute({
           sql: `INSERT INTO match_analyses (fixture_id, is_preliminary, confidence, lambda_home, lambda_away,
-                  adjustments_applied, markets, alerts, data_quality, home_team, away_team, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                  adjustments_applied, markets, alerts, data_quality, home_team, away_team, confidence_breakdown, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           args: [fixture.id, isPrelim, analysis.confidence, analysis.model.lambdaHome, analysis.model.lambdaAway,
                  JSON.stringify(analysis.model.adjustmentsApplied), JSON.stringify(merged), JSON.stringify(analysis.alerts),
-                 matchDataWithLineups.dataQuality, home.name, away.name, now],
+                 matchDataWithLineups.dataQuality, home.name, away.name, breakdown, now],
         })
       }
 
@@ -584,7 +588,7 @@ export async function saveManualLineupAction(
 
     // Re-analyze with missing players as "out" injuries
     const { buildMatchData } = await import("@/lib/data/pipeline")
-    const { analyzeMatch } = await import("@/lib/engine/analyzer")
+    const { analyzeMatch, confidenceBreakdown } = await import("@/lib/engine/analyzer")
     const fxRows = await db.execute({
       sql: `SELECT f.id, f.match_date, f.stadium, f.city, f.altitude_m, f.stage,
                    f.home_team_id, f.away_team_id, h.name AS home_name, a.name AS away_name
@@ -645,23 +649,25 @@ export async function saveManualLineupAction(
 
     const now = new Date().toISOString()
     const isPrelim = homeConfirmed && awayConfirmed ? 0 : 1
+    const breakdown = JSON.stringify(confidenceBreakdown(withManual))
     const existingRow = await db.execute({ sql: "SELECT id FROM match_analyses WHERE fixture_id = ?", args: [fixtureId] })
     if ((existingRow.rows as any[]).length > 0) {
       await db.execute({
         sql: `UPDATE match_analyses SET is_preliminary = ?, confidence = ?, lambda_home = ?, lambda_away = ?,
-                adjustments_applied = ?, markets = ?, alerts = ?, data_quality = ?, created_at = ? WHERE fixture_id = ?`,
+                adjustments_applied = ?, markets = ?, alerts = ?, data_quality = ?,
+                confidence_breakdown = ?, created_at = ? WHERE fixture_id = ?`,
         args: [isPrelim, analysis.confidence, analysis.model.lambdaHome, analysis.model.lambdaAway,
                JSON.stringify(analysis.model.adjustmentsApplied), JSON.stringify(merged),
-               JSON.stringify(analysis.alerts), withManual.dataQuality, now, fixtureId],
+               JSON.stringify(analysis.alerts), withManual.dataQuality, breakdown, now, fixtureId],
       })
     } else {
       await db.execute({
         sql: `INSERT INTO match_analyses (fixture_id, is_preliminary, confidence, lambda_home, lambda_away,
-                adjustments_applied, markets, alerts, data_quality, home_team, away_team, created_at)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                adjustments_applied, markets, alerts, data_quality, home_team, away_team, confidence_breakdown, created_at)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         args: [fixtureId, isPrelim, analysis.confidence, analysis.model.lambdaHome, analysis.model.lambdaAway,
                JSON.stringify(analysis.model.adjustmentsApplied), JSON.stringify(merged),
-               JSON.stringify(analysis.alerts), withManual.dataQuality, home.name, away.name, now],
+               JSON.stringify(analysis.alerts), withManual.dataQuality, home.name, away.name, breakdown, now],
       })
     }
     return { ok: true, message: `Lineup aplicado · confianza ${analysis.confidence} · λ ${analysis.model.lambdaHome.toFixed(2)}/${analysis.model.lambdaAway.toFixed(2)}` }

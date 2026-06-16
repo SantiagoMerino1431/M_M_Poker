@@ -167,6 +167,7 @@ export async function migrate() {
   // Add columns to existing tables (safe to run multiple times)
   for (const sql of [
     "ALTER TABLE match_analyses ADD COLUMN home_team TEXT DEFAULT ''",
+    "ALTER TABLE match_analyses ADD COLUMN confidence_breakdown TEXT",
     "ALTER TABLE match_analyses ADD COLUMN away_team TEXT DEFAULT ''",
     "ALTER TABLE fixtures ADD COLUMN stadium TEXT",
     "ALTER TABLE fixtures ADD COLUMN city TEXT",

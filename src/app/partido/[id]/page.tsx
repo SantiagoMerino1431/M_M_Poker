@@ -162,6 +162,13 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
             </span>
           )}
         </div>
+        {analysis.confidenceBreakdown && analysis.confidenceBreakdown.length > 0 && (
+          <div style={{ marginTop: -8, marginBottom: 16, fontSize: 11, color: "var(--text-muted)" }}>
+            {analysis.confidenceBreakdown.map((item, i) => (
+              <span key={i} style={{ marginRight: 12 }}>{item}</span>
+            ))}
+          </div>
+        )}
 
         {/* Teams */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", alignItems: "center", gap: 16, marginBottom: 24 }}>
