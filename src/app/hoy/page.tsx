@@ -1,9 +1,10 @@
 export const maxDuration = 30
 
-import { getTodayAnalyses, getDashboardData } from "../actions"
+import { getTodayAnalyses, getDashboardData, getOpenBetsToday } from "../actions"
 import Link from "next/link"
 import { todayLabel } from "@/lib/utils/time"
 import { HoyActions } from "@/components/HoyActions"
+import { correlationWarnings } from "@/lib/engine/correlation"
 import { cookies } from "next/headers"
 
 function ConfidenceBadge({ score }: { score: number }) {
@@ -25,12 +26,15 @@ export default async function HoyPage() {
   const cookieStore = await cookies()
   const userId = cookieStore.get("mm_uid")?.value ? Number(cookieStore.get("mm_uid")!.value) : undefined
 
-  const [analyses, dashboard] = await Promise.all([
+  const [analyses, dashboard, openBets] = await Promise.all([
     getTodayAnalyses(),
     getDashboardData(userId),
+    getOpenBetsToday(),
   ])
 
   const { bankroll, metrics } = dashboard
+  const realExposure = openBets.filter(b => b.mode === "real").reduce((s, b) => s + b.amount, 0)
+  const warnings = correlationWarnings(openBets.map(b => ({ fixtureId: b.fixtureId, market: b.market, selection: b.selection })))
   const dailyExposure = analyses
     .flatMap(a => a.markets)
     .filter(m => m.isRecommended && m.kellyAmount)
@@ -75,6 +79,37 @@ export default async function HoyPage() {
           </div>
         </div>
       </div>
+
+      {openBets.length > 0 && (
+        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", padding: 16, marginBottom: 24 }}>
+          <div style={{ fontSize: 11, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 12 }}>
+            Apuestas abiertas hoy ({openBets.length})
+          </div>
+          {openBets.map(b => (
+            <div key={b.id} style={{ display: "flex", gap: 12, justifyContent: "space-between", fontSize: 12, padding: "4px 0", borderBottom: "1px solid var(--border)" }}>
+              <span style={{ color: "var(--text-muted)" }}>{b.market} · {b.selection}</span>
+              <span style={{ color: b.mode === "real" ? "var(--accent)" : "var(--text-muted)", fontWeight: 600 }}>
+                ${b.amount.toLocaleString("es-CO")} ({b.mode})
+              </span>
+            </div>
+          ))}
+          <div style={{ marginTop: 12 }}>
+            <div style={{ fontSize: 11, color: "var(--text-muted)", marginBottom: 4 }}>
+              Exposición real comprometida: ${realExposure.toLocaleString("es-CO")} / ${Math.round(bankroll.current * 0.15).toLocaleString("es-CO")} máx.
+            </div>
+            <div style={{ height: 6, background: "var(--surface-2)", borderRadius: 3 }}>
+              <div style={{ height: 6, borderRadius: 3, width: `${Math.min(100, (realExposure / (bankroll.current * 0.15)) * 100).toFixed(0)}%`, background: realExposure > bankroll.current * 0.15 ? "var(--loss)" : "var(--win)" }} />
+            </div>
+          </div>
+          {warnings.length > 0 && (
+            <div style={{ marginTop: 12, padding: "8px 12px", background: "rgba(255,180,0,0.08)", border: "1px solid rgba(255,180,0,0.3)" }}>
+              {warnings.map((w, i) => (
+                <div key={i} style={{ fontSize: 11, color: "rgba(255,200,0,0.9)", marginBottom: i < warnings.length - 1 ? 4 : 0 }}>⚠ {w}</div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {analyses.length === 0 && (
         <div style={{ textAlign: "center", padding: "60px 0", color: "var(--text-muted)" }}>

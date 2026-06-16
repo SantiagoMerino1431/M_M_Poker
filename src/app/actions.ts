@@ -701,6 +701,13 @@ export async function deleteBetAction(betId: number): Promise<{ ok: boolean; mes
   }
 }
 
+export async function getOpenBetsToday(): Promise<import("@/lib/types").Bet[]> {
+  const today = new Date().toISOString().split("T")[0]
+  const { getBets } = await import("@/lib/kelly/tracker")
+  const all = await getBets({})
+  return all.filter(b => b.result === null && b.createdAt >= `${today}T00:00:00Z`)
+}
+
 export async function updateBetAction(
   betId: number,
   patch: { amount?: number; oddsUsed?: number },

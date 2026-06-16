@@ -8,6 +8,7 @@ import { Bar, StatRow } from "@/components/StatBar"
 import { MarketBettingCard } from "@/components/MarketBettingCard"
 import { LineupEditor } from "@/components/LineupEditor"
 import { MARKET_GROUPS } from "@/lib/engine/market-labels"
+import { CustomBetForm } from "@/components/CustomBetForm"
 import type { MarketResult } from "@/lib/types"
 
 function pct0(n: number) { return `${Math.round(n * 100)}%` }
@@ -430,6 +431,8 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
           La cuota justa es el mínimo para EV positivo. Kelly al 25% fraccionado.
         </p>
       </div>
+
+      <CustomBetForm fixtureId={fixtureId} bankroll={bankroll.current} confidence={confidence} />
 
       <LineupEditor
         fixtureId={fixtureId}
