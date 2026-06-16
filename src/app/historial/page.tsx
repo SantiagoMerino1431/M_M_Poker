@@ -2,7 +2,7 @@ export const maxDuration = 30
 
 import { getBets, calcMetrics } from "@/lib/kelly/tracker"
 import { HistorialActions } from "@/components/HistorialActions"
-import { BetTable } from "@/components/BetTable"
+import { BetHistory } from "@/components/BetHistory"
 import { getBankrollState } from "@/lib/kelly/bankroll"
 import { cookies } from "next/headers"
 
@@ -99,8 +99,9 @@ export default async function HistorialPage() {
           Historial de apuestas
         </h2>
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)" }}>
-          <BetTable
+          <BetHistory
             bets={[...realBets, ...paperBets].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 40)}
+            bankroll={bankrollState.current}
           />
         </div>
       </div>
