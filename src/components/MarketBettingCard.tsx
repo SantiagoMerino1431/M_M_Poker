@@ -6,6 +6,9 @@ import { useUser } from "./UserContext"
 import { kellyStake } from "@/lib/kelly/sizing"
 import { selectionLabel } from "@/lib/engine/market-labels"
 import type { MarketResult } from "@/lib/types"
+import { OddsHistorySparkline } from "./OddsHistorySparkline"
+
+interface OddsPoint { odds: number; recordedAt: string }
 
 interface Props {
   fixtureId: number
@@ -16,6 +19,7 @@ interface Props {
   homeName?: string
   awayName?: string
   exposureRemaining?: number
+  oddsHistory?: Record<string, OddsPoint[]>
 }
 
 export function MarketBettingCard({
@@ -27,6 +31,7 @@ export function MarketBettingCard({
   homeName = "Local",
   awayName = "Visitante",
   exposureRemaining = Infinity,
+  oddsHistory,
 }: Props) {
   const { user } = useUser()
   const [oddsMap, setOddsMap] = useState<Record<string, string>>(
@@ -163,6 +168,11 @@ export function MarketBettingCard({
                   {m.marketProbability != null && <> · mercado {(m.marketProbability * 100).toFixed(0)}%</>}
                   {" "}· mezcla {(m.ourProbability * 100).toFixed(0)}%
                 </div>
+                {oddsHistory?.[m.selection] && oddsHistory[m.selection].length >= 2 && (
+                  <div style={{ marginTop: 4, opacity: 0.7 }}>
+                    <OddsHistorySparkline points={oddsHistory[m.selection]} />
+                  </div>
+                )}
               </div>
 
               <div className="stat-number" style={{ fontSize: 17 }}>
