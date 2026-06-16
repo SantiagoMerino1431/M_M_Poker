@@ -29,7 +29,8 @@ type FixtureRow = {
 // Queries local DB for today's fixtures. API-Football free plan doesn't cover season 2026.
 export async function fetchTodayFixtures(): Promise<FixtureRow[]> {
   const { db } = await import("../db/client")
-  const today = new Date().toISOString().split("T")[0]
+  const { bogotaDayRangeUtc } = await import("../utils/time")
+  const { startUtc, endUtc } = bogotaDayRangeUtc()
   const rows = await db.execute({
     sql: `SELECT f.id, f.match_date, f.stadium, f.city, f.stage,
                  f.altitude_m, f.home_team_id, f.away_team_id,
@@ -39,7 +40,7 @@ export async function fetchTodayFixtures(): Promise<FixtureRow[]> {
           JOIN teams a ON a.id = f.away_team_id
           WHERE f.match_date >= ? AND f.match_date < ?
           ORDER BY f.match_date`,
-    args: [`${today}T00:00:00Z`, `${today}T23:59:59Z`],
+    args: [startUtc, endUtc],
   })
   return (rows.rows as any[]).map(r => ({
     id: r.id,

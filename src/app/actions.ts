@@ -15,10 +15,14 @@ function normalizeName(name: string): string {
 }
 
 export async function getTodayAnalyses(): Promise<MatchAnalysis[]> {
-  const today = new Date().toISOString().split("T")[0]
+  const { bogotaDayRangeUtc } = await import("@/lib/utils/time")
+  const { startUtc, endUtc } = bogotaDayRangeUtc()
   const rows = await db.execute({
-    sql: "SELECT * FROM match_analyses WHERE created_at >= ? ORDER BY confidence DESC",
-    args: [`${today}T00:00:00Z`],
+    sql: `SELECT ma.* FROM match_analyses ma
+          JOIN fixtures f ON f.id = ma.fixture_id
+          WHERE f.match_date >= ? AND f.match_date < ?
+          ORDER BY ma.confidence DESC`,
+    args: [startUtc, endUtc],
   })
   return (rows.rows as any[]).map(r => ({
     fixtureId: r.fixture_id,
@@ -278,8 +282,9 @@ export async function runPreMatchAction(fixtureId?: number): Promise<{ ok: boole
                 f.home_team_id, f.away_team_id, h.name AS home_name, a.name AS away_name
          FROM fixtures f JOIN teams h ON h.id=f.home_team_id JOIN teams a ON a.id=f.away_team_id
          WHERE f.match_date >= ? AND f.match_date < ?`
-    const today = new Date().toISOString().split("T")[0]
-    const fxArgs = fixtureId != null ? [fixtureId] : [`${today}T00:00:00Z`, `${today}T23:59:59Z`]
+    const { bogotaDayRangeUtc } = await import("@/lib/utils/time")
+    const { startUtc, endUtc } = bogotaDayRangeUtc()
+    const fxArgs = fixtureId != null ? [fixtureId] : [startUtc, endUtc]
     const fxRows = await db.execute({ sql: fxSql, args: fxArgs })
     const targets = (fxRows.rows as any[]).map(r => ({
       id: r.id, date: r.match_date, stadium: r.stadium ?? "Unknown", city: r.city ?? "Unknown",
