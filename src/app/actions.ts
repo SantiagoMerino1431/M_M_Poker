@@ -721,3 +721,13 @@ export async function updateBetAction(
     return { ok: false, message: err?.message ?? "Error al actualizar" }
   }
 }
+
+export async function resetLearnedStrengthsAction(): Promise<{ ok: boolean; message: string }> {
+  try {
+    const { recomputeAllStrengths } = await import("@/lib/model/recompute-strengths")
+    await recomputeAllStrengths()
+    return { ok: true, message: "Fuerzas reiniciadas desde semillas y recalculadas con historial." }
+  } catch (e) {
+    return { ok: false, message: `Error: ${e instanceof Error ? e.message : String(e)}` }
+  }
+}
