@@ -56,3 +56,46 @@ body {
   background: var(--accent);
   animation: pulse-accent 1.4s ease-in-out infinite;
 }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Responsive utilities */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.stack-mobile {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hide-mobile {
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .hide-mobile {
+    display: none;
+  }
+
+  .stack-mobile {
+    flex-direction: column;
+  }
+
+  /* Tighten page padding on mobile */
+  body {
+    font-size: 14px;
+  }
+
+  /* Nav links stack vertically */
+  nav {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

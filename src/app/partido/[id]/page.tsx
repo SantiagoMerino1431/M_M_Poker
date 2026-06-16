@@ -12,6 +12,8 @@ import { MARKET_GROUPS } from "@/lib/engine/market-labels"
 import { CustomBetForm } from "@/components/CustomBetForm"
 import type { MarketResult } from "@/lib/types"
 import { MatchResultModal } from "@/components/MatchResultModal"
+import { LiveStatusBadge } from "@/components/LiveStatusBadge"
+import { CaptureClosingOddsButton } from "@/components/CaptureClosingOddsButton"
 
 function pct0(n: number) { return `${Math.round(n * 100)}%` }
 function fmt(d: string | null) {
@@ -161,6 +163,15 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
               Preliminar
             </span>
           )}
+          <LiveStatusBadge
+            fixtureId={fixtureId}
+            initial={{
+              status: fixture?.status ?? "NS",
+              homeScore: fixture?.homeScore ?? null,
+              awayScore: fixture?.awayScore ?? null,
+              elapsed: null,
+            }}
+          />
         </div>
         {analysis.confidenceBreakdown && analysis.confidenceBreakdown.length > 0 && (
           <div style={{ marginTop: -8, marginBottom: 16, fontSize: 11, color: "var(--text-muted)" }}>
@@ -482,6 +493,10 @@ export default async function PartidoPage({ params }: { params: Promise<{ id: st
           />
         )
       })}
+
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+        <CaptureClosingOddsButton fixtureId={fixtureId} />
+      </div>
 
       <div style={{ padding: "12px 16px", border: "1px solid var(--border)", fontSize: 11, color: "var(--text-muted)", display: "flex", justifyContent: "space-between", marginTop: 8 }}>
         <span>Poisson + Dixon-Coles · CSV fallback H2H + form</span>
