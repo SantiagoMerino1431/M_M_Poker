@@ -35,7 +35,7 @@ export async function getTodayAnalyses(): Promise<MatchAnalysis[]> {
 
 export async function getFixtureDetails(fixtureId: number) {
   const rows = await db.execute({
-    sql: `SELECT f.match_date, f.stage, f.stadium, f.city,
+    sql: `SELECT f.match_date, f.stage, f.stadium, f.city, f.home_score, f.away_score, f.status,
                  ht.name as home_name, ht.country as home_country,
                  ht.group_name, ht.fifa_ranking as home_ranking,
                  at.name as away_name, at.country as away_country,
@@ -54,6 +54,9 @@ export async function getFixtureDetails(fixtureId: number) {
     stadium: r.stadium as string | null,
     city: r.city as string | null,
     groupName: r.group_name as string,
+    homeScore: r.home_score as number | null,
+    awayScore: r.away_score as number | null,
+    status: r.status as string | null,
     home: { name: r.home_name as string, country: r.home_country as string, fifaRanking: r.home_ranking as number },
     away: { name: r.away_name as string, country: r.away_country as string, fifaRanking: r.away_ranking as number },
   }
@@ -729,5 +732,60 @@ export async function resetLearnedStrengthsAction(): Promise<{ ok: boolean; mess
     return { ok: true, message: "Fuerzas reiniciadas desde semillas y recalculadas con historial." }
   } catch (e) {
     return { ok: false, message: `Error: ${e instanceof Error ? e.message : String(e)}` }
+  }
+}
+
+export async function recordResultAction(
+  fixtureId: number, homeScore: number, awayScore: number, autoSettle = true
+): Promise<{ ok: boolean; message: string; settled: number }> {
+  try {
+    // Save score to fixtures table
+    await db.execute({
+      sql: `UPDATE fixtures SET home_score = ?, away_score = ?, status = 'FT' WHERE id = ?`,
+      args: [homeScore, awayScore, fixtureId],
+    })
+
+    let settled = 0
+    if (autoSettle) {
+      const { betResultForScore } = await import("@/lib/engine/settle")
+      const { nextBalanceAfterSettle, updateBankroll } = await import("@/lib/kelly/bankroll")
+
+      const openRows = await db.execute({
+        sql: `SELECT * FROM bets WHERE fixture_id = ? AND result IS NULL`,
+        args: [fixtureId],
+      })
+
+      for (const row of openRows.rows as any[]) {
+        const result = betResultForScore(row.market, row.selection, homeScore, awayScore)
+        if (!result) continue
+
+        const profitLoss = result === "win"
+          ? Math.round(row.amount * (row.odds_used - 1))
+          : result === "loss"
+          ? -row.amount
+          : 0
+
+        await db.execute({
+          sql: `UPDATE bets SET result = ?, profit_loss = ?, settled_at = ? WHERE id = ?`,
+          args: [result, profitLoss, new Date().toISOString(), row.id],
+        })
+
+        if (row.mode === "real") {
+          const state = await getBankrollState(row.user_id ?? undefined)
+          const settleResult: "win" | "loss" | "void" = result === "draw" ? "void" : result
+          const nextBalance = nextBalanceAfterSettle(state.current, settleResult, row.amount, row.odds_used)
+          await updateBankroll(nextBalance, "daily", row.user_id ?? undefined)
+        }
+        settled++
+      }
+    }
+
+    // Trigger strength recomputation
+    const { recomputeAllStrengths } = await import("@/lib/model/recompute-strengths")
+    await recomputeAllStrengths()
+
+    return { ok: true, message: `Resultado guardado. ${settled} apuesta(s) liquidada(s).`, settled }
+  } catch (e) {
+    return { ok: false, message: `Error: ${e instanceof Error ? e.message : String(e)}`, settled: 0 }
   }
 }
