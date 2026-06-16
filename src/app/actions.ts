@@ -86,6 +86,12 @@ export async function getAnalysisForFixture(fixtureId: number): Promise<MatchAna
 }
 
 export async function registerBet(bet: Omit<Bet, "id">): Promise<{ ok: boolean; id?: number; message?: string }> {
+  const { getSettings } = await import("@/lib/db/settings-store")
+  const { effectiveBetMode } = await import("@/lib/config/settings")
+  const settings = await getSettings()
+  const effectiveMode = effectiveBetMode(bet.mode, settings.paperOnly)
+  const betWithMode = { ...bet, mode: effectiveMode }
+
   const { checkBetAllowed } = await import("@/lib/kelly/portfolio")
   const state = await getBankrollState(bet.userId)
 
@@ -102,12 +108,12 @@ export async function registerBet(bet: Omit<Bet, "id">): Promise<{ ok: boolean; 
     mode: state.mode,
     bankroll: state.current,
     todayRealStaked,
-    newAmount: bet.amount,
-    betMode: bet.mode,
+    newAmount: betWithMode.amount,
+    betMode: betWithMode.mode,
   })
   if (!check.allowed) return { ok: false, message: check.reason }
 
-  const id = await saveBet({ ...bet, amount: check.adjustedAmount })
+  const id = await saveBet({ ...betWithMode, amount: check.adjustedAmount })
   return { ok: true, id, message: check.reason }
 }
 
@@ -809,5 +815,22 @@ export async function recordResultAction(
     return { ok: true, message: `Resultado guardado. ${settled} apuesta(s) liquidada(s).`, settled }
   } catch (e) {
     return { ok: false, message: `Error: ${e instanceof Error ? e.message : String(e)}`, settled: 0 }
+  }
+}
+
+export async function getSettingsAction(): Promise<import("@/lib/config/settings").AppSettings> {
+  const { getSettings } = await import("@/lib/db/settings-store")
+  return getSettings()
+}
+
+export async function saveSettingsAction(
+  patch: Partial<import("@/lib/config/settings").AppSettings>
+): Promise<{ ok: boolean; message: string }> {
+  try {
+    const { saveSettings } = await import("@/lib/db/settings-store")
+    const next = await saveSettings(patch)
+    return { ok: true, message: next.paperOnly ? "Guardado · modo PAPEL activo (sin dinero real)" : "Guardado · modo REAL habilitado" }
+  } catch (e) {
+    return { ok: false, message: `Error: ${e instanceof Error ? e.message : String(e)}` }
   }
 }
