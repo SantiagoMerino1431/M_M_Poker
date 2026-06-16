@@ -5,6 +5,7 @@ import { HistorialActions } from "@/components/HistorialActions"
 import { BetHistory } from "@/components/BetHistory"
 import { getBankrollState } from "@/lib/kelly/bankroll"
 import { cookies } from "next/headers"
+import Link from "next/link"
 
 function KPICard({ label, value, sub, color }: { label: string; value: string; sub?: string; color?: string }) {
   return (
@@ -34,9 +35,12 @@ export default async function HistorialPage() {
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 24px" }}>
       <div style={{ marginBottom: 40 }}>
-        <p style={{ fontSize: 12, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.12em", marginBottom: 8 }}>
-          Apuestas reales · {realMetrics.totalBets} registradas
-        </p>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 8 }}>
+          <p style={{ fontSize: 12, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.12em" }}>
+            Apuestas reales · {realMetrics.totalBets} registradas
+          </p>
+          <Link href="/calibracion" style={{ fontSize: 11, color: "var(--text-muted)", textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.06em" }}>Calibración →</Link>
+        </div>
         <h1 className="stat-number" style={{ fontSize: "clamp(32px, 5vw, 56px)" }}>
           Track <span style={{ color: "var(--accent)" }}>Record</span>
         </h1>
